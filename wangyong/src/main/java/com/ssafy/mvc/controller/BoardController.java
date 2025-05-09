@@ -35,6 +35,9 @@ public class BoardController {
 	 */ 
 	@GetMapping("/category/{boardNum}")
 	public ResponseEntity<List<ColBoard>> getMethodName1(@PathVariable("boardNum") int boardNum) {
+		System.out.println("연습용합치기");
+		
+		System.out.println("안녕하시렵니까");
 		
 		try {
 			List<ColBoard> list = boardService.getCategoryBoard(boardNum);	// 1~5번 이외 sql 조회 시 exception 발생.

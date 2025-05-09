@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="com.ssafy.mvc.model.dao.BoardDao">
+
+	<select id="getCategory" parameterType="int" resultType="ColBoard">
+		select * from col_board
+		where category=#{categoryNum};
+	</select>
+
+	
+	<insert id="insertBoard" parameterType="ColBoard">
+   		insert into col_board (user_id, category, title, content)
+   		values (#{userId}, #{category}, #{title}, #{content})
+	</insert>
+	
+
+	<select id="getBoard" parameterType="int" resultType="ColBoard">
+		select * from col_board
+		where colboard_id=#{colboardId}
+	</select>
+
+
+	<update id="update" parameterType="ColBoard">
+		update col_board
+		set title=#{title}, content=#{content}
+		where colboard_id=#{colboardId}
+	</update>
+
+	<delete id="delete" parameterType="int">
+		delete from col_board
+		where colboard_id=#{colboardId}
+	</delete>
+
+</mapper>
