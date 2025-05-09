@@ -33,5 +33,20 @@
 		delete from col_board
 		where colboard_id=#{colboardId}
 	</delete>
+	
+	<select id="getBoardByUser" parameterType="String" resultType="ColBoard">
+		select * from col_board
+		where user_id=#{user_id}
+	</select>
+	
+	<update id="upBoardCnt" parameterType="int">
+		update col_board
+		set view_cnt=view_cnt+1
+		where colboard_id=#{colboard_id}
+	</update>
+	
+	
+	
+	
 
 </mapper>

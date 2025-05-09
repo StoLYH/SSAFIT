@@ -15,4 +15,8 @@ public interface BoardService {
 	int updateBoard(ColBoard colBoard);
 	
 	int deleteBoard(int colboardId);
+	
+	List<ColBoard> getBoardlistByUser(String userId);
+	
+	
 }

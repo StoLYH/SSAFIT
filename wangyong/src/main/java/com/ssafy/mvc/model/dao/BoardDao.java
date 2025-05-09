@@ -17,4 +17,9 @@ public interface BoardDao {
 	int update(ColBoard colBoard);
 	
 	int delete(int colboardId);
+	
+	List<ColBoard> getBoardByUser(String user_id);
+	
+	// 조회수 증가하기
+	int upBoardCnt(int colboardId);
 }

@@ -33,6 +33,9 @@ public class BoardServiceImpl implements BoardService{
 
 	@Override
 	public ColBoard getOneBoard(int colboardId) {
+		// 조회를 하였기 때문에 조회수 1 증가해야 한다.
+		boardDao.upBoardCnt(colboardId);
+		
 		return boardDao.getBoard(colboardId);
 	}
 
@@ -46,6 +49,12 @@ public class BoardServiceImpl implements BoardService{
 	@Override
 	public int deleteBoard(int colboardId) {
 		return boardDao.delete(colboardId);
+	}
+
+
+	@Override
+	public List<ColBoard> getBoardlistByUser(String userId) {
+		return boardDao.getBoardByUser(userId);
 	}
 
 	
