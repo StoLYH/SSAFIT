@@ -30,6 +30,8 @@ public class UserController {
         //임시
         return new ResponseEntity<>("fail", HttpStatus.NO_CONTENT);
     }
+    
+    
 
 	
 	

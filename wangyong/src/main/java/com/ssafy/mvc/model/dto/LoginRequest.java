@@ -1,19 +1,19 @@
 package com.ssafy.mvc.model.dto;
 
 public class LoginRequest {
-    private String uesrId;
+    private String userId;
     private String password;
 
-    public LoginRequest(String uesrId, String password) {
-        this.uesrId = uesrId;
+    public LoginRequest(String userId, String password) {
+        this.userId = userId;
         this.password = password;
     }
 
-    public String getUesrId() {
-        return uesrId;
+    public String getUserId() {
+        return userId;
     }
     public void setUesrId(String uesrId) {
-        this.uesrId = uesrId;
+        this.userId = uesrId;
     }
     public String getPassword() {
         return password;
