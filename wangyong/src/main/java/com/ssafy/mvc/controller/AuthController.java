@@ -31,8 +31,8 @@ public class AuthController {
 	}
 
 	@PostMapping("/logout")
-	public ResponseEntity<?> logout() {
-		// 로그아웃 로직 처리
+	public ResponseEntity<?> logout(HttpSession session) {
+		session.invalidate();
 		return ResponseEntity.ok("로그아웃 성공");
 	}
 }

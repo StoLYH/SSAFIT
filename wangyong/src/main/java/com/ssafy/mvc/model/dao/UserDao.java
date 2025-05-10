@@ -5,5 +5,7 @@ import com.ssafy.mvc.model.dto.User;
 
 public interface UserDao {
     int insertUser(User user);
-	LoginRequest findUserById(String userId);
+    User findUserByIdUser(String userId);
+    LoginRequest findUserByIdLogin(String userId);
+    int updateUser(User originUser);
 }

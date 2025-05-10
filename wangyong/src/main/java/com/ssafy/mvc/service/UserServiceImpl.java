@@ -21,9 +21,18 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
+	public int updateUser(User user, String userId) {
+		User originUser = userDao.findUserByIdUser(userId);
+		originUser.setPassword(user.getPassword());
+		originUser.setUserName(user.getUserName());
+		originUser.setUserRole(user.getUserRole());
+		return userDao.updateUser(originUser);
+	}
+
+	@Override
 	public LoginRequest login(LoginRequest loginRequest) {
 		// service에서 로그인로직 처리
-		LoginRequest user = userDao.findUserById(loginRequest.getUserId());
+		LoginRequest user = userDao.findUserByIdLogin(loginRequest.getUserId());
 		System.out.println(user.getUserId()+" "+user.getPassword());
 		if (user == null || !user.getPassword().equals(loginRequest.getPassword())) {
 			throw new RuntimeException("아이디 또는 비밀번호가 틀렸습니다");

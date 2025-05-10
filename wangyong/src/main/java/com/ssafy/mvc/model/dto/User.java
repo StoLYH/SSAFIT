@@ -31,11 +31,11 @@ public class User {
         this.userName = userName;
     }
 
-    public String getuserRole() {
+    public String getUserRole() {
         return userRole;
     }
 
-    public void setRole(String userRole) {
+    public void setUserRole(String userRole) {
         this.userRole = userRole;
     }
 
