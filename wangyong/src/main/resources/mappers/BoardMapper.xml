@@ -11,7 +11,7 @@
 	</select>
 
 	
-	<insert id="insertBoard" parameterType="ColBoard">
+	<insert id="insertBoard" parameterType="ColBoard" useGeneratedKeys="true" keyProperty="colboardId">
    		insert into col_board (user_id, category, title, content)
    		values (#{userId}, #{category}, #{title}, #{content})
 	</insert>
@@ -45,6 +45,22 @@
 		where colboard_id=#{colboard_id}
 	</update>
 	
+
+	<select id="search" parameterType="SearchCondition" resultType="ColBoard">
+		select * from col_board
+		<if test="key != null">
+		WHERE ${key} LIKE concat('%',#{word},'%')
+		</if>
+		<!-- 정렬 조건 -->
+		<if test="orderBy != null">
+			ORDER BY ${orderBy} ${orderByDir}
+		</if>	
+	</select>
+	
+	<insert id="insertBoardFile" parameterType="BoardFile">
+		insert into file(colboard_id,original_name,upload_name,file_size)
+		values(#{colboardId},#{originalName},#{uploadName},#{fileSize});
+	</insert>
 	
 	
 	

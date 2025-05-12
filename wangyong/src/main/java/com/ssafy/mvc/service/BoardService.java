@@ -3,8 +3,11 @@ package com.ssafy.mvc.service;
 import java.util.List;
 
 import com.ssafy.mvc.model.dto.ColBoard;
+import com.ssafy.mvc.model.dto.SearchCondition;
 
 public interface BoardService {
+	//
+	List<ColBoard> getSearchBoard(SearchCondition condition);
 	
 	List<ColBoard> getCategoryBoard(int categoryNum);
 	
