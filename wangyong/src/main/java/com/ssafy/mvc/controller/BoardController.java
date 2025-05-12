@@ -33,6 +33,7 @@ public class BoardController {
 	}
 	
 	/**
+	 * GET http://localhost:8080/board?key=user_id&word=003&orderBy=view_cnt&orderByDir=desc
 	 * 전체 게시글 조회 (메인페이지) + 검색기능
 	 * 
 	 * user_id(작가), category, content 기준으로 필터링
@@ -55,7 +56,9 @@ public class BoardController {
 			@RequestParam(value = "orderBy", required = false) String orderBy,
 			@RequestParam(value = "orderByDir", required = false) String orderByDir) {
 
+		System.out.println(key);
 		SearchCondition condition = new SearchCondition(key, word, orderBy, orderByDir);
+		
 		
 		try {
 			List<ColBoard> list = boardService.getSearchBoard(condition);
@@ -132,6 +135,7 @@ public class BoardController {
 	 */
 	@GetMapping("user/{userId}")
 	public ResponseEntity<List<ColBoard>> getMethod4(@PathVariable("userId") String userId) {
+		
 		try {
 			List<ColBoard> list = boardService.getBoardlistByUser(userId);	
 			if (!list.isEmpty()) {
@@ -173,12 +177,13 @@ public class BoardController {
 	
 	/**
 	 * colboard_id(기본키)와 ColBoard객체를 이용한 게시글 정보 수정
+	 * 파일처리 => 전체갱신방식 선택
+	 * 기존 게시물의 파일 전체삭제 이후 재 업로드 
 	 * 정상 실행 : 200
 	 * 서버 오류 : 500
 	 */
 	@PutMapping("{colboardId}")
-	public ResponseEntity<String> postMethodName(@PathVariable("colboardId") int colboardId, @RequestBody ColBoard colBoard) {
-		System.out.println(colBoard);
+	public ResponseEntity<String> postMethodName(@PathVariable("colboardId") int colboardId, @ModelAttribute ColBoard colBoard) {
 		
 		colBoard.setColboardId(colboardId);
 		

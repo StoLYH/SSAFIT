@@ -11,7 +11,7 @@ public interface BoardService {
 	
 	List<ColBoard> getCategoryBoard(int categoryNum);
 	
-	int intsertCategoryBoard(ColBoard colBoard);
+	int intsertCategoryBoard(ColBoard colBoard);	// flag = 0 (일반등록)  1(업데이트)
 
 	ColBoard getOneBoard(int colboardId);
 	
@@ -21,5 +21,7 @@ public interface BoardService {
 	
 	List<ColBoard> getBoardlistByUser(String userId);
 	
+	// 업데이트 전용
+	boolean forupdate(ColBoard colBoard);
 	
 }

@@ -7,8 +7,13 @@
 
 	<select id="getFiles" parameterType="int" resultType="BoardFile">
 		select * from file
+		where colboard_id=#{colboardId}
 	</select>
 
+	<delete id="deleteFile" parameterType="int">
+		delete from file
+		where colboard_id=#{colboardId}
+	</delete>
 
 
 </mapper>
