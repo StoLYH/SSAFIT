@@ -1,7 +1,6 @@
 package com.ssafy.mvc.model.dto;
 
 public class ColBoard {
-	
     private int colboardId;        // 기본키
     private String userId;         
     private int category;          
