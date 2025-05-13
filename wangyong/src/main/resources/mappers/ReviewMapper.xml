@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="com.ssafy.mvc.model.dao.ReviewDao">
+
+	<insert id="insertReview" parameterType="Review">
+		insert into review(colboard_id,user_id,content)
+		values(#{colboardId},#{userId},#{content});
+	</insert>
+	
+	<select id="selectAllReviews" parameterType="int">
+	select * from review
+		where colboard_id=#{colboardId}
+	</select>
+	
+
+</mapper>
