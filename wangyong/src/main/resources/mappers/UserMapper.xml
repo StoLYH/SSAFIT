@@ -24,8 +24,6 @@
 
 
 
-
-
 	<select id="findUserByIdLogin" parameterType="String"
 		resultType="LoginRequest">
 		select user_id,password from user where user_id =#{userId}
