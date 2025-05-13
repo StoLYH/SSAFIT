@@ -10,7 +10,10 @@
 		values(#{colboardId},#{userId},#{content});
 	</insert>
 	
-	
+	<select id="selectAllReviews" parameterType="int">
+	select * from review
+		where colboard_id=#{colboardId}
+	</select>
 	
 
 </mapper>

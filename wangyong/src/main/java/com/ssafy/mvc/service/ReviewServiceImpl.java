@@ -1,5 +1,7 @@
 package com.ssafy.mvc.service;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
 import com.ssafy.mvc.model.dao.ReviewDao;
@@ -20,6 +22,12 @@ public class ReviewServiceImpl implements ReviewService {
 	@Override
 	public int insertReview(Review review) {
 		return reviewDao.insertReview(review);
+	}
+
+	@Override
+	public List<Review> selectAllReviews(int colboardId) {
+		// TODO Auto-generated method stub
+		return reviewDao.selectAllReviews(colboardId);
 	}
 
 }
