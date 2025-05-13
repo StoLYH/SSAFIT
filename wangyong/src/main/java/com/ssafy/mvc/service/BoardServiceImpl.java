@@ -2,6 +2,8 @@ package com.ssafy.mvc.service;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -13,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.ssafy.mvc.model.dao.BoardDao;
+import com.ssafy.mvc.model.dao.FileDao;
 import com.ssafy.mvc.model.dto.BoardFile;
 import com.ssafy.mvc.model.dto.ColBoard;
 import com.ssafy.mvc.model.dto.SearchCondition;
@@ -24,24 +27,34 @@ public class BoardServiceImpl implements BoardService{
 	private String uploadDir;				// application.properties에 존재
 	
 	BoardDao boardDao;
+	FileDao fileDao;
+	
 	
 	@Autowired
-	public BoardServiceImpl(BoardDao boardDao) {
+	public BoardServiceImpl(BoardDao boardDao, FileDao fileDao) {
 		this.boardDao = boardDao;
+		this.fileDao = fileDao;
 	}
 
 
 	@Override
 	public List<ColBoard> getCategoryBoard(int categoryNum) {
-		return boardDao.getCategory(categoryNum);
+		List<ColBoard> list = boardDao.getCategory(categoryNum);
+		for (ColBoard c: list) {
+			int id = c.getColboardId();	// 게시판 기본키
+			List<BoardFile> fileList = fileDao.getFiles(id);		// 게시판 기본키 이용해 해당 파일을 모두 가져온다.
+			c.setBoardFiles(fileList);	
+		}
+		
+		return list;
 	}
 
 
 	@Override
 	public int intsertCategoryBoard(ColBoard colBoard) {
+
 		int result = boardDao.insertBoard(colBoard);	// 게시물 등록
 		int primarykey = colBoard.getColboardId();		// 기본키
-		System.out.println(primarykey + "기본키 확인");	
 		
 		// 첨부파일이 없는경우.
 		List<MultipartFile> attachList = colBoard.getAttach();
@@ -99,25 +112,141 @@ public class BoardServiceImpl implements BoardService{
 		}
 		return timeStr + "_" + uniqueStr + extName;
 	}
-
+	
 
 	@Override
 	public ColBoard getOneBoard(int colboardId) {
 		// 조회를 하였기 때문에 조회수 1 증가해야 한다.
 		boardDao.upBoardCnt(colboardId);
 		
-		return boardDao.getBoard(colboardId);
+		List<BoardFile> File = fileDao.getFiles(colboardId);  // 해당하는 게시판이 가지고 있는 파일정보
+		ColBoard board = boardDao.getBoard(colboardId);				
+		board.setBoardFiles(File);
+		
+		return board;
 	}
 
 
 	@Override
 	public int updateBoard(ColBoard colBoard) {
+		List<BoardFile> fileList = fileDao.getFiles(colBoard.getColboardId());
+		// 기존파일 전체삭제 (서버,db)
+		boolean result1 = deleteFileFromServer(fileList);				// 서버
+		int result2 = fileDao.deleteFile(colBoard.getColboardId());		// db(파일만 삭제)
+		
+		if (result1 == true) {
+			System.out.println("게시물 서버삭제완료");
+		}
+		if (result2 == 1) {
+			System.out.println("게시물 db삭제완료");
+		}
+		
+		// 서버단, 파일 재 업로드
+		forupdate(colBoard);
+		
+		// db처리
 		return boardDao.update(colBoard);
 	}
+	
+	@Override
+	public boolean forupdate(ColBoard colBoard) {		// 업데이트 정보를 내포
+
+		int primarykey = colBoard.getColboardId();		// 기본키
+		
+		// 첨부파일이 없는경우.
+		List<MultipartFile> attachList = colBoard.getAttach();
+		if (attachList == null) {
+			return true;
+		}
+		
+		for (MultipartFile attach : attachList) {
+			if (!attach.isEmpty()) {
+				String originalName = attach.getOriginalFilename();
+				long fileSize = attach.getSize();	// byte 크기
+				String uploadName = generateUniqueName(originalName);
+				File dirFile = new File(uploadDir);	// 저장할 경로 설정
+				
+				if (!dirFile.exists()) {
+					dirFile.mkdirs();		// 해당 디렉토리 없으면 만들기
+				}
+				File file = new File(dirFile, uploadName);	// 저장경로 + 이름 설정
+				
+				// 1. 서버에 저장 (나중에 처리)
+				try {
+					attach.transferTo(file);
+				} catch (Exception e) {		// 예외처리 고민 해봐야 할듯.....
+					e.printStackTrace();
+				}
+			
+				
+				// 2. 디비에 저장
+				BoardFile boardFile = new BoardFile();
+				// no, original_name, upload_name, file_size
+				boardFile.setColboardId(primarykey);		// 외래키
+				boardFile.setOriginalName(originalName);
+				boardFile.setUploadName(uploadName);
+				boardFile.setFileSize(fileSize);
+				
+				
+				int fileInsertResult = boardDao.insertBoardFile(boardFile);
+				System.out.println(fileInsertResult + " fileInsertResult");
+				if (fileInsertResult != 1) {
+					return false;	// 파일 처리 실패시 예외처리
+				}
+			}
+		}
+		
+		return true;	// 실행완료.
+	}
+	
+	
+	// 서버 파일 삭제
+	public boolean deleteFileFromServer(List<BoardFile> fileList) {
+	    boolean allDeleted = true; // 전체 삭제 성공 여부
+
+	    // 서버에서 제거
+	    for (BoardFile f : fileList) {
+	    	String uploadName = f.getUploadName();
+	        try {
+	            Path filePath = Paths.get(uploadDir).resolve(uploadName).normalize();
+	            File file = filePath.toFile();
+
+	            if (file.exists()) {
+	                boolean deleted = file.delete();
+	                if (!deleted) {
+	                    System.out.println("파일 삭제 실패: " + uploadName);
+	                    allDeleted = false;
+	                }
+	            } else {
+	                System.out.println("파일이 존재하지 않음: " + uploadName);
+	                allDeleted = false;
+	            }
+	            
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	            allDeleted = false;
+	        }
+	        System.out.println("파일 삭제 완료.");
+	    }
+
+	    return allDeleted;
+	}
+	
 
 
 	@Override
 	public int deleteBoard(int colboardId) {
+		// 보드파일을 가져와야지!!!!!!!!!!!!
+		List<BoardFile> fileList = fileDao.getFiles(colboardId);
+
+		if (fileList != null) {
+			boolean result = deleteFileFromServer(fileList);
+			if (result == true) {
+			}
+		}
+	
+		
+		
 		// 게시판 삭제시 파일 연쇄 삭제
 		return boardDao.delete(colboardId);
 	}
@@ -125,13 +254,30 @@ public class BoardServiceImpl implements BoardService{
 
 	@Override
 	public List<ColBoard> getBoardlistByUser(String userId) {
-		return boardDao.getBoardByUser(userId);
+		List<ColBoard> list = boardDao.getBoardByUser(userId);
+		
+		for (ColBoard c: list) {
+			int id = c.getColboardId();	// 게시판 기본키
+			List<BoardFile> fileList = fileDao.getFiles(id);		// 게시판 기본키 이용해 해당 파일을 모두 가져온다.
+			c.setBoardFiles(fileList);	
+			System.out.println(c);
+		}
+		
+		return list;
 	}
 
 
 	@Override
 	public List<ColBoard> getSearchBoard(SearchCondition condition) {
-		return boardDao.search(condition);
+		// 기본키에 해당하는 파일 다 찾아와서 반환 해줘야 함 
+		List<ColBoard> list = boardDao.search(condition);
+		for (ColBoard c: list) {
+			int id = c.getColboardId();	// 게시판 기본키
+			List<BoardFile> fileList = fileDao.getFiles(id);		// 게시판 기본키 이용해 해당 파일을 모두 가져온다.
+			c.setBoardFiles(fileList);	
+		}
+				
+		return list;
 	}
 
 	

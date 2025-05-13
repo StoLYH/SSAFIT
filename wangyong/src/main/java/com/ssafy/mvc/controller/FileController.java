@@ -37,24 +37,23 @@ public class FileController {
 	// 서버에 저장된 파일을 준다.
 	@GetMapping("/sendImg/{fileName}")
     public ResponseEntity<Resource> serveFile(@PathVariable String fileName) {
+		System.out.println(fileName);
         try {
             // 경로를 지정하고 리소스 객체로 변환
             Path filePath = Paths.get(uploadDir).resolve(fileName).normalize();
-            Resource resource = new UrlResource(filePath.toUri());
+            Resource resource = new UrlResource(filePath.toUri());	// 파일
 
-            if (!resource.exists()) {
+            if (!resource.exists()) {	// 파일 존재하지 않는경우
                 return ResponseEntity.notFound().build();
             }
 
-            // 파일의 MIME 타입 추출
+            // 파일의 타입 추출 (image/png, image/jpeg, application/pdf)
             String contentType = Files.probeContentType(filePath);
             if (contentType == null) {
-                contentType = "application/octet-stream";
+                contentType = "application/octet-stream";	// pdf와 같은 바이너리 파일
             }
 
-            return ResponseEntity.ok()
-                    .header(HttpHeaders.CONTENT_TYPE, contentType)
-                    .body(resource);
+            return ResponseEntity.ok().header(HttpHeaders.CONTENT_TYPE, contentType).body(resource);
 
         } catch (MalformedURLException e) {
             return ResponseEntity.badRequest().build();
@@ -65,7 +64,7 @@ public class FileController {
 
 	/**
 	 * 게시물 기본키를 이용해서 파일정보 조회
-	 * 
+	 * 클라이언트 쪽에서 파일을 원하는 경우 => 선제적으로 파일정보를 가져가서 src로 파일 요청을 하도록 구성
 	 */
 	 @GetMapping("{colboardId}")
 	public ResponseEntity<List<BoardFile>> getMethod4(@PathVariable("colboardId") int colboardId) {

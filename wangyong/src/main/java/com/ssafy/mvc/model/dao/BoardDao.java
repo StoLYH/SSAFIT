@@ -28,4 +28,6 @@ public interface BoardDao {
 	
 	// 파일등록
 	int insertBoardFile(BoardFile boardFile);
+
+	
 }
