@@ -29,5 +29,16 @@ public class ReviewServiceImpl implements ReviewService {
 		// TODO Auto-generated method stub
 		return reviewDao.selectAllReviews(colboardId);
 	}
+	@Override
+	public int removeReview(int reviewId) {
+		return reviewDao.removeReview(reviewId);
+	}
+
+	@Override
+	public int updateReview(int reviewId, Review review) {
+		Review originreview = reviewDao.selectReview(reviewId);
+		originreview.setContent(review.getContent());
+		return reviewDao.updateReview(originreview);
+	}
 
 }
