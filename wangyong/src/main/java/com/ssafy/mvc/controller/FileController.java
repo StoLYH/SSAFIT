@@ -18,7 +18,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
-
+@CrossOrigin(origins = "http://localhost:5174")
 @RestController
 @RequestMapping("/upload")
 public class FileController {

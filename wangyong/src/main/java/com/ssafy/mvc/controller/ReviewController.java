@@ -1,9 +1,11 @@
 package com.ssafy.mvc.controller;
 
 import java.util.ArrayList;
+
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -13,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafy.mvc.model.dto.Review;
 import com.ssafy.mvc.service.ReviewService;
-
+@CrossOrigin(origins = "http://localhost:5174")
 @RestController
 @RequestMapping("/review")
 public class ReviewController {

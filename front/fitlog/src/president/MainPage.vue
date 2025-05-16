@@ -1,5 +1,6 @@
 <template>
   <div class="main-container">
+    <AuthorList.vue/>
     <FitlogHeader />
     <MainBanner />
     <ColumnList title="요즘 인기 칼럼" :items="hotColumns" />

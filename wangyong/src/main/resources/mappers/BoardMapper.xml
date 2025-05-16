@@ -50,7 +50,7 @@
 		select * from col_board
 		<if test="key != null">
 		WHERE ${key} LIKE concat('%',#{word},'%')
-		</if>
+		</if>	
 		<!-- 정렬 조건 -->
 		<if test="orderBy != null">
 			ORDER BY ${orderBy} ${orderByDir}
