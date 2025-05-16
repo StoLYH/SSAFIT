@@ -3,13 +3,10 @@ package com.ssafy.mvc.controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.ssafy.mvc.model.dto.ColBoard;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.ssafy.mvc.model.dto.Review;
 import com.ssafy.mvc.service.ReviewService;
@@ -24,8 +21,7 @@ public class ReviewController {
 		
 	}
 	
-	
-	
+
 	//리뷰 등록
 	@PostMapping
 	public ResponseEntity<String> registReview(@RequestBody Review review ){ 
@@ -34,7 +30,6 @@ public class ReviewController {
 	}
 	//colboardId 받아서 해당 리뷰 보여줌 
 	@GetMapping("{colboardId}")
-	
 	public ResponseEntity<List<Review>>getAllReviews(@PathVariable int colboardId){
 		List<Review>list = reviewService.selectAllReviews(colboardId);
 		if(!list.isEmpty()) {
@@ -42,9 +37,28 @@ public class ReviewController {
 		}
 		return ResponseEntity.noContent().build();
 		
-		
-		
 	}
+
+
+	//리뷰 삭제
+	@DeleteMapping("{reviewId}")
+	public ResponseEntity<String> deleteReview(@PathVariable int reviewId){
+		reviewService.removeReview(reviewId);
+		return ResponseEntity.ok("성공");
+	}
+
+	//리뷰수정
+	@PutMapping("{reviewId}")
+	public ResponseEntity<String> updateReview(@PathVariable int reviewId, @RequestBody Review review) {
+
+		int result = reviewService.updateReview(reviewId,review);
+		if (result == 1) {
+			return ResponseEntity.status(HttpStatus.OK).body("성공적으로 업데이트 되었습니다");
+		}
+
+		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("서버 오류로 인해서 업데이트 불가");
+	}
+
 	
 	
 	
