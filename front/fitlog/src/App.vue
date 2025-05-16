@@ -3,10 +3,11 @@ import DebatePage from './president/DebatePage.vue';
 import MainPage from './president/MainPage.vue'
 import MainCategory from './president/MainCategory.vue';
 import register from './president/register.vue';
+import LandingPage from './president/LandingPage.vue';
 </script>
 
 <template>
-  <register/>
+  <LandingPage></LandingPage>
 </template>
 
 <style scoped>

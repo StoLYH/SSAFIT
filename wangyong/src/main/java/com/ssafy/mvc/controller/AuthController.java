@@ -10,9 +10,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-@CrossOrigin(origins = "http://localhost:5174")
+@CrossOrigin(origins = "http://localhost:5173")
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/api/auth")
 public class AuthController {
 
 	// 싱글톤 의존성 주입
@@ -23,8 +23,9 @@ public class AuthController {
 	}
 
 	@PostMapping("/login")
-	public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest, HttpSession session) {
+	public ResponseEntity<String> login(@RequestBody LoginRequest loginRequest, HttpSession session) {
 		// 로그인 로직 처리
+		System.out.println("check");
 		LoginRequest user = userService.login(loginRequest);
 		session.setAttribute("loginUser", user.getUserId());
 		return ResponseEntity.ok("로그인 성공");
