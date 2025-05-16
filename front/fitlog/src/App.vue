@@ -1,9 +1,12 @@
 <script setup>
+import DebatePage from './president/DebatePage.vue';
 import MainPage from './president/MainPage.vue'
+import MainCategory from './president/MainCategory.vue';
+import register from './president/register.vue';
 </script>
 
 <template>
-  <MainPage />
+  <register/>
 </template>
 
 <style scoped>

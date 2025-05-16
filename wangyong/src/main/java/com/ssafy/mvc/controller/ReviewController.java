@@ -1,6 +1,7 @@
 package com.ssafy.mvc.controller;
 
 import java.util.ArrayList;
+
 import java.util.List;
 
 import com.ssafy.mvc.model.dto.ColBoard;
@@ -10,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import com.ssafy.mvc.model.dto.Review;
 import com.ssafy.mvc.service.ReviewService;
-
+@CrossOrigin(origins = "http://localhost:5174")
 @RestController
 @RequestMapping("/review")
 public class ReviewController {
