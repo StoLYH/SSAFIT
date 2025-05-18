@@ -1,5 +1,19 @@
+<<<<<<< HEAD
+<script setup>
+import DebatePage from './president/DebatePage.vue';
+import MainPage from './president/MainPage.vue'
+import MainCategory from './president/MainCategory.vue';
+import register from './president/register.vue';
+import LandingPage from './president/LandingPage.vue';
+</script>
+
+<template>
+  <LandingPage></LandingPage>
+  <MainPage></MainPage>
+=======
 <template>
   <RouterView />
+>>>>>>> 501e7ac2458b9fbd4584d2dcb52ace5e67d8d2ff
 </template>
 
 <script setup>
