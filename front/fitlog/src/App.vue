@@ -8,6 +8,7 @@ import LandingPage from './president/LandingPage.vue';
 
 <template>
   <LandingPage></LandingPage>
+  <MainPage></MainPage>
 </template>
 
 <style scoped>
