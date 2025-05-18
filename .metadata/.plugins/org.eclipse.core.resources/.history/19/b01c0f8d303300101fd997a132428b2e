@@ -1,0 +1,34 @@
+package com.ssafy.mvc.service;
+
+import java.util.List;
+
+import com.ssafy.mvc.model.dto.ColBoard;
+import com.ssafy.mvc.model.dto.CoverImg;
+import com.ssafy.mvc.model.dto.SearchCondition;
+
+public interface BoardService {
+	//
+	List<ColBoard> getSearchBoard(SearchCondition condition);
+	
+	List<ColBoard> getCategoryBoard(int categoryNum);
+	
+	int intsertCategoryBoard(ColBoard colBoard);	// flag = 0 (일반등록)  1(업데이트)
+
+	ColBoard getOneBoard(int colboardId);
+	
+	int updateBoard(ColBoard colBoard);
+	
+	int deleteBoard(int colboardId);
+	
+	List<ColBoard> getBoardlistByUser(String userId);
+	
+	// 업데이트 전용
+	boolean forupdate(ColBoard colBoard);
+	
+	// 업로드 가장 최근 3개 가져오기
+	List<ColBoard> getRecentBoard();
+	
+	int registCover(CoverImg coverImg);
+	
+	
+}

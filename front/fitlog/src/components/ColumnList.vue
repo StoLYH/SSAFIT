@@ -2,12 +2,12 @@
   <section class="section">
     <h2>{{ title }}</h2>
     <div class="card-list">
-      <div class="card" v-for="(item, idx) in items" :key="idx">
+      <div class="card" v-for="(item, idx) in items" :key="item.colboardId">
         <img src="/un.png" alt="칼럼" />
         <div class="card-content">
-          <div class="category">{{ item.category }}</div>
+          <div class="category">{{ getCategoryName(item.category) }}</div>
           <div class="title">{{ item.title }}</div>
-          <div class="meta">{{ item.author }} · {{ item.date }}</div>
+          <div class="meta">{{ item.userId }} · {{ item.createdAt }}</div>
         </div>
       </div>
     </div>
@@ -19,9 +19,23 @@ const props = defineProps({
   title: String,
   items: {
     type: Array,
-    default: () => []
+    default: () => []       // 부모가 전달한 데이터가 없으면 빈 배열 전달
   }
 })
+
+const getCategoryName = (category) => {
+  switch (category) {
+    case 1: return "운동/트레이닝";
+    case 2: return "재활/통증";
+    case 3: return "영양/식단";
+    case 4: return "정신 건강/라이프스타일";
+    case 5: return "의학/질환";
+    default: return "카테고리 없음";
+  }
+};
+
+// props는 접근은 가능하지만 읽기전용이라 수정이 불가하다
+
 </script>
 
 <style scoped>

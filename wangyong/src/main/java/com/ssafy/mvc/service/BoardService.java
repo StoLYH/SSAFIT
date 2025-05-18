@@ -24,4 +24,7 @@ public interface BoardService {
 	// 업데이트 전용
 	boolean forupdate(ColBoard colBoard);
 	
+	// 업로드 가장 최근 3개 가져오기
+	List<ColBoard> getRecentBoard();
+	
 }

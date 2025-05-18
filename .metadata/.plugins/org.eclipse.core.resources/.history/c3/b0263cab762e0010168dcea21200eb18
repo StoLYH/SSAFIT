@@ -1,0 +1,13 @@
+package com.ssafy.mvc.model.dto;
+
+import java.util.List;
+
+import org.springframework.web.multipart.MultipartFile;
+
+public class BoardFile {
+	
+	private List<MultipartFile> attach;				// 게시물 하나 당 파일 여러개
+	private List<BoardFileDetail> boardFiles;		// 각 게시물 정보를 저장
+	
+	
+}

@@ -1,9 +1,12 @@
 <template>
-  <div class="post-item">
-    <img src="/un.png" alt="썸네일" />
+  <div class="post-item" @click="goToShow">
+    <img
+      :src="fileinfo && fileinfo[0] ? `http://localhost:8080/upload/sendImg/${fileinfo[0].uploadName}` : '/un.png'"
+      alt="썸네일"/>
+                                          <!-- 기본 이미지 어떻게 처리할지 고민...... -->
     <div class="post-info">
       <div class="title">{{ post.title }}</div>
-      <div class="summary">첫 줄에는 글의 요약 내용 일부가 표시되는 부분입니다<br>첫 줄에는 글의 요약 내용 일부가 표시되는 부분입니다<br>첫 줄에는 글의 요약 내용 일부가 표시되는 부분입니다</div>
+      <div class="summary">{{ removehtml }} </div>
       <div class="meta-row">
         <span class="category">{{ post.category }}</span>
         <span class="author">{{ post.author }}</span>
@@ -17,7 +20,29 @@
 </template>
 
 <script setup>
-defineProps({ post: Object })
+import {watch, ref} from 'vue';
+import {getfileInformaton} from '@/api/board';
+import { useRouter } from 'vue-router';
+
+const props =defineProps({ post: Object })    // 각 게시판의 dto가 넘어온다
+const fileinfo = ref(null);
+const removehtml = ref("");
+const router = useRouter();
+
+function goToShow() {
+  router.push('/show/' + props.post.colboardId);
+}
+
+watch(
+  () => props.post.colboardId,  // 처음과 + 특정 카테고리의 게시물이 바뀔 때 마다 호출
+  async (newId) => {
+    console.log("찍힘?");
+    fileinfo.value = await getfileInformaton(newId);  // 게시판 id를 이용해서 해당 게시판의 파일정보 가져온다
+    removehtml.value = props.post.content.replace(/<[^>]*>?/g, '').slice(0, 100);
+  },
+  { immediate: true } // 처음 렌더링 될 때도 실행
+)
+
 </script>
 
 <style scoped>
@@ -53,7 +78,7 @@ img {
   margin-bottom: 12px;
 }
 .summary {
-  font-size: 16px;
+  font-size: 25px;
   color: #555;
   margin-bottom: 16px;
   line-height: 1.6;

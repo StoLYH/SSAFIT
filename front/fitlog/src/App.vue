@@ -1,13 +1,10 @@
-<script setup>
-import DebatePage from './president/DebatePage.vue';
-import MainPage from './president/MainPage.vue'
-import MainCategory from './president/MainCategory.vue';
-import register from './president/register.vue';
-</script>
-
 <template>
-  <register/>
+  <RouterView />
 </template>
+
+<script setup>
+import { RouterView } from 'vue-router'
+</script>
 
 <style scoped>
 header {
