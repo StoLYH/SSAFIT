@@ -18,7 +18,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
-@CrossOrigin(origins = "http://localhost:5174")
+@CrossOrigin(origins = "http://localhost:5173")
 @RestController
 @RequestMapping("/upload")
 public class FileController {
@@ -37,6 +37,9 @@ public class FileController {
 	// 서버에 저장된 파일을 준다.
 	@GetMapping("/sendImg/{fileName}")
     public ResponseEntity<Resource> serveFile(@PathVariable String fileName) {
+		System.out.println("요첨옴?");
+		
+		
 		System.out.println(fileName);
         try {
             // 경로를 지정하고 리소스 객체로 변환

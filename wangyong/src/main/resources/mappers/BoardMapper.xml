@@ -13,7 +13,7 @@
 	
 	<insert id="insertBoard" parameterType="ColBoard" useGeneratedKeys="true" keyProperty="colboardId">
    		insert into col_board (user_id, category, title, content)
-   		values (#{userId}, #{category}, #{title}, #{content})
+   		values (#{userId}, #{category}, #{title}, #{content, jdbcType=LONGVARCHAR})
 	</insert>
 	
 
@@ -61,6 +61,12 @@
 		insert into file(colboard_id,original_name,upload_name,file_size)
 		values(#{colboardId},#{originalName},#{uploadName},#{fileSize});
 	</insert>
+	
+	<select id="getRecentBoardList" resultType="ColBoard">
+		SELECT * FROM col_board
+		ORDER BY created_at DESC
+		LIMIT 3;
+	</select>
 	
 	
 	

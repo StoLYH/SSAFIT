@@ -1,0 +1,31 @@
+package com.ssafy.mvc.service;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.ssafy.mvc.model.dao.FileDao;
+import com.ssafy.mvc.model.dto.BoardFile;
+
+
+@Service
+public class FileServiceImpl implements FileService{
+
+	FileDao fileDao;
+	
+	@Autowired
+	public FileServiceImpl(FileDao fileDao) {
+		this.fileDao = fileDao;
+	}
+
+	@Override
+	public List<BoardFile> getBoardFiles(int colboardId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	
+	
+
+}

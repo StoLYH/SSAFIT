@@ -4,7 +4,13 @@
 
 <script setup>
 import PostItem from './PostItem.vue'
-defineProps({ posts: Array })
+
+const props = defineProps({ posts: Array })
+console.dir(props.posts);
+console.log("안녕!");
+
+// 특정 카테고리의 게시판의 게시물 리스트를 가져온다. -> for문 넘기기
+
 </script>
 
 .post-list {

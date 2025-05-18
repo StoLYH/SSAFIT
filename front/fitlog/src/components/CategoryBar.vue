@@ -1,13 +1,14 @@
 <template>
   <div class="category-bar">
-    <div class="category-item strong">운동/트레이닝</div>
-    <div class="category-item strong">재활/통증관리</div>
-    <div class="category-item strong">재활/통증관리</div>
-    <div class="category-item">건강</div>
-    <div class="category-item">다이어트</div>
-    <div class="category-item">QnA</div>
+    <RouterLink class="category-item strong" to="/category/1">운동/트레이닝</RouterLink>
+    <RouterLink class="category-item strong" to="/category/2">재활/통증</RouterLink>
+    <RouterLink class="category-item strong" to="/category/3">영양/식단</RouterLink>
+    <RouterLink class="category-item" to="/category/4">정신 건강/라이프스타일</RouterLink>
+    <RouterLink class="category-item" to="/category/5">의학/질환 정보</RouterLink>
   </div>
 </template>
+
+
 
 <script setup>
 </script>
