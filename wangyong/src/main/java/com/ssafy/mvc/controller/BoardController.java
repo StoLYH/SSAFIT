@@ -215,8 +215,12 @@ public class BoardController {
 
 	
 	
-
-	
+	// 메인페이지 게시물
+	@GetMapping("recent")
+	public ResponseEntity<List<ColBoard>> getPopularColumns() {
+		
+		return ResponseEntity.status(HttpStatus.OK).body(boardService.getRecentBoard());
+	}
 	
 	
 }

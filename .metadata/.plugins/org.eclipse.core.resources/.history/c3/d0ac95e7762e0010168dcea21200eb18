@@ -1,0 +1,14 @@
+package com.ssafy.mvc.model.dto;
+
+import java.util.List;
+
+import org.springframework.web.multipart.MultipartFile;
+
+public class BoardFile {
+	private int fileNo;
+    private int no; 
+    private String originalName;
+    private String uploadName;
+    private long fileSize;
+	
+}

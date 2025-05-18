@@ -53,8 +53,10 @@ public class BoardServiceImpl implements BoardService{
 	@Override
 	public int intsertCategoryBoard(ColBoard colBoard) {
 
-		int result = boardDao.insertBoard(colBoard);	// 게시물 등록
-		int primarykey = colBoard.getColboardId();		// 기본키
+		int result = boardDao.insertBoard(colBoard);	// 게시물 등록			=> 예외처리
+		
+		
+		int primarykey = colBoard.getColboardId();		// 기본키				=> 기본키 리턴
 		
 		// 첨부파일이 없는경우.
 		List<MultipartFile> attachList = colBoard.getAttach();
@@ -279,6 +281,13 @@ public class BoardServiceImpl implements BoardService{
 				
 		return list;
 	}
+
+
+	@Override
+	public List<ColBoard> getRecentBoard() {
+		return boardDao.getRecentBoardList();
+	}
+	
 
 	
 }

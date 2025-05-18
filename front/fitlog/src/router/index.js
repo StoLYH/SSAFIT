@@ -1,0 +1,49 @@
+import DebatePageView from '@/views/DebatePageView.vue'
+import MainCategoryView from '@/views/MainCategoryView.vue'
+import MainPageView from '@/views/MainPageView.vue'
+import RegisterView from '@/views/RegisterView.vue'
+import ShowBoardView from '@/views/ShowBoardView.vue'
+
+import Home from '@/views/Home.vue'
+
+import { createRouter, createWebHistory } from 'vue-router'
+
+const router = createRouter({
+  history: createWebHistory(import.meta.env.BASE_URL),
+  routes: [
+    {
+      path: '/',              // 부모경로
+      name: 'home',
+      component: Home,        // 헤더,푸터 재사용 가능한 목록 
+      children: [
+        {
+          path: '',          
+          name: 'main',
+          component: MainPageView,
+        },
+        {
+          path: 'category/:categoryNumber',   //   부모경로 + category
+          name: 'category',
+          component: MainCategoryView,
+        },
+        {
+          path: 'register',
+          name: 'register',
+          component: RegisterView,
+        },
+        {
+          path: 'show/:colboardId',
+          name: 'show',
+          component: ShowBoardView,
+        },
+        {
+          path: 'debate',
+          name: 'debate',
+          component: DebatePageView,
+        }
+      ]
+    }
+  ]
+});
+
+export default router
