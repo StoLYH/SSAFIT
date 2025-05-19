@@ -16,6 +16,7 @@
   
   <script setup>
   import { ref } from 'vue'
+  import { PostRegist } from '@/api/user';
 
   const goToLogin = () => {
   router.push('/login')
@@ -31,7 +32,13 @@
   const onProfileImageChange = (e) => {
     // 프로필 이미지 업로드 로직
   }
-  const onRegister = () => {
+  const onRegister = async () => {
+    const result = await PostRegist({
+      userId: id,
+      password: password,
+      userName: nickname,
+      userRole:job 
+    })
     // 회원가입 로직
   }
   </script>

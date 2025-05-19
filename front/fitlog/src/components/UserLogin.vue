@@ -17,16 +17,22 @@ const goToRegister = () => {
   router.push('regist')
 }
   import { ref } from 'vue'
-  import {PostLogin} from '@/api/user'
+  import {PostLogin} from '@/api/auth'
   const id = ref('')
   const password = ref('')
   const onLogin = async() => {
     const result = await PostLogin({
       userId: id.value, password: password.value
     }) 
-    console.dir(result)
+
+    if (result.success) {
+    router.replace('/') // 메인 페이지로 이동
+  } else {
+    alert('로그인 실패!')
+  }
     
   }
+
   </script>
   
   <style scoped>
