@@ -67,6 +67,13 @@
 		ORDER BY created_at DESC
 		LIMIT 3;
 	</select>
+
+
+	<select id="getRecentBoardList" resultType="ColBoard">
+		SELECT * FROM col_board
+		ORDER BY view_cnt DESC
+		LIMIT 3;
+	</select>
 	
 	
 	

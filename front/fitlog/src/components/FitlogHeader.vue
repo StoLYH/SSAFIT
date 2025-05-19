@@ -21,7 +21,7 @@
       </span>
       <span class="right-link">광고 상품</span>
       <span class="right-link">작가 지원</span>
-      <span class="right-link">로그인</span>
+      <span class="right-link" @click="goToLogin" >로그인</span>
       <button class="signup-btn">회원가입</button>
     </div>
   </header>
@@ -30,6 +30,14 @@
 </template>
 
 <script setup>
+import router from '@/router';
+
+const goToLogin = ()=>{
+  router.push('/welcome/login')
+
+}
+
+
 </script>
 
 <style scoped>
