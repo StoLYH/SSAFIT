@@ -9,6 +9,13 @@ const getRecentColumns = async () => {
     return data;
 }
 
+const getPopularColumns = async () => {
+    const {data} = await api.get("board/popular");
+    return data;
+}
+
+
+
 const getCategoryColumns = async (categoryNumber) => {
     const {data} = await api.get("board/category/" + categoryNumber);
     return data
@@ -34,6 +41,7 @@ const  getoneBoard = async (colboardId) => {
 
 export {
     getRecentColumns,
+    getPopularColumns,
     getCategoryColumns,
     registForm,
     getfileInformaton,

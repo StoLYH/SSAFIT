@@ -10,12 +10,19 @@
         <span class="profile-btn">프로필 이미지 등록</span>
       </label>
       <button type="submit" class="btn btn-register">회원가입</button>
-      <button type="button" class="btn btn-login" @click="$emit('switch')">로그인</button>
+      <button type="button" class="btn btn-login" @click="goToLogin">로그인</button>
     </form>
   </template>
   
   <script setup>
   import { ref } from 'vue'
+
+  const goToLogin = () => {
+  router.push('/login')
+}
+
+
+
   const id = ref('')
   const password = ref('')
   const passwordConfirm = ref('')

@@ -288,7 +288,11 @@ public class BoardServiceImpl implements BoardService{
 	public List<ColBoard> getRecentBoard() {
 		return boardDao.getRecentBoardList();
 	}
-	
 
-	
+	@Override
+	public List<ColBoard> getPopularBoard() {
+		return boardDao.getPopularBoardList();
+	}
+
+
 }

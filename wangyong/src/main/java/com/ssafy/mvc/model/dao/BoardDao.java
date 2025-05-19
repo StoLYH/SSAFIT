@@ -31,5 +31,6 @@ public interface BoardDao {
 	
 	List<ColBoard> getRecentBoardList();
 
-	
+
+    List<ColBoard> getPopularBoardList();
 }

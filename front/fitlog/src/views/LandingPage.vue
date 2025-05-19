@@ -9,8 +9,7 @@
             <p>지식을 공유하고, 소통하며<br>전문성을 강화 시키는 건강 커뮤니티 플랫폼</p>
           </div>
           <div class="landing-right">
-            <UserLogin v-if="!isRegister" @switch="isRegister = true" />
-            <UserRegister v-else @switch="isRegister = false" />
+           <RouterView></RouterView>
           </div>
         </div>
       </div>
@@ -18,11 +17,7 @@
   </template>
   
   <script setup>
-  import { ref } from 'vue'
-  import UserLogin from '../components/UserLogin.vue'
-  import UserRegister from '../components/UserRegister.vue'
-  
-  const isRegister = ref(false)
+
   </script>
   
   <style scoped>

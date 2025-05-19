@@ -3,8 +3,11 @@ import MainCategoryView from '@/views/MainCategoryView.vue'
 import MainPageView from '@/views/MainPageView.vue'
 import RegisterView from '@/views/RegisterView.vue'
 import ShowBoardView from '@/views/ShowBoardView.vue'
-
+import LandingPage from '@/views/LandingPage.vue'
 import Home from '@/views/Home.vue'
+import UserRegister from '@/components/UserRegister.vue'
+import UserLogin from '@/components/UserLogin.vue'
+
 
 import { createRouter, createWebHistory } from 'vue-router'
 
@@ -40,10 +43,27 @@ const router = createRouter({
           path: 'debate',
           name: 'debate',
           component: DebatePageView,
+        },
+      ]
+    },
+    {
+      path: '/welcome',
+      name: 'landingpage',
+      component: LandingPage,
+      redirect: { name: 'login' }, 
+      children: [
+        {
+          path: 'login',
+          name: 'login',
+          component: UserLogin,
+        },
+        {
+          path: 'regist',
+          name: 'regist',
+          component: UserRegister,
         }
       ]
-    }
-  ]
+    } ]
 });
 
 export default router
