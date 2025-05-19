@@ -1,0 +1,5 @@
+package com.ssafy.mvc.exception;
+
+public class BoardException {
+
+}
