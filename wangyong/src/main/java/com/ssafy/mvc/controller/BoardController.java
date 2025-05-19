@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.ssafy.mvc.exception.BoardException;
 import com.ssafy.mvc.model.dto.ColBoard;
 import com.ssafy.mvc.model.dto.SearchCondition;
 import com.ssafy.mvc.service.BoardService;
@@ -51,13 +53,12 @@ public class BoardController {
 	 * get매핑 시 requestBody 사용불가.
 	 * 	 */
 	@GetMapping()
-	public ResponseEntity<List<ColBoard>> getMethod1(
+	public ResponseEntity<?> getMethod1(
 			@RequestParam(value = "key", required = false) String key,
 			@RequestParam(value = "word", required = false) String word,
 			@RequestParam(value = "orderBy", required = false) String orderBy,
 			@RequestParam(value = "orderByDir", required = false) String orderByDir) {
 
-		System.out.println(key);
 		SearchCondition condition = new SearchCondition(key, word, orderBy, orderByDir);
 		
 		
@@ -71,8 +72,8 @@ public class BoardController {
 				return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 			}
 		} catch (Exception e) {
-			// 서버오류
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+			throw new BoardException("검색시 에러 발생 ");
+			// GET http://localhost:8080/board?key=usd&word=user001&orderBy=view_cnt&orderByDir=desc
 		}
 	}
 	
@@ -86,7 +87,7 @@ public class BoardController {
 	 *  서버오류 : 500 
 	 */ 
 	@GetMapping("/category/{boardNum}")
-	public ResponseEntity<List<ColBoard>> getMethod2(@PathVariable("boardNum") int boardNum) {
+	public ResponseEntity<?> getMethod2(@PathVariable("boardNum") int boardNum) {
 		try {
 			List<ColBoard> list = boardService.getCategoryBoard(boardNum);	
 			if (!list.isEmpty()) {
@@ -98,7 +99,7 @@ public class BoardController {
 			}
 		} catch (Exception e) {
 			// 서버오류 500
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();	
+			throw new BoardException("카테고리별 조회시 에러 발생");	
 		}
 	}
 	
@@ -111,19 +112,20 @@ public class BoardController {
 	 * 서버오류 : 500 경우
 	 */
 	@GetMapping({"{colboardId}"})
-	public ResponseEntity<ColBoard> getMethod3(@PathVariable("colboardId") int colboardId) {
+	public ResponseEntity<?> getMethod3(@PathVariable("colboardId") int colboardId) {
 		try {
 			ColBoard colBoard = boardService.getOneBoard(colboardId);
+			System.out.println(colBoard);
 			if (colBoard != null) {	
 				// 등록성공 200
 				return ResponseEntity.status(HttpStatus.OK).body(colBoard);
 			} else {	
-				// 데이터가 없는경우 404	[오류x]
+				// 데이터가 없는경우 404	[오류x] => 사실 발동 될 일이 없다....
 				return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 			}
 		} catch (Exception e) {	
+			throw new BoardException("개별 게시물 조회시 에러 발생");	
 			// 서버오류 500
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 	}
 	
@@ -135,7 +137,7 @@ public class BoardController {
 	 * 서버 오류 : 500
 	 */
 	@GetMapping("user/{userId}")
-	public ResponseEntity<List<ColBoard>> getMethod4(@PathVariable("userId") String userId) {
+	public ResponseEntity<?> getMethod4(@PathVariable("userId") String userId) {
 		
 		try {
 			List<ColBoard> list = boardService.getBoardlistByUser(userId);	
@@ -148,7 +150,7 @@ public class BoardController {
 			}
 		} catch (Exception e) {
 			// 서버오류 500
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();	
+			throw new BoardException("사용자 게시물 조회시 에러 발생");		
 		}
 	}
 	
@@ -164,15 +166,18 @@ public class BoardController {
 	@PostMapping
 	public ResponseEntity<String> postMethodName(@ModelAttribute ColBoard colBoard) {
 		
-		int result = boardService.intsertCategoryBoard(colBoard);
-	
+		try {
+			int result = boardService.intsertCategoryBoard(colBoard);
+			if(result == 1) {	// 등록성공 201
+				return ResponseEntity.status(HttpStatus.CREATED).body("성공적으로 등록 되었습니다.");
+			} else {
+				return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("에러 발생: 게시물 등록시 에러 발생");
+			}
+		} catch (Exception e) {
+			// 서버오류 500
+			throw new BoardException("게시물 등록시 에러 발생");	
+		}
 		
-		if(result == 1) {	// 등록성공 201
-			return ResponseEntity.status(HttpStatus.CREATED).body("성공적으로 등록 되었습니다.");
-		} 	
-		
-		// 서버오류 500
-		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("등록실패");
 	}
 	
 	
@@ -186,14 +191,17 @@ public class BoardController {
 	@PutMapping("{colboardId}")
 	public ResponseEntity<String> postMethodName(@PathVariable("colboardId") int colboardId, @ModelAttribute ColBoard colBoard) {
 		
-		colBoard.setColboardId(colboardId);
-		
-		int result = boardService.updateBoard(colBoard);
-		if (result == 1) {
-			return ResponseEntity.status(HttpStatus.OK).body("성공적으로 업데이트 되었습니다");
-		} 
-		
-		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("서버 오류로 인해서 업데이트 불가");
+		try {
+			colBoard.setColboardId(colboardId);
+			int result = boardService.updateBoard(colBoard);
+			if (result == 1) {
+				return ResponseEntity.status(HttpStatus.OK).body("성공적으로 업데이트 되었습니다");
+			} else {
+				return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("에러 발생: 업데이트 에러 발생");
+			}
+		} catch (Exception e) {
+			throw new BoardException("게시물 업데이트시 에러 발생");	
+		}
 	}
 	
 	/**
@@ -203,30 +211,34 @@ public class BoardController {
 	 */
 	@DeleteMapping("{colboardId}")
 	public ResponseEntity<String> deleteMethod(@PathVariable("colboardId") int colboardId) {
-		
-		int result = boardService.deleteBoard(colboardId);
-		if (result == 1) {
-			return ResponseEntity.status(HttpStatus.OK).body("성공적으로 삭제 되었습니다");
-		} 
-		
-		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("서버 오류로 인해서 삭제 불가");
+		try {
+			int result = boardService.deleteBoard(colboardId);
+			if (result == 1) {
+				return ResponseEntity.status(HttpStatus.OK).body("성공적으로 삭제 되었습니다");
+			} else {
+				return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("에러 발생: 게시물 삭제시 예외 발생");
+			}
+		} catch (Exception e) {
+			throw new BoardException("게시물 삭제시 에러 발생");	
+		}
 	}
 	
-
 	
-	
-	// 메인페이지 게시물
+	// 최근에 올라온 칼럼 3개만 가져오도록 Limit 걸어두었다.
 	@GetMapping("recent")
 	public ResponseEntity<List<ColBoard>> getRecentColumns() {
-		
-		return ResponseEntity.status(HttpStatus.OK).body(boardService.getRecentBoard());
-	}
-	// 인기 게시물
-	@GetMapping("popular")
-	public ResponseEntity<List<ColBoard>> getPopularColumns() {
-
-		return ResponseEntity.status(HttpStatus.OK).body(boardService.getPopularBoard());
-	}
+		try {
+			return ResponseEntity.status(HttpStatus.OK).body(boardService.getRecentBoard());
+		} catch(Exception e) {
+			throw new BoardException("최근에 올라온 칼럼 조회시 에러");
+		}
+	}	
+	
+	
+	
+	
+	
+	
 	
 	
 }

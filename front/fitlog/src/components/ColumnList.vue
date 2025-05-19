@@ -2,8 +2,8 @@
   <section class="section">
     <h2>{{ title }}</h2>
     <div class="card-list">
-      <div class="card" v-for="(item, idx) in items" :key="item.colboardId">
-        <img src="/un.png" alt="칼럼" />
+      <div class="card" v-for="(item) in items" :key="item.colboardId">
+        <img :src="imageMap[item.colboardId]" alt="칼럼" />
         <div class="card-content">
           <div class="category">{{ getCategoryName(item.category) }}</div>
           <div class="title">{{ item.title }}</div>
@@ -15,6 +15,9 @@
 </template>
 
 <script setup>
+import {ref, watch} from 'vue';
+import {getfileInformaton} from '@/api/board';
+
 const props = defineProps({
   title: String,
   items: {
@@ -22,6 +25,26 @@ const props = defineProps({
     default: () => []       // 부모가 전달한 데이터가 없으면 빈 배열 전달
   }
 })
+
+const imageMap = ref({}); // key(게시판 기본키) value(http요청)
+
+// watch - { immediate: true } 조합
+watch (
+  () => props.items,     // 감시 값 -> 함수 리턴 값 설정
+  async (newItems) => {
+    const map = {};
+    for (const item of newItems) {
+      const fileinfo = await getfileInformaton(item.colboardId);  // 게시물에 해당하는 파일가져오기
+      if (fileinfo && fileinfo.length > 0 ) {
+        map[item.colboardId] = `http://localhost:8080/upload/sendImg/${fileinfo[0].uploadName}`
+      } else {
+        map[item.colboardId] = '/un.png';
+      }
+    }
+    imageMap.value = map;
+  }, 
+  { immediate: true }   
+);
 
 const getCategoryName = (category) => {
   switch (category) {

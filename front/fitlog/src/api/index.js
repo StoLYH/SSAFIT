@@ -6,7 +6,6 @@ const api = axios.create({
     headers: {
         'Content-Type': 'application/json'
     }
-
 })
 
 
@@ -15,9 +14,9 @@ const api_file = axios.create({
     headers: {
         'Content-Type': 'multipart/form-data'
     }
-
 })
 
 
 
 export { api, api_file };
+
