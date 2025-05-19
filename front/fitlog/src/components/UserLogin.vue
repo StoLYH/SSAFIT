@@ -4,12 +4,18 @@
       <input class="form-input" type="password" placeholder="비밀번호" v-model="password" required />
       <div class="form-btns">
         <button type="submit" class="btn btn-login">로그인</button>
-        <button type="button" class="btn btn-register" @click="$emit('switch')">회원가입</button>
+        <button type="button" class="btn btn-register" @click="goToRegister">회원가입</button>
       </div>
     </form>
   </template>
   
   <script setup>
+import router from '@/router';
+
+
+const goToRegister = () => {
+  router.push('regist')
+}
   import { ref } from 'vue'
   import {PostLogin} from '@/api/user'
   const id = ref('')
