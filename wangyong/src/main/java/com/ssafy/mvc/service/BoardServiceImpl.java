@@ -122,6 +122,7 @@ public class BoardServiceImpl implements BoardService{
 		boardDao.upBoardCnt(colboardId);
 		
 		List<BoardFile> File = fileDao.getFiles(colboardId);  // 해당하는 게시판이 가지고 있는 파일정보
+		
 		ColBoard board = boardDao.getBoard(colboardId);				
 		board.setBoardFiles(File);
 		

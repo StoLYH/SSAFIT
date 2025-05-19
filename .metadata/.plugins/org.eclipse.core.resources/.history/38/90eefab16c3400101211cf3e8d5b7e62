@@ -1,0 +1,19 @@
+package com.ssafy.mvc.exception;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+@RestControllerAdvice
+public class GlobalExceptionHandler {
+	
+	@ExceptionHandler(BoardException.class)
+	public ResponseEntity<String> handleBoardException(BoardException e) {
+		return ResponseEntity.internalServerError().body("에러 발생: " + e.getMessage());
+	}
+	
+	
+	
+	
+	
+}

@@ -5,9 +5,7 @@
 <script setup>
 import PostItem from './PostItem.vue'
 
-const props = defineProps({ posts: Array })
-console.dir(props.posts);
-console.log("안녕!");
+const props = defineProps({ posts: Array }) // props 이름 : 데이터 타입
 
 // 특정 카테고리의 게시판의 게시물 리스트를 가져온다. -> for문 넘기기
 
