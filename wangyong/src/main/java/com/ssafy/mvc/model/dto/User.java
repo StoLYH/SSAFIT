@@ -1,12 +1,35 @@
 package com.ssafy.mvc.model.dto;
 
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
+
 public class User {
     private String userId;
     private String userName;
     private String userRole;
     private String password;
+    private MultipartFile attach;
+    private UserFile userFile;	// 각 파일에 대한 정보
+
     //생성자
 
+
+    public MultipartFile getAttach() {
+        return attach;
+    }
+
+    public void setAttach(MultipartFile attach) {
+        this.attach = attach;
+    }
+
+    public UserFile getUserFile() {
+        return userFile;
+    }
+
+    public void setUserFile(UserFile userFile) {
+        this.userFile = userFile;
+    }
 
     public User(String userId, String userName, String userRole, String password) {
         this.userId = userId;

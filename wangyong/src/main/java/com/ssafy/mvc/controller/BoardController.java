@@ -235,13 +235,22 @@ public class BoardController {
 		} catch(Exception e) {
 			throw new BoardException("최근에 올라온 칼럼 조회시 에러");
 		}
-	}	
-	
-	
-	
-	
-	
-	
-	
-	
+	}
+
+	@GetMapping("popular")
+	public ResponseEntity<List<ColBoard>> getPopularColumns() {
+		try {
+			return ResponseEntity.status(HttpStatus.OK).body(boardService.getPopularBoard());
+		} catch(Exception e) {
+			throw new BoardException("인기칼럼 조회시 에러");
+		}
+	}
+
+
+
+
+
+
+
+
 }
