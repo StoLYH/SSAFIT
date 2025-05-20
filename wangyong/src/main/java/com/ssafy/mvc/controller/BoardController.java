@@ -58,6 +58,9 @@ public class BoardController {
 			@RequestParam(value = "word", required = false) String word,
 			@RequestParam(value = "orderBy", required = false) String orderBy,
 			@RequestParam(value = "orderByDir", required = false) String orderByDir) {
+		
+		
+		System.out.println("안녕");
 
 		SearchCondition condition = new SearchCondition(key, word, orderBy, orderByDir);
 		

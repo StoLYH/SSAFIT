@@ -1,4 +1,4 @@
-GitRepositoriesView.GitDirectories=C\:\\ssafy\\project\\.git;
-GitRepositoriesView.GitDirectories.relative=.git;
+GitRepositoriesView.GitDirectories=C\:\\ssafy\\final\\.git;C\:\\z\\live-vue\\.git;
+GitRepositoriesView.GitDirectories.relative=.git;C\:\\z\\live-vue\\.git;
 core_autoIgnoreDerivedResources=false
 eclipse.preferences.version=1

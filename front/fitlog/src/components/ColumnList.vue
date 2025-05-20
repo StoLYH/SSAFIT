@@ -1,8 +1,8 @@
 <template>
   <section class="section">
     <h2>{{ title }}</h2>
-    <div class="card-list">
-      <div class="card" v-for="(item) in items" :key="item.colboardId">
+    <div class="card-list" >
+      <div class="card" v-for="(item) in items" :key="item.colboardId" @click="goToColumnDetail(item.colboardId)">
         <img :src="imageMap[item.colboardId]" alt="칼럼" />
         <div class="card-content">
           <div class="category">{{ getCategoryName(item.category) }}</div>
@@ -17,6 +17,9 @@
 <script setup>
 import {ref, watch} from 'vue';
 import {getfileInformaton} from '@/api/board';
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
 
 const props = defineProps({
   title: String,
@@ -25,6 +28,8 @@ const props = defineProps({
     default: () => []       // 부모가 전달한 데이터가 없으면 빈 배열 전달
   }
 })
+
+
 
 const imageMap = ref({}); // key(게시판 기본키) value(http요청)
 
@@ -58,6 +63,10 @@ const getCategoryName = (category) => {
 };
 
 // props는 접근은 가능하지만 읽기전용이라 수정이 불가하다
+
+const goToColumnDetail = (colboardId) => {
+  router.push(`/show/${colboardId}`);
+}
 
 </script>
 

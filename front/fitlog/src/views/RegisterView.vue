@@ -24,7 +24,7 @@
 
     <div id="editorContainer" ref="editorContainer"></div>          <!-- 내용 입력  editorContainer는 Toast UI Editor의 UI와 기능 랜더링-->
 
-    <!-- 파일 등록 + 등록 버튼, @change는 입력을 확정할 시 에발생하는 이밴트 -->
+    <!-- 파일 등록 + 등록 버튼, @change는 입력을 확정할 시 발생하는 이밴트 -->
     <div class="register-btn-row">
       <label class="file-upload-label">
         파일 등록하기
@@ -60,9 +60,13 @@ import {useRouter} from 'vue-router';
 
 
 const router = useRouter();
+
+// toast ui editor 설정
 const editorContainer = ref(null)   // 게시글 content 랜더링 위치 설정
 const editorInstance = ref(null)    // 게시글 content 객체
-const files = ref([])
+
+
+const files = ref([])           // 섬내일 이미지, 첨부파일 저장
 const coverPreview = ref(null)
 const defaultCover = '/un.png'  // 기본 이미지
 
@@ -84,7 +88,7 @@ onMounted(() => {
       ]
   });
 
-  // 마운트 시 커버 이미지가 없으면 기본 이미지 파일을 files[0]에 넣음
+  // 마운트 시, 기본 이미지 파일을 files[0]에 넣음
   if (!files.value[0]) {
     fetch(defaultCover)
       .then(res => res.blob())  // 바이너리 처리
@@ -95,32 +99,46 @@ onMounted(() => {
   }
 });
 
-function onCoverChange(e) {
-  const file = e.target.files[0]
+function onCoverChange(e) {   // e -> event객체
+  const file = e.target.files[0]  // 이미지 파일
   if (file) {
-    coverPreview.value = URL.createObjectURL(file)
+    coverPreview.value = URL.createObjectURL(file)    // 미리보기 화면 제공
+
     // files[0]에 항상 커버 이미지가 오도록 함
-    if (files.value.length > 0) {
-      files.value[0] = file
-    } else {
-      files.value.unshift(file)
-    }
+    if (files.value.length > 0) {  
+      files.value[0] = file        // 기존 0번째 mounted 될때 들어간 것은 삭제
+    } 
   }
 }
 
 function handleFiles(e) {
-  const selected = Array.from(e.target.files);
-  // cover 이미지는 files[0]에 있으므로, 나머지 파일만 추가
+  const selected = Array.from(e.target.files);  // 선택된 파일 배열로 만들기
+  
+  // cover 이미지는 files[0]에 고정, 나머지 -> 첨부파일
   const existingNames = new Set(files.value.slice(1).map((f) => f.name + f.size));
+  /*
+  files.value.slice(1) -> 기존 첨부파일만 가져온다
+  map -> 배열의 각 요소를 "변환"해서 새 배열을 반환
+  f.name + f.size -> 파일 이름과 크기를 문자열로 합친다
+  Set -> 중복 제거
+  */
+  
   const newFiles = selected.filter((f) => !existingNames.has(f.name + f.size));
-  files.value = [files.value[0], ...newFiles];
+
+  /*
+  selected -> 새로 첨부한 파일
+  filter -> 조건에 맞는 요소만 남김
+  !existingNames.has(f.name + f.size) -> 기존 첨부파일 중 중복 안되는 파일만 저장
+  */
+
+  files.value = [files.value[0], ...newFiles];  // 기존파일 + 새로 첨부한 파일 업데이트
   e.target.value = '';
 }
 
 function removeFile(idx) {
   // 커버 이미지는 files[0]이므로, idx==0은 삭제 불가
   if (idx === 0) return;
-  files.value.splice(idx, 1);
+  files.value.splice(idx, 1);  // 해당 첨부파일 삭제
 }
 
 const categories = [
@@ -133,15 +151,36 @@ const categories = [
 const selectedCategory = ref('')
 
 async function registerPost() {
+
+  // 제목,카테고리 => 미입력시 경고창
+  if (selectedCategory.value == '') {
+    window.alert("카테고리를 선택하세요.")
+    return;
+  }
+
+  if (document.querySelector('.title-input').value == '') {
+    window.alert("제목을 입력하세요."); 
+    return;
+  } else if (document.querySelector('.title-input').value.length < 3) {
+    window.alert("제목이 너무 짧습니다.");
+    return;
+  } 
+
+
+  const confirm = window.confirm("등록 완료 하시겠습니까?")
+  if (!confirm) {
+    return;
+  }
+
   const formData = new FormData();
-  formData.append('userId', 'user001');
+  formData.append('userId', 'user001'); // 하드코딩
   formData.append('category', selectedCategory.value);
   const title = document.querySelector('.title-input').value;
   const content = editorInstance.value.getHTML();
   formData.append('title', title);
   formData.append('content', content);
 
-  // 파일 전체를 attach로 한 번만 추가
+  // 파일 각각 attach로 추가
   files.value.forEach(file => {
     formData.append('attach', file);
   });

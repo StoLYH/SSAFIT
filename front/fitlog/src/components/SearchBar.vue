@@ -1,19 +1,29 @@
 <template>
   <div class="search-bar">
     <select v-model="filter">
-      <option value="author">작가</option>
+      <option value="user_id">작가</option>
       <option value="title">제목</option>
-      <option value="content">내용물</option>
     </select>
     <input type="text" placeholder="검색어를 입력하세요" v-model="search" />
-    <button>검색</button>
+    <button @click="gosearch">검색</button>
   </div>
 </template>
 
 <script setup>
 import { ref } from 'vue'
-const search = ref('')
-const filter = ref('author')
+import { getsearch } from '@/api/board'
+const search = ref('')    // 입력되는 값 
+const filter = ref('user_id')
+
+const emit = defineEmits(['searchEmit'])
+
+const gosearch = async () => {
+  const res = await getsearch(`?key=${filter.value}&word=${search.value}`);
+  console.log(res);   // 조회된 게시판
+  
+  emit("searchEmit", res);  // 부모로 올리자
+}
+
 </script>
 
 <style scoped>

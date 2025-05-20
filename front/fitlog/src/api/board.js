@@ -14,8 +14,6 @@ const getPopularColumns = async () => {
     return data;
 }
 
-
-
 const getCategoryColumns = async (categoryNumber) => {
     const {data} = await api.get("board/category/" + categoryNumber);
     return data
@@ -39,6 +37,13 @@ const  getoneBoard = async (colboardId) => {
     return data;
 }
 
+//  검색하기 (writer, title 기준으로 검색하기)
+const getsearch = async (query) => {
+    const {data} = await api.get("board" + query);
+    return data;
+}
+
+
 export {
     getRecentColumns,
     getPopularColumns,
@@ -46,5 +51,5 @@ export {
     registForm,
     getfileInformaton,
     getoneBoard,
-
+    getsearch
 };

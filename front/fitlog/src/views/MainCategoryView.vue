@@ -1,6 +1,6 @@
 <template>
   <div class="main-category-container">
-    <SearchBar />
+    <SearchBar @searchEmit="handleSearchEmit" />
     <CategoryBar />
     <div class="register-btn-wrapper">
       <RegisterButton />
@@ -22,6 +22,8 @@ import { useRoute } from 'vue-router'
 
 const route = useRoute();
 const posts = ref([]);
+const currentPage = ref(1);
+const totalPages = ref(5);
 
 watch(
   () => route.params.categoryNumber,    // 함수로 사용해야 변화되는 값을 추적
@@ -31,12 +33,16 @@ watch(
   { immediate: true }                   // 최초 진입 시에도 한 번 실행
 )
 
-const currentPage = 1
-const totalPages = 5
-
-function handlePageChange(newPage) {
-  // 페이지 변경 로직
+const handleSearchEmit = (res) => {
+  posts.value = res;
 }
+
+const handlePageChange = (page) => {
+  currentPage.value = page;
+  // TODO: 페이지 변경 시 데이터 다시 불러오기
+  // 예: posts.value = await getCategoryColumns(route.params.categoryNumber, page);
+}
+
 </script>
 
 <style scoped>

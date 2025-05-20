@@ -25,6 +25,7 @@ import {getfileInformaton} from '@/api/board';
 import { useRouter } from 'vue-router';
 
 const props =defineProps({ post: Object })    // 각 게시판의 dto가 넘어온다
+
 const fileinfo = ref(null);
 const removehtml = ref("");
 const router = useRouter();
@@ -36,7 +37,6 @@ function goToShow() {
 watch(
   () => props.post.colboardId,  // 처음과 + 특정 카테고리의 게시물이 바뀔 때 마다 호출
   async (newId) => {
-    console.log("찍힘?");
     fileinfo.value = await getfileInformaton(newId);  // 게시판 id를 이용해서 해당 게시판의 파일정보 가져온다
     removehtml.value = props.post.content.replace(/<[^>]*>?/g, '').slice(0, 100);
   },
