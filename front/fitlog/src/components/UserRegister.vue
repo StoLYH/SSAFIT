@@ -26,7 +26,7 @@
   const router = useRouter();
 
   const goToLogin = () => {
-    router.push('login')
+    router.push('/login')
   }
 
   const id = ref('')
@@ -68,7 +68,7 @@
 
       if (result==="success") {
         alert('회원가입이 완료되었습니다.')
-        router.push('/welcome/login')
+        router.push('/welcome')
       }
     } catch (error) {
       console.error('회원가입 중 오류 발생:', error)
