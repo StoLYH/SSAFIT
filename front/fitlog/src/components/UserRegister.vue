@@ -54,28 +54,19 @@
         return
       }
 
-      // 프로필 이미지 업로드
+      // file과 User 정보를 한 번에 보내기
+      const formData = new FormData()
+      formData.append('userId', id.value)
+      formData.append('password', password.value)
+      formData.append('userName', nickname.value)
+      formData.append('userRole', job.value)
       if (profileImage.value) {
-        const formData = new FormData()
-        formData.append('file', profileImage.value)
-        formData.append('userId', id.value)
-
-        const response = await api_file.post('/profile', formData)
-
-        if (response.status !== 201) {
-          throw new Error('프로필 이미지 업로드 실패')
-        }
+        formData.append('attach', profileImage.value)
       }
 
-      // 회원가입 정보 전송
-      const result = await PostRegist({
-        userId: id.value,
-        password: password.value,
-        userName: nickname.value,
-        userRole: job.value
-      })
+      const result = await PostRegist(formData)
 
-      if (result) {
+      if (result==="success") {
         alert('회원가입이 완료되었습니다.')
         router.push('/login')
       }
