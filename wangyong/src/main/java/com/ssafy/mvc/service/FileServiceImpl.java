@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.ssafy.mvc.model.dao.FileDao;
 import com.ssafy.mvc.model.dto.BoardFile;
-
+import com.ssafy.mvc.model.dto.UserFile;
 
 @Service
 public class FileServiceImpl implements FileService{
@@ -24,7 +24,18 @@ public class FileServiceImpl implements FileService{
 		return fileDao.getFiles(colboardId);
 	}
 
-	
-	
+	@Override
+	public UserFile getProfileImage(String userId) {
+		return fileDao.getProfileImage(userId);
+	}
 
+	@Override
+	public int uploadProfileImage(UserFile userFile) {
+		return fileDao.insertProfileImage(userFile);
+	}
+
+	@Override
+	public int deleteProfileImage(String userId) {
+		return fileDao.deleteProfileImage(userId);
+	}
 }
