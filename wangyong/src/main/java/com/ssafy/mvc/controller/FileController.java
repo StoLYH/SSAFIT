@@ -34,7 +34,7 @@ public class FileController {
 	}
 	
 	
-	// 서버에 저장된 파일을 준다.
+	// 서버에 저장된 파일을 준다.		
 	@GetMapping("/sendImg/{fileName}")
     public ResponseEntity<Resource> serveFile(@PathVariable String fileName) {
 		System.out.println("요첨옴?");

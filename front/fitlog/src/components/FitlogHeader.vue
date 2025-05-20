@@ -2,7 +2,7 @@
   <header class="header">
     <div class="left-area">
       <div class="logo-area">
-        <img src="/fitlog.png" alt="Fitlog 로고" class="fitlog-img" />
+        <img src="/fitlog.png" @click="goToHome" alt="Fitlog 로고" class="fitlog-img" />
       </div>
       <nav class="main-nav">
         <ul>
@@ -35,6 +35,10 @@ import router from '@/router';
 const goToLogin = ()=>{
   router.push('/welcome/login')
 
+}
+
+const goToHome = ()=>{
+  router.push("/");
 }
 
 
