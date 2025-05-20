@@ -25,7 +25,7 @@ const goToRegister = () => {
       userId: id.value, password: password.value
     }) 
 
-    if (result.success) {
+    if (result==="성공") {
     router.replace('/') // 메인 페이지로 이동
   } else {
     alert('로그인 실패!')

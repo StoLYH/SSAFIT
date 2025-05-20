@@ -9,15 +9,20 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.ssafy.mvc.model.dto.BoardFile;
+import com.ssafy.mvc.model.dto.UserFile;
 import com.ssafy.mvc.service.FileService;
 
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.UUID;
+
 @CrossOrigin(origins = "http://localhost:5173")
 @RestController
 @RequestMapping("/upload")
@@ -32,8 +37,7 @@ public class FileController {
 	public FileController(FileService fileService) {
 		this.fileService = fileService;
 	}
-	
-	
+
 	// 서버에 저장된 파일을 준다.
 	@GetMapping("/sendImg/{fileName}")
     public ResponseEntity<Resource> serveFile(@PathVariable String fileName) {

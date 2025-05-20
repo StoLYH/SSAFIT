@@ -21,41 +21,20 @@ import DividerBar from '../components/DividerBar.vue'
 //연습
 import { ref, onMounted } from 'vue';
 import { getRecentColumns } from '@/api/board.js'
+import { getPopularColumns } from '@/api/board.js'
 
+const hotColumns = ref([]);
 const recentColumns = ref([]);
 
 onMounted(async () =>{
+  hotColumns.value = await getPopularColumns();
   recentColumns.value = await getRecentColumns();
-  console.dir(recentColumns.value)
 })
 
 
 
 
 
-const hotColumns = [
-  {
-    img: 'https://images.unsplash.com/photo-1519864600265-abb23847ef2c',
-    category: '운동/트레이닝',
-    title: '관절 체중이 들어가는 자리입니다.',
-    author: '홍길동',
-    date: '2024.06.01'
-  },
-  {
-    img: 'https://images.unsplash.com/photo-1519864600265-abb23847ef2c',
-    category: '운동/트레이닝',
-    title: '관절 체중이 들어가는 자리입니다.',
-    author: '홍길동',
-    date: '2024.06.01'
-  },
-  {
-    img: 'https://images.unsplash.com/photo-1519864600265-abb23847ef2c',
-    category: '운동/트레이닝',
-    title: '관절 체중이 들어가는 자리입니다.',
-    author: '홍길동',
-    date: '2024.06.01'
-  }
-]
 
 
 

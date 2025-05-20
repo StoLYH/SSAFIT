@@ -28,7 +28,7 @@ public class AuthController {
 		System.out.println("check");
 		LoginRequest user = userService.login(loginRequest);
 		session.setAttribute("loginUser", user.getUserId());
-		return ResponseEntity.ok("로그인 성공");
+		return ResponseEntity.ok("성공");
 	}
 
 	@PostMapping("/logout")
