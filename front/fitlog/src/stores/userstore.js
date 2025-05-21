@@ -4,24 +4,24 @@ import { PostLogin } from '@/api/auth'
 
 export const useUserStore = defineStore('user', {
   state: () => ({
-    userId: sessionStorage.getItem('userId') || null,
-    token: sessionStorage.getItem('token') || null
+    userId: null,
+    token: null
   }),
   actions: {
     async login(loginForm) {
       try {
-        const data = await PostLogin(loginForm) // 로그인
+        const data = await PostLogin(loginForm)
+
+        // 로그인 성공 시 userId와 token 저장
         this.userId = data.userId
         this.token = data.token
+
+        // 토큰 세션스토리지에도 저장
         sessionStorage.setItem('token', data.token)
-        sessionStorage.setItem('userId', data.userId)
         return true
       } catch (error) {
         console.error('로그인 실패:', error)
-        if (error.response?.status === 401) {
-          return { success: false, message: '아이디 또는 비밀번호가 일치하지 않습니다.' }
-        }
-        return { success: false, message: '로그인 중 오류가 발생했습니다.' }
+        return false
       }
     },
     setUser(userId, token) {
