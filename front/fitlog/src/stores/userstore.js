@@ -1,7 +1,6 @@
 // src/stores/userStore.js
 import { defineStore } from 'pinia'
 import { PostLogin } from '@/api/auth'
-import { GetInfo } from '@/api/user'
 
 
 export const useUserStore = defineStore('user', {
