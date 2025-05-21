@@ -12,4 +12,5 @@ public interface UserDao {
     int confirmId(String user);
 	int confirmName(String name);
 
+
 }

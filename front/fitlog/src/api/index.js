@@ -1,5 +1,4 @@
 import axios from "axios";
-import { useUserStore } from '@/stores/userstore'
 
 // axios 인스턴스 생성
 const api = axios.create({
@@ -15,7 +14,6 @@ const api_file = axios.create({
         'Content-Type': 'multipart/form-data'
     }
 })
-
 
 export { api, api_file };
 
