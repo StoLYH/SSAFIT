@@ -34,10 +34,34 @@ public class UserServiceImpl implements UserService {
 		// service에서 로그인로직 처리
 		LoginRequest user = userDao.findUserByIdLogin(loginRequest.getUserId());
 		System.out.println(user.getUserId()+" "+user.getPassword());
+		System.out.println(user);
 		if (user == null || !user.getPassword().equals(loginRequest.getPassword())) {
 			throw new RuntimeException("아이디 또는 비밀번호가 틀렸습니다");
 		} else {
 			return user;
 		}
 	}
+	
+	
+	@Override
+	public boolean confirmId(String id) {
+		// 1. id 중복성 검사
+		int result = userDao.confirmId(id);
+		
+		if (result == 1) {	// 중복
+			return false;
+		}
+		return true;		// 비중복
+	}
+
+	@Override
+	public boolean confirmName(String name) {
+		// Name중복성 검사 
+		int result = userDao.confirmName(name);
+		if (result == 1) {	// 중복
+			return false;
+		}
+		return true;		// 비중복
+	}
+	
 }

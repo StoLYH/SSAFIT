@@ -238,7 +238,15 @@ public class BoardController {
 	}	
 	
 	
-	
+	@GetMapping("popular")
+	public ResponseEntity<List<ColBoard>> getPopularColumns() {
+		try {
+			return ResponseEntity.status(HttpStatus.OK).body(boardService.getPopularBoard());
+		} catch(Exception e) {
+			throw new BoardException("인기칼럼 조회시 에러");
+		}
+	}
+
 	
 	
 	

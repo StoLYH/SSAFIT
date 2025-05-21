@@ -40,9 +40,42 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("user not found or update failed");
     }
     
-    
 
-	
-	
+    /**
+     * 회원가입 시 -> id 중복성 검사
+     */
+    @GetMapping("confirmId/{id}")
+    public ResponseEntity<String> confirm1(@PathVariable("id") String id) {
+    	
+    	try {
+        	boolean result = userService.confirmId(id);
+        	if (result == true) { 
+        		return ResponseEntity.status(HttpStatus.OK).body("비중복");
+        	} else {
+        		return ResponseEntity.status(HttpStatus.OK).body("중복");
+        	}
+    	} catch (Exception e) {
+    		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+    	} 
+    }
 
+        	
+    	
+    /**
+     * 회원가입 시 -> Name 중복성 검사
+     */
+    @GetMapping("confirmName/{name}")
+    public ResponseEntity<String> confirm2(@PathVariable("name") String name) {
+
+    	try {
+        	boolean result = userService.confirmName(name);
+        	if (result == true) { 
+        		return ResponseEntity.status(HttpStatus.OK).body("비중복");
+        	} else {
+        		return ResponseEntity.status(HttpStatus.OK).body("중복");
+        	}
+    	} catch (Exception e) {
+    		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+    	} 
+    }
 }
