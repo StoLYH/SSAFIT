@@ -3,21 +3,57 @@ package com.ssafy.mvc.service;
 import com.ssafy.mvc.model.dao.UserDao;
 import com.ssafy.mvc.model.dto.LoginRequest;
 import com.ssafy.mvc.model.dto.User;
+import com.ssafy.mvc.model.dto.UserFile;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.UUID;
 
 @Service
 public class UserServiceImpl implements UserService {
 
+	@Value("${file.upload.directory}")
+	private String uploadDir;
+
 	// 싱글톤 의존성 주입
 	private UserDao userDao;
+	private FileService fileService;
 
-	public UserServiceImpl(UserDao userDao) {
+	public UserServiceImpl(UserDao userDao, FileService fileService) {
 		this.userDao = userDao;
+		this.fileService = fileService;
 	}
 
 	@Override
-	public int insertUser(User user) {
-		return userDao.insertUser(user);
+	public int insertUser(User user) throws IOException {
+		// User 정보 DB 저장 먼저
+		int result = userDao.insertUser(user);
+		
+		// file 저장 (User 정보가 저장된 후에)
+		if (result == 1 && user.getAttach() != null) {
+			UserFile userFile = new UserFile();
+			userFile.setUserId(user.getUserId());
+			userFile.setOriginalName(user.getAttach().getOriginalFilename());
+			userFile.setUploadName(UUID.randomUUID().toString() + "_" + user.getAttach().getOriginalFilename());
+			userFile.setFileSize(user.getAttach().getSize());
+			//User 이미지 DB 저장
+			fileService.uploadProfileImage(userFile);
+			
+			// 업로드 디렉토리 생성
+			Path uploadPath = Paths.get(uploadDir);
+			if (!Files.exists(uploadPath)) {
+				Files.createDirectories(uploadPath);
+			}
+			
+			Path filePath = uploadPath.resolve(userFile.getUploadName()).normalize();
+            Files.copy(user.getAttach().getInputStream(), filePath);
+		}
+		return result;
 	}
 
 	@Override

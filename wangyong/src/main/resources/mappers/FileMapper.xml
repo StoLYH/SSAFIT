@@ -15,5 +15,20 @@
 		where colboard_id=#{colboardId}
 	</delete>
 
+	<!-- 프로필 이미지 관련 SQL -->
+	<select id="getProfileImage" parameterType="string" resultType="UserFile">
+		select * from user_file
+		where user_id=#{userId}
+	</select>
+	
+	<insert id="insertProfileImage" parameterType="UserFile">
+		insert into user_file (user_id, original_name, upload_name, file_size)
+		values (#{userId}, #{originalName}, #{uploadName}, #{fileSize})
+	</insert>
+	
+	<delete id="deleteProfileImage" parameterType="string">
+		delete from user_file
+		where user_id=#{userId}
+	</delete>
 
 </mapper>

@@ -5,6 +5,10 @@ import com.ssafy.mvc.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+
 @CrossOrigin(origins = "http://localhost:5173")
 @RestController
 @RequestMapping("/api/user")
@@ -20,11 +24,23 @@ public class UserController {
 
     //Post 방식 회원가입 json형식으로 넘어올 때 DB까지 전달
     @PostMapping
-    public ResponseEntity<String> registUser(@RequestBody User user) {
-        if(userService.insertUser(user)==1){
+    public ResponseEntity<String> registUser(
+        @RequestParam("userId") String userId,
+        @RequestParam("userName") String userName,
+        @RequestParam("userRole") String userRole,
+        @RequestParam("password") String password,
+        @RequestParam(value = "attach", required = false) MultipartFile attach
+    ) throws IOException {
+        System.out.println("userId: " + userId);
+        System.out.println("userName: " + userName);
+        System.out.println("userRole: " + userRole);
+        System.out.println("password: " + password);
+
+        User user = new User(userId, userName, userRole, password);
+        user.setAttach(attach);
+        if (userService.insertUser(user) == 1) {
             return new ResponseEntity<>("success", HttpStatus.OK);
         }
-        //임시
         return new ResponseEntity<>("fail", HttpStatus.NO_CONTENT);
     }
 

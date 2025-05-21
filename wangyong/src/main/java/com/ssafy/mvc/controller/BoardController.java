@@ -235,9 +235,8 @@ public class BoardController {
 		} catch(Exception e) {
 			throw new BoardException("최근에 올라온 칼럼 조회시 에러");
 		}
-	}	
-	
-	
+	}
+
 	@GetMapping("popular")
 	public ResponseEntity<List<ColBoard>> getPopularColumns() {
 		try {
@@ -247,9 +246,11 @@ public class BoardController {
 		}
 	}
 
-	
-	
-	
-	
-	
+
+
+
+
+
+
+
 }

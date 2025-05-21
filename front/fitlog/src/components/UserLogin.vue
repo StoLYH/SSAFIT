@@ -16,20 +16,27 @@ import router from '@/router';
 const goToRegister = () => {
 router.push('regist')
 }
-import { ref } from 'vue'
-import {PostLogin} from '@/api/auth'
-const id = ref('')
-const password = ref('')
-const onLogin = async() => {
-  const result = await PostLogin({
-    userId: id.value, password: password.value
-  }) 
+  import { ref } from 'vue'
+  import { useUserStore } from '@/stores/userstore' // <-- 이게 핵심!
 
-  if (result==="성공") {
-  router.replace('/') // 메인 페이지로 이동
-} else {
-  alert('로그인 실패!')
-}
+
+
+const userStore = useUserStore();
+  const id = ref('')
+  const password = ref('')
+  const onLogin = async() => {
+    const result = await userStore.login({
+      userId: id.value, password: password.value
+    }) 
+
+    if (result === true) {
+        router.replace('/')
+    } else {
+        alert(result.message || '로그인 실패!')
+    }
+  }
+
+  </script>
   
 }
 
