@@ -7,7 +7,7 @@ import LandingPage from '@/views/LandingPage.vue'
 import Home from '@/views/Home.vue'
 import UserRegister from '@/components/UserRegister.vue'
 import UserLogin from '@/components/UserLogin.vue'
-
+import EditView from '@/views/EditView.vue'
 
 import { createRouter, createWebHistory } from 'vue-router'
 
@@ -33,6 +33,11 @@ const router = createRouter({
           path: 'register',
           name: 'register',
           component: RegisterView,
+        },
+        {
+          path: 'edit/:colboardId',
+          name: 'edit',
+          component: EditView,
         },
         {
           path: 'show/:colboardId',

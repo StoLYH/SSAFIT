@@ -22,8 +22,9 @@ const goToRegister = () => {
 
 
 const userStore = useUserStore();
-  const id = ref('')
-  const password = ref('')
+const id = ref('')
+const password = ref('')
+
   const onLogin = async() => {
     const result = await userStore.login({
       userId: id.value, password: password.value

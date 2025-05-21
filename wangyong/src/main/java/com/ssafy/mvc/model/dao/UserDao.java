@@ -8,4 +8,8 @@ public interface UserDao {
     User findUserByIdUser(String userId);
     LoginRequest findUserByIdLogin(String userId);
     int updateUser(User originUser);
+    
+    int confirmId(String user);
+	int confirmName(String name);
+
 }

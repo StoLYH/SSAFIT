@@ -1,5 +1,5 @@
 <template>
-  <div class="show-board-container">
+  <div class="show-board-container" v-if="board">
     <div class="show-board-header-flex">
       <div class="side-area left"><ShowBoardProfile /></div>                          <!-- 왼쪽 프로필-->
       <div class="center-area"><ShowBoardTitle :board="board" /></div>                <!-- 게시글 제목-->  
@@ -15,11 +15,14 @@
 
     <!-- 버튼-->
     <div class="board-action-btns">
-      <button class="edit-btn">수정하기</button>
-      <button class="delete-btn">삭제하기</button>
+      <template v-if="userStore.userId == board.userId">
+        <button class="edit-btn" @click="editfunction">수정하기</button>
+        <button class="delete-btn" @click="deletefunction">삭제하기</button>
+      </template>    
     </div>
     <ShowBoardComment />
   </div>
+  <div v-else class="loading">로딩 중...</div>
 </template>
 
 <script setup>
@@ -30,20 +33,57 @@ import ShowBoardComment from '../components/showBoardDir/ShowBoardComment.vue'
 import { useRoute } from 'vue-router'
 import {ref, watch} from 'vue'
 import {getoneBoard} from '@/api/board'
+import { useUserStore } from '@/stores/userstore'
+import { deleteBoard } from '@/api/board'
+import { useRouter } from 'vue-router'
 
+
+const userStore = useUserStore();
 const route = useRoute();
-const colboardId = route.params.colboardId;  // 게시판 id 가져오기  
-
+const router = useRouter();
+const colboardId = ref(route.params.colboardId);  // ref로 변경
 const board = ref(null); // 게시물 정보
 
+// 게시물 데이터 로드 함수
+const loadBoard = async () => {
+  try {
+    const response = await getoneBoard(colboardId.value);
+    board.value = response;
+  } catch (error) {
+    console.error('게시물 로드 실패:', error);
+    alert('게시물을 불러오는데 실패했습니다.');
+    router.push('/');
+  }
+};
 
-watch(colboardId, async () => {
-  board.value = await getoneBoard(colboardId);
-  console.log(board.value);
-},
-{ immediate: true } 
-)
+// route.params.colboardId가 변경될 때마다 실행
+watch(() => route.params.colboardId, (newId) => {
+  colboardId.value = newId;
+  loadBoard();
+}, { immediate: true });
 
+const deletefunction = async () => {
+  const isConfirmed = window.confirm("정말 삭제하시겠습니까?");
+  if (!isConfirmed) return;
+
+  try {
+    const response = await deleteBoard(colboardId.value);
+    if (response.status == 200) {
+      alert('삭제가 완료되었습니다.');
+      router.push('/category/1');
+    } else {
+      // 500 오류
+    }
+    
+  } catch (error) {
+    console.error('삭제 실패:', error);
+    alert('삭제 중 오류가 발생했습니다.');
+  }
+}
+
+const editfunction = () => {
+  router.push("/edit/" + colboardId.value);
+}
 
 </script>
 
@@ -120,5 +160,11 @@ watch(colboardId, async () => {
 .delete-btn:hover {
   background: #ff4d4f;
   color: #fff;
+}
+.loading {
+  text-align: center;
+  padding: 2rem;
+  font-size: 1.2rem;
+  color: #666;
 }
 </style>

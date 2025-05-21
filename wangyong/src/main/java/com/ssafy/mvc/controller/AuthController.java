@@ -24,8 +24,6 @@ public class AuthController {
 
 	// 싱글톤 의존성 주입
 
-
-
 	@Autowired
 	private JwtUtil jwtUtil;
 
@@ -63,4 +61,8 @@ public class AuthController {
 		session.invalidate();
 		return ResponseEntity.ok("로그아웃 성공");
 	}
+	
+	
+	
+	
 }

@@ -1,4 +1,5 @@
 import axios from "axios";
+import { useUserStore } from '@/stores/userstore'
 
 // axios 인스턴스 생성
 const api = axios.create({
@@ -8,14 +9,12 @@ const api = axios.create({
     }
 })
 
-
 const api_file = axios.create({
     baseURL: import.meta.env.VITE_FITLOG_API_URL,
     headers: {
         'Content-Type': 'multipart/form-data'
     }
 })
-
 
 
 export { api, api_file };

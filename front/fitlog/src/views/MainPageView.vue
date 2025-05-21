@@ -32,12 +32,6 @@ onMounted(async () =>{
 })
 
 
-
-
-
-
-
-
 const popularAuthors = [
   {
     name: '헬창수',

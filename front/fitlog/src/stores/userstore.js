@@ -10,7 +10,7 @@ export const useUserStore = defineStore('user', {
   actions: {
     async login(loginForm) {
       try {
-        const data = await PostLogin(loginForm)
+        const data = await PostLogin(loginForm) // 로그인
         this.userId = data.userId
         this.token = data.token
         sessionStorage.setItem('token', data.token)
@@ -32,6 +32,7 @@ export const useUserStore = defineStore('user', {
       this.userId = null
       this.token = null
       sessionStorage.removeItem('token')
+      sessionStorage.removeItem('userId')
     }
   }
-})
+},)
