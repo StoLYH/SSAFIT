@@ -8,6 +8,13 @@ const PostRegist = async (registForm)=>{
     return data;
 }
 
+
+const GetInfo = async (userId)=>{
+    const{data}= await api.get(`${USER_API_BASE}/${userId}`)
+    return data;
+}
+
 export{
-    PostRegist
+    PostRegist,
+    GetInfo
 }

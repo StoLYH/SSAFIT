@@ -60,7 +60,6 @@ public class BoardController {
 			@RequestParam(value = "orderByDir", required = false) String orderByDir) {
 		
 		
-		System.out.println("안녕");
 
 		SearchCondition condition = new SearchCondition(key, word, orderBy, orderByDir);
 		
@@ -105,8 +104,11 @@ public class BoardController {
 			throw new BoardException("카테고리별 조회시 에러 발생");	
 		}
 	}
-	
-	
+
+
+
+
+
 	/**
 	 * 디테일 페이지 이동 시, colboard_Id(기본키)를 이용하여 게시물 1개 가져오기
 	 * 조회수 1 증가가 일어난다. (service단에서 처리)
@@ -118,8 +120,7 @@ public class BoardController {
 	public ResponseEntity<?> getMethod3(@PathVariable("colboardId") int colboardId) {
 		try {
 			ColBoard colBoard = boardService.getOneBoard(colboardId);
-			System.out.println(colBoard);
-			if (colBoard != null) {	
+			if (colBoard != null) {
 				// 등록성공 200
 				return ResponseEntity.status(HttpStatus.OK).body(colBoard);
 			} else {	
@@ -139,6 +140,8 @@ public class BoardController {
 	 * 데이터가 없는 겨우 : 404
 	 * 서버 오류 : 500
 	 */
+
+	//마이페이지 전체칼럼
 	@GetMapping("user/{userId}")
 	public ResponseEntity<?> getMethod4(@PathVariable("userId") String userId) {
 		
@@ -156,6 +159,16 @@ public class BoardController {
 			throw new BoardException("사용자 게시물 조회시 에러 발생");		
 		}
 	}
+
+	//마이페이지 인기칼럼
+	@GetMapping("user/popular{userId}")
+	public ResponseEntity<List<ColBoard>> getUserPopularColumns(@PathVariable String userId) {
+		try {
+			return ResponseEntity.status(HttpStatus.OK).body(boardService.getUserPopularBoard(userId));
+		} catch(Exception e) {
+			throw new BoardException("인기칼럼 조회시 에러");
+		}
+	}
 	
 	
 	
@@ -166,6 +179,15 @@ public class BoardController {
 	 *  정상 실행 : 201
 	 *  서버 오류 : 500
 	 */
+
+	//
+
+
+
+
+
+
+
 	@PostMapping
 	public ResponseEntity<String> postMethodName(@ModelAttribute ColBoard colBoard) {
 		

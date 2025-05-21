@@ -14,6 +14,20 @@ const getPopularColumns = async () => {
     return data;
 }
 
+
+const getUserPopularColumns = async (userId) => {
+    const {data} = await api.get("board/user/popular" + userId);
+    return data;
+}
+
+
+const getUserColumns = async (userId) => {
+    const {data} = await api.get("board/user/" + userId);
+    return data;
+}
+
+
+
 const getCategoryColumns = async (categoryNumber) => {
     const {data} = await api.get("board/category/" + categoryNumber);
     return data
@@ -51,5 +65,7 @@ export {
     registForm,
     getfileInformaton,
     getoneBoard,
-    getsearch
+    getsearch,
+    getUserColumns,
+    getUserPopularColumns
 };

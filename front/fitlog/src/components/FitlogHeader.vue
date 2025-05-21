@@ -19,7 +19,10 @@
           <line x1="15.4142" y1="15" x2="20" y2="19.5858" stroke="#222" stroke-width="2" stroke-linecap="round"/>
         </svg>
       </span>
+      
+
       <span class="right-link">광고 상품</span>
+      <RouterLink class="right-link" to="/mypage">마이페이지</RouterLink>
       <span class="right-link" @click="goToLogin" >로그인</span>
       <button class="signup-btn">회원가입</button>
     </div>
@@ -30,6 +33,10 @@
 
 <script setup>
 import router from '@/router';
+import { useUserStore } from '@/stores/userstore';
+
+const store = useUserStore();
+const userId = store.userId;
 
 const goToLogin = ()=>{
   router.push('/welcome/login')

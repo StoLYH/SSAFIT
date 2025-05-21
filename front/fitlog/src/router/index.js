@@ -7,7 +7,7 @@ import LandingPage from '@/views/LandingPage.vue'
 import Home from '@/views/Home.vue'
 import UserRegister from '@/components/UserRegister.vue'
 import UserLogin from '@/components/UserLogin.vue'
-
+import MyPageView from '@/views/MyPageView.vue'
 
 import { createRouter, createWebHistory } from 'vue-router'
 
@@ -44,6 +44,11 @@ const router = createRouter({
           name: 'debate',
           component: DebatePageView,
         },
+        {
+          path: 'mypage',   //   부모경로 + category
+          name: 'mypage',
+          component: MyPageView,
+        }
       ]
     },
     {
