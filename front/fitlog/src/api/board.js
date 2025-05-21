@@ -25,6 +25,11 @@ const registForm = async (formData) => {
     return data;
 }
 
+const updateBoard = async (colboardId, formData) => {
+    const response = await api_file.put(`board/${colboardId}`, formData)
+    return response;
+}
+
 // 게시물 파일정보를 가져온다. 
 const getfileInformaton = async (colboardId) => {
     const {data} = await api.get(`upload/${colboardId}`);
@@ -43,6 +48,17 @@ const getsearch = async (query) => {
     return data;
 }
 
+const deleteBoard = async (colboardId) => {
+    const response = await api.delete("board/" + colboardId);
+    return response;
+}
+
+const serveFile = async (uploadName) => {
+    const {data} = await api_file.get(`upload/sendImg/${uploadName}`);
+    return data;
+}
+
+
 
 export {
     getRecentColumns,
@@ -51,5 +67,8 @@ export {
     registForm,
     getfileInformaton,
     getoneBoard,
-    getsearch
+    getsearch,
+    deleteBoard,
+    updateBoard,
+    serveFile
 };
