@@ -9,6 +9,7 @@
   </form>
 </template>
 
+
 <script setup>
 import router from '@/router';
 
@@ -22,8 +23,9 @@ router.push('regist')
 
 
 const userStore = useUserStore();
-  const id = ref('')
-  const password = ref('')
+const id = ref('')
+const password = ref('')
+
   const onLogin = async() => {
     const result = await userStore.login({
       userId: id.value, password: password.value
@@ -35,12 +37,8 @@ const userStore = useUserStore();
         alert(result.message || '로그인 실패!')
     }
   }
-
-  </script>
-  
-}
-
 </script>
+
 
 <style scoped>
 .login-form {

@@ -42,11 +42,10 @@ public class FileController {
 	// 서버에 저장된 파일을 준다.		
 	@GetMapping("/sendImg/{fileName}")
     public ResponseEntity<Resource> serveFile(@PathVariable String fileName) {
-		System.out.println("요첨옴?");
+		System.out.println("옴???????????");
+        
 		
-		
-		System.out.println(fileName);
-        try {
+		try {
             // 경로를 지정하고 리소스 객체로 변환
             Path filePath = Paths.get(uploadDir).resolve(fileName).normalize();
             Resource resource = new UrlResource(filePath.toUri());	// 파일

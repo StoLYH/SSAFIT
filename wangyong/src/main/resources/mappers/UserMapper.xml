@@ -28,9 +28,7 @@
 		resultType="LoginRequest">
 		select user_id,password from user where user_id =#{userId}
 	</select>
-
-
-
+	
 
 
 

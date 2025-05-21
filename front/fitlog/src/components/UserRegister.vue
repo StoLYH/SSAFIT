@@ -1,10 +1,16 @@
 <template>
     <form class="register-form" @submit.prevent="onRegister">
-      <input class="form-input" type="text" placeholder="아이디 또는 이메일" v-model="id" required />
+      <div class="input-wrapper">
+        <input class="form-input" type="text" placeholder="아이디 또는 이메일" v-model="id" required />
+        <button type="button" class="check-btn" @click="checkId">중복확인</button>
+      </div>
       <input class="form-input" type="password" placeholder="비밀번호" v-model="password" required />
       <input class="form-input" type="password" placeholder="비밀번호 확인" v-model="passwordConfirm" required />
       <input class="form-input" type="text" placeholder="직업" v-model="job" required />
-      <input class="form-input" type="text" placeholder="닉네임" v-model="nickname" required />
+      <div class="input-wrapper">
+        <input class="form-input" type="text" placeholder="닉네임" v-model="nickname" required />
+        <button type="button" class="check-btn" @click="checkNickname">중복확인</button>
+      </div>
       <label class="profile-upload">
         <input type="file" accept="image/*" @change="onProfileImageChange" hidden />
         <span class="profile-btn">프로필 이미지 등록</span>
@@ -19,9 +25,8 @@
   
   <script setup>
   import { ref, onBeforeUnmount } from 'vue'
-  import { PostRegist } from '@/api/user';
+  import { PostRegist, confirmId, confirmName } from '@/api/user';
   import { useRouter } from 'vue-router';
-  import { api_file } from '@/api';
 
   const router = useRouter();
 
@@ -76,6 +81,24 @@
     }
   }
 
+  const checkId = async () => {
+    const res = await confirmId(id.value);
+      if (res === "중복") {
+        alert('이미 사용 중인 아이디입니다.');
+      } else {
+        alert('사용 가능한 아이디입니다.');
+      }
+  };
+
+  const checkNickname = async () => {
+    const res = await confirmName(nickname.value);
+      if (res === "중복") {
+        alert('이미 사용 중인 닉네임입니다.');
+      } else {
+        alert('사용 가능한 닉네임입니다.');
+      }
+  };
+
   // 컴포넌트가 제거될 때 미리보기 URL 해제
   onBeforeUnmount(() => {
     if (previewUrl.value) {
@@ -90,6 +113,25 @@
     display: flex;
     flex-direction: column;
     gap: 18px;
+  }
+  .input-wrapper {
+    position: relative;
+    width: 100%;
+    margin-bottom: 0;
+  }
+  .input-wrapper .form-input {
+    width: 100%;
+    padding-right: 100px; /* 버튼 공간 확보 */
+    box-sizing: border-box;
+  }
+  .input-wrapper .check-btn {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 90px;
+    height: 38px;
+    margin: 0;
   }
   .form-input {
     width: 100%;

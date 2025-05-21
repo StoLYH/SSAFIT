@@ -9,6 +9,8 @@ public interface UserDao {
     LoginRequest findUserByIdLogin(String userId);
     int updateUser(User originUser);
     
-	int confirmId(String user);
+    int confirmId(String user);
 	int confirmName(String name);
+
+
 }

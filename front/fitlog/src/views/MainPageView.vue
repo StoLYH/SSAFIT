@@ -21,7 +21,6 @@ import { ref, onMounted } from 'vue';
 import { getRecentColumns } from '@/api/board.js'
 import { getPopularColumns } from '@/api/board.js'
 
-const hotColumns = ref([]);
 const recentColumns = ref([]);
 const hotColumns = ref([]);
 
@@ -29,12 +28,6 @@ onMounted(async () =>{
   hotColumns.value = await getPopularColumns();
   recentColumns.value = await getRecentColumns();
 })
-
-
-
-
-
-
 
 
 const popularAuthors = [
