@@ -22,4 +22,8 @@ public class LoginRequest {
         this.password = password;
     }
 
+	@Override
+	public String toString() {
+		return "LoginRequest [userId=" + userId + ", password=" + password + "]";
+	}
 }
