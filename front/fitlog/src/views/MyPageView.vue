@@ -161,6 +161,19 @@ async function handleSave({ field, value }) {
     color: #666;
     font-size: 0.98rem;
   }
+
+  .profile-onelineInfo,
+.profile-exper {
+  font-size: 1.05rem;
+  margin-bottom: 8px;
+  cursor: pointer; /* 손가락 커서 */
+}
+
+.profile-onelineInfo:hover,
+.profile-exper:hover {
+  background: #f0f4ff;   /* 원하는 배경색으로 변경 */
+  color: #1a237e;        /* 원하는 글자색으로 변경 */
+}
   .edit-btn {
     background: #222;
     color: #fff;
