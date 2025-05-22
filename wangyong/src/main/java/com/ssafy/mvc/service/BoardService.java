@@ -28,4 +28,6 @@ public interface BoardService {
 	List<ColBoard> getRecentBoard();
 
     List<ColBoard> getPopularBoard();
+
+	List<ColBoard> getUserPopularBoard(String userId);
 }

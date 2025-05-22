@@ -8,6 +8,18 @@ const PostRegist = async (registForm)=>{
     return data;
 }
 
+
+const GetInfo = async (userId)=>{
+    const{data}= await api.get(`${USER_API_BASE}/${userId}`)
+    return data;
+}
+
+
+const updateUserDetail = async (newUserDetail)=>{
+    const{data}= await api.put(`${USER_API_BASE}/detail`,newUserDetail)
+    return data;
+}
+
 const confirmId = async (userId) => {
     const { data } = await api.get(`${USER_API_BASE}/confirmId/${userId}`)
     return data
@@ -21,5 +33,7 @@ const confirmName = async (userName) => {
 export{
     PostRegist,
     confirmId,
-    confirmName
+    confirmName,
+    GetInfo,
+    updateUserDetail
 }

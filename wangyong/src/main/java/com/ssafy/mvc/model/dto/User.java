@@ -7,13 +7,31 @@ import java.util.List;
 public class User {
     private String userId;
     private String userName;
-    private String userRole;
+    private int userRole;
     private String password;
     private MultipartFile attach;
-    private UserFile userFile;	// 각 파일에 대한 정보
+    private UserFile userFile;
+    private UserRole userRoleName;
+    private UserDetail userDetail;
+    // 각 파일에 대한 정보
 
     //생성자
 
+    public UserDetail getUserDetail() {
+        return userDetail;
+    }
+
+    public void setUserDetail(UserDetail userDetail) {
+        this.userDetail = userDetail;
+    }
+
+    public UserRole getUserRoleName() {
+        return userRoleName;
+    }
+
+    public void setUserRoleName(UserRole userRoleName) {
+        this.userRoleName = userRoleName;
+    }
 
     public MultipartFile getAttach() {
         return attach;
@@ -31,7 +49,7 @@ public class User {
         this.userFile = userFile;
     }
 
-    public User(String userId, String userName, String userRole, String password) {
+    public User(String userId, String userName, int userRole, String password) {
         this.userId = userId;
         this.userName = userName;
         this.userRole = userRole;
@@ -54,11 +72,11 @@ public class User {
         this.userName = userName;
     }
 
-    public String getUserRole() {
+    public int getUserRole() {
         return userRole;
     }
 
-    public void setUserRole(String userRole) {
+    public void setUserRole(int userRole) {
         this.userRole = userRole;
     }
 

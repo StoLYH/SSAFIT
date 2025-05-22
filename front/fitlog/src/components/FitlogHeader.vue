@@ -20,13 +20,13 @@
         </svg>
       </span>
       <span class="right-link">광고 상품</span>
-      <span class="right-link">작가 지원</span>
-      <template v-if="!userStore.userId">
+      <RouterLink class="right-link" to="/mypage">마이페이지</RouterLink>
+      <template v-if="!store.userId">
         <span class="right-link" @click="goToLogin">로그인</span>
         <button class="signup-btn" @click="goToRegister">회원가입</button>
       </template>
       <template v-else>
-        <span class="right-link">{{ userStore.userId }}님</span>
+        <span class="right-link">{{ userId }}님</span>
         <button class="signup-btn" @click="handleLogout">로그아웃</button>
       </template>
     </div>
@@ -37,13 +37,13 @@
 
 <script setup>
 import router from '@/router';
-import { useUserStore } from '@/stores/userstore'
+import { useUserStore } from '@/stores/userstore';
 
-const userStore = useUserStore();
+const store = useUserStore();
+const userId = store.userId;
 
-const goToLogin = () => {
-  router.push('/welcome/login')
-}
+const goToLogin = ()=>{
+  router.push('/welcome/login')}
 
 const goToRegister = () => {
   router.push('/welcome/regist')
@@ -55,9 +55,9 @@ const goToHome = () => {
 
 const handleLogout = () => {
   console.log('Logout clicked');
-  console.log('Before clearUser - userId:', userStore.userId);
-  userStore.clearUser();  // 세션버리기
-  console.log('After clearUser - userId:', userStore.userId);
+  console.log('Before clearUser - userId:', store.userId);
+  store.clearUser();  // 세션버리기
+  console.log('After clearUser - userId:', store.userId);
   router.push('/');
 }
 </script>

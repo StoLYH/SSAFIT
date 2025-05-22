@@ -14,6 +14,20 @@ const getPopularColumns = async () => {
     return data;
 }
 
+
+const getUserPopularColumns = async (userId) => {
+    const {data} = await api.get("board/user/popular" + userId);
+    return data;
+}
+
+
+const getUserColumns = async (userId) => {
+    const {data} = await api.get("board/user/" + userId);
+    return data;
+}
+
+
+
 const getCategoryColumns = async (categoryNumber) => {
     const {data} = await api.get("board/category/" + categoryNumber);
     return data
@@ -30,7 +44,7 @@ const updateBoard = async (colboardId, formData) => {
     return response;
 }
 
-// 게시물 파일정보를 가져온다. 
+// 게시물 파일정보를 가져온다.
 const getfileInformaton = async (colboardId) => {
     const {data} = await api.get(`upload/${colboardId}`);
     return data;
@@ -70,5 +84,7 @@ export {
     getsearch,
     deleteBoard,
     updateBoard,
-    serveFile
+    serveFile,
+    getUserColumns,
+    getUserPopularColumns
 };
