@@ -14,7 +14,14 @@ const GetInfo = async (userId)=>{
     return data;
 }
 
+
+const updateUserDetail = async (newUserDetail)=>{
+    const{data}= await api.put(`${USER_API_BASE}/detail`,newUserDetail)
+    return data;
+}
+
 export{
     PostRegist,
-    GetInfo
+    GetInfo,
+    updateUserDetail
 }

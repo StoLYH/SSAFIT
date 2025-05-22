@@ -10,24 +10,32 @@
 	</insert>
 
 	<resultMap id="UserResultMap" type="User">
-		<id property="userId" column="user_id"/>
-		<result property="userName" column="user_name"/>
-		<result property="password" column="password"/>
-		<result property="userRole" column="user_role"/>
+    <id property="userId" column="user_id"/>
+    <result property="userName" column="user_name"/>
+    <result property="password" column="password"/>
+    <result property="userRole" column="user_role"/>
+    
+    <association property="userRoleName" javaType="UserRole">
+        <result property="userRole" column="user_role"/>
+        <result property="userRoleName" column="user_role_name"/>
+    </association>
+    
+    <association property="userDetail" javaType="UserDetail">
+        <id property="userId" column="user_id"/>
+        <result property="onelineInfo" column="oneline_info"/>
+        <result property="exper" column="exper"/>
+    </association>
+</resultMap>
 
-		<!-- Nested DTO 매핑 -->
-		<association property="userRoleName" javaType="UserRole">
-			<result property="userRole" column="user_role"/>
-			<result property="userRoleName" column="user_role_name"/>
-		</association>
-	</resultMap>
-
-	<select id="findUserByIdUser" parameterType="String" resultMap="UserResultMap">
-		select u.user_id, u.user_name, u.user_role , u.password, r.user_role_name
-		from user u
-		join user_role r on u.user_role = r.user_role
-		where user_id = #{userId}
-	</select>
+<select id="findUserByIdUser" parameterType="String" resultMap="UserResultMap">
+    SELECT u.user_id, u.user_name, u.user_role, u.password,
+           r.user_role_name,
+           d.oneline_info, d.exper
+    FROM user u
+    LEFT JOIN user_role r ON u.user_role = r.user_role
+    LEFT JOIN user_detail d ON u.user_id = d.user_id
+    WHERE u.user_id = #{userId}
+</select>
 
 
 
@@ -45,5 +53,14 @@
 		resultType="LoginRequest">
 		select user_id,password from user where user_id =#{userId}
 	</select>
+
+
+<insert id="updateUserDetail" parameterType="UserDetail">
+    INSERT INTO user_detail (user_id, oneline_info, exper)
+    VALUES (#{userId}, #{onelineInfo}, #{exper})
+    ON DUPLICATE KEY UPDATE
+      oneline_info = VALUES(oneline_info),
+      exper = VALUES(exper)
+  </insert>
 
 </mapper>

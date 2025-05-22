@@ -12,12 +12,18 @@ public class User {
     private MultipartFile attach;
     private UserFile userFile;
     private UserRole userRoleName;
+    private UserDetail userDetail;
     // 각 파일에 대한 정보
 
     //생성자
 
+    public UserDetail getUserDetail() {
+        return userDetail;
+    }
 
-
+    public void setUserDetail(UserDetail userDetail) {
+        this.userDetail = userDetail;
+    }
 
     public UserRole getUserRoleName() {
         return userRoleName;

@@ -6,10 +6,17 @@
         <div class="profile-info">
           <h1>{{ userInfo.nickname }}</h1>
           <div class="profile-role">{{ userInfo.role }}</div>
-          <div class="profile-desc">{{ userInfo.desc }}</div>
-          <ul class="profile-extra">
-            <li v-for="(item, idx) in userInfo.extra" :key="idx">{{ item }}</li>
-          </ul>
+          <div class="profile-onelineInfo" @click="openEdit('onelineInfo')">{{ userInfo.onelineInfo }}</div>
+          <div class="profile-exper" @click="openEdit('exper')">{{ userInfo.exper }}</div>
+          <UserDetailEditModal
+    v-if="showModal"
+    :modelValue="editValue"
+    :field="editField"
+    @close="showModal = false"
+    @save="handleSave"
+  />
+
+          
         </div>
         <button class="edit-btn">정보수정</button>
       </div>
@@ -42,6 +49,9 @@ import { useUserStore } from '@/stores/userstore';
 import { getUserColumns } from '@/api/board.js'
 import { getUserPopularColumns } from '@/api/board.js'
 import { GetInfo } from '@/api/user'
+import UserDetailEditModal from '@/components/UserDetailEditModal.vue'
+import { updateUserDetail } from '@/api/user.js'
+
 
   const data = ref({});
   const posts = ref([]);
@@ -51,12 +61,8 @@ import { GetInfo } from '@/api/user'
   const userInfo = ref({
     nickname: '당신은 누구십니까',
     role: '당신의 직업은?',
-    desc: 'working out is essential to me',
-    extra: [
-      'winning bodybuilding contest',
-      'working in H1 Fitness',
-      'healthman youtube channel'
-    ]
+    onelineInfo: 'working out is essential to me',
+    exper: 'winning bodybuilding contest, working in H1 Fitness, healthman youtube channel'
   })
   
   // 예시 데이터, 실제로는 API에서 받아와야 함
@@ -68,7 +74,9 @@ import { GetInfo } from '@/api/user'
         data.value = await GetInfo(store.userId);
         userInfo.value = {
           nickname: data.value.userName,
-          role: data.value.userRoleName.userRoleName 
+          role: data.value.userRoleName.userRoleName,
+          onelineInfo: data.value.userDetail?.onelineInfo || '아직 한 줄 소개가 없습니다.',
+          exper: data.value.userDetail?.exper || '아직 경력 정보가 없습니다.'
         }
       } catch (error) {
         console.error('Error fetching user info:', error);
@@ -82,8 +90,29 @@ import { GetInfo } from '@/api/user'
       popularColumns.value = popular || []; // null이나 undefined면 빈 배열로
     }
   })  
+  const showModal = ref(false)
+const editField = ref('')
+const editValue = ref('')
 
-
+function openEdit(field) {
+  editField.value = field
+  editValue.value = userInfo.value[field]
+  showModal.value = true
+}
+async function handleSave({ field, value }) {
+  const newUserDetail = {
+    userId: store.userId,
+    onelineInfo: field === 'onelineInfo' ? value : userInfo.value.onelineInfo,
+      exper: field === 'exper' ? value : userInfo.value.exper
+  } 
+  // TODO: API로 저장 후 userInfo 갱신
+  try {
+      await updateUserDetail(newUserDetail)
+      userInfo.value[field] = value
+    } catch (e) {
+      alert('저장에 실패했습니다.')
+    }
+}
 
 
 
@@ -121,11 +150,11 @@ import { GetInfo } from '@/api/user'
     color: #888;
     margin-bottom: 8px;
   }
-  .profile-desc {
+  .profile-onelineInfo {
     font-size: 1.05rem;
     margin-bottom: 8px;
   }
-  .profile-extra {
+  .profile-exper {
     list-style: none;
     padding: 0;
     margin: 0;

@@ -3,6 +3,7 @@ package com.ssafy.mvc.service;
 import com.ssafy.mvc.model.dao.UserDao;
 import com.ssafy.mvc.model.dto.LoginRequest;
 import com.ssafy.mvc.model.dto.User;
+import com.ssafy.mvc.model.dto.UserDetail;
 import com.ssafy.mvc.model.dto.UserFile;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -80,5 +81,10 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public User getUserInfo(String userId) {
 		return userDao.findUserByIdUser(userId);
+	}
+
+	@Override
+	public int updateUserDetail(UserDetail userDetail) {
+		return userDao.updateUserDetail(userDetail);
 	}
 }

@@ -2,6 +2,7 @@ package com.ssafy.mvc.controller;
 
 import com.ssafy.mvc.exception.BoardException;
 import com.ssafy.mvc.model.dto.User;
+import com.ssafy.mvc.model.dto.UserDetail;
 import com.ssafy.mvc.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -62,6 +63,15 @@ public class UserController {
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("user not found or update failed");
     }
+
+
+    //디테일 정보등록
+     @PutMapping("detail")
+  public ResponseEntity<?> updateUserDetail(@RequestBody UserDetail userDetail) {
+         System.out.println("userDetail: " + userDetail);
+      userService.updateUserDetail(userDetail);
+      return ResponseEntity.ok().build();
+  }
     
     
 
