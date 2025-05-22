@@ -86,14 +86,11 @@ public class FileController {
 
 	@GetMapping("user/{userId}")
 	public ResponseEntity<UserFile> getMethod5(@PathVariable("userId") String userId) {
-
 		UserFile userFile = fileService.getUserFiles(userId);
-
-
-		if (userFile == null) {
+		if (userFile != null) {
 			return ResponseEntity.status(HttpStatus.OK).body(userFile);
 		} else {
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 		}
 	}
 

@@ -83,13 +83,10 @@ import { GetImg } from '@/api/user.js'
 
         // 프로필 이미지 가져오기
         try {
-          console.log('사용자 ID:', store.userId);
           profileData.value = await GetImg(store.userId);
-          console.log('프로필 이미지 데이터:', profileData.value);
 
           if (profileData.value && profileData.value.uploadName) {
             profileImg.value = `http://localhost:8080/upload/sendImg/${profileData.value.uploadName}`;
-            console.log('프로필 이미지 URL:', profileImg.value);
           } else {
             console.log('프로필 이미지가 없습니다.');
             profileImg.value = '/landingpage2.png';
@@ -99,15 +96,13 @@ import { GetImg } from '@/api/user.js'
           profileImg.value = '/landingpage2.png';
         }
 
-        // 게시물 데이터 가져오기
-        const columns = await getUserColumns(store.userId);
-        posts.value = columns || [];
-
-        const popular = await getUserPopularColumns(store.userId);
-        popularColumns.value = popular || [];
       } catch (error) {
         console.error('사용자 정보 로딩 실패:', error);
       }
+
+        // 칼럼 리스트 - 실패해도 에러 아님 (빈 배열은 정상)
+    posts.value = (await getUserColumns(store.userId).catch(() => [])) ?? []
+    popularColumns.value = (await getUserPopularColumns(store.userId).catch(() => [])) ?? []
     }
   })  
   const showModal = ref(false)
