@@ -11,11 +11,11 @@
 </template>
 
 <script setup>
-import SearchBar from '../components/SearchBar.vue'
-import CategoryBar from '../components/CategoryBar.vue'
-import PostList from '../components/PostList.vue'
-import Pagination from '../components/Pagination.vue'
-import RegisterButton from '../components/RegisterButton.vue'
+import SearchBar from '@/components/SearchBar.vue'
+import CategoryBar from '@/components/CategoryBar.vue'
+import PostList from '@/components/PostList.vue'
+import Pagination from '@/components/Pagination.vue'
+import RegisterButton from '@/components/RegisterButton.vue'
 import { getCategoryColumns } from '../api/board'
 import { ref, watch } from 'vue'
 import { useRoute } from 'vue-router'

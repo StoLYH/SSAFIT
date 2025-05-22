@@ -1,7 +1,7 @@
 <template>
   <div>
     <MainBanner />
-    <ColumnList title="요즘 인기 칼럼" :items="hotColumns" />
+    <ColumnList title="요즘 인기 칼럼" :items="hotColumns" /> 
     <ColumnList title="최근에 올라온 칼럼" :items="recentColumns" />
     <BannerSection>댓글로 칼럼이 가장 인상적이었던 운동/칼럼가?</BannerSection>
     <AuthorList title="인기칼럼 작가" :authors="popularAuthors" />
@@ -17,25 +17,17 @@ import BannerSection from '../components/BannerSection.vue'
 import AuthorList from '../components/AuthorList.vue'
 import DividerBar from '../components/DividerBar.vue'
 
-
-//연습
 import { ref, onMounted } from 'vue';
 import { getRecentColumns } from '@/api/board.js'
 import { getPopularColumns } from '@/api/board.js'
 
-const hotColumns = ref([]);
 const recentColumns = ref([]);
+const hotColumns = ref([]);
 
 onMounted(async () =>{
   hotColumns.value = await getPopularColumns();
   recentColumns.value = await getRecentColumns();
 })
-
-
-
-
-
-
 
 
 const popularAuthors = [

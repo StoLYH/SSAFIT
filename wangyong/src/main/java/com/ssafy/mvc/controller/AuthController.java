@@ -3,11 +3,17 @@ import com.ssafy.mvc.jwt.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.CrossOrigin;
+
+import com.ssafy.mvc.jwt.JwtUtil;
 import com.ssafy.mvc.model.dto.LoginRequest;
 import com.ssafy.mvc.service.UserService;
-
 import jakarta.servlet.http.HttpSession;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,8 +29,6 @@ import java.util.Map;
 public class AuthController {
 
 	// 싱글톤 의존성 주입
-
-
 
 	@Autowired
 	private JwtUtil jwtUtil;
@@ -63,4 +67,8 @@ public class AuthController {
 		session.invalidate();
 		return ResponseEntity.ok("로그아웃 성공");
 	}
+	
+	
+	
+	
 }

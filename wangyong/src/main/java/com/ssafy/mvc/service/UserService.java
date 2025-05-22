@@ -12,4 +12,8 @@ public interface UserService {
 	public LoginRequest login(LoginRequest loginRequest);
     public User getUserInfo(String userId);
     public int updateUserDetail(UserDetail userDetail);
+
+	public boolean confirmId(String id);
+	public boolean confirmName(String name);
+
 }

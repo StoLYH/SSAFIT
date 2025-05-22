@@ -60,6 +60,7 @@ public class BoardController {
 			@RequestParam(value = "orderByDir", required = false) String orderByDir) {
 		
 		
+		System.out.println("안녕");
 
 		SearchCondition condition = new SearchCondition(key, word, orderBy, orderByDir);
 		
@@ -104,11 +105,8 @@ public class BoardController {
 			throw new BoardException("카테고리별 조회시 에러 발생");	
 		}
 	}
-
-
-
-
-
+	
+	
 	/**
 	 * 디테일 페이지 이동 시, colboard_Id(기본키)를 이용하여 게시물 1개 가져오기
 	 * 조회수 1 증가가 일어난다. (service단에서 처리)
@@ -116,20 +114,19 @@ public class BoardController {
 	 * 데이터가 없는 경우 : 404
 	 * 서버오류 : 500 경우
 	 */
-	@GetMapping({"{colboardId}"})
+	@GetMapping("/{colboardId}")
 	public ResponseEntity<?> getMethod3(@PathVariable("colboardId") int colboardId) {
 		try {
 			ColBoard colBoard = boardService.getOneBoard(colboardId);
+			System.out.println("조회된 게시글: " + colBoard);
 			if (colBoard != null) {
-				// 등록성공 200
 				return ResponseEntity.status(HttpStatus.OK).body(colBoard);
-			} else {	
-				// 데이터가 없는경우 404	[오류x] => 사실 발동 될 일이 없다....
+			} else {
 				return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 			}
 		} catch (Exception e) {	
-			throw new BoardException("개별 게시물 조회시 에러 발생");	
-			// 서버오류 500
+			e.printStackTrace();
+			throw new BoardException("개별 게시물 조회시 에러 발생: " + e.getMessage());
 		}
 	}
 	
@@ -169,7 +166,7 @@ public class BoardController {
 			throw new BoardException("인기칼럼 조회시 에러");
 		}
 	}
-	
+
 	
 	
 	/**
@@ -236,6 +233,9 @@ public class BoardController {
 	 */
 	@DeleteMapping("{colboardId}")
 	public ResponseEntity<String> deleteMethod(@PathVariable("colboardId") int colboardId) {
+
+		System.out.println("삭제함???");
+
 		try {
 			int result = boardService.deleteBoard(colboardId);
 			if (result == 1) {
@@ -252,6 +252,7 @@ public class BoardController {
 	// 최근에 올라온 칼럼 3개만 가져오도록 Limit 걸어두었다.
 	@GetMapping("recent")
 	public ResponseEntity<List<ColBoard>> getRecentColumns() {
+
 		try {
 			return ResponseEntity.status(HttpStatus.OK).body(boardService.getRecentBoard());
 		} catch(Exception e) {
@@ -261,6 +262,7 @@ public class BoardController {
 
 	@GetMapping("popular")
 	public ResponseEntity<List<ColBoard>> getPopularColumns() {
+
 		try {
 			return ResponseEntity.status(HttpStatus.OK).body(boardService.getPopularBoard());
 		} catch(Exception e) {

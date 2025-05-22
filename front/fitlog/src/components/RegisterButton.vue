@@ -1,13 +1,22 @@
 <template>
+<template v-if="!userStore.userId">
+</template>
+<template v-if="userStore.userId">
   <button class="register-btn" @click="LoginClick">등록하기</button>
+</template>
 </template>
 
 <script setup>
 import {ref} from 'vue';
 import { useRouter} from 'vue-router';
+import { useUserStore } from '@/stores/userstore';
+
+
 
 const router = useRouter();
 const login = ref(true);
+const userStore = useUserStore();
+
 
 function LoginClick() {
   console.log("등록함");

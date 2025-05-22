@@ -19,12 +19,16 @@
           <line x1="15.4142" y1="15" x2="20" y2="19.5858" stroke="#222" stroke-width="2" stroke-linecap="round"/>
         </svg>
       </span>
-      
-
       <span class="right-link">광고 상품</span>
       <RouterLink class="right-link" to="/mypage">마이페이지</RouterLink>
-      <span class="right-link" @click="goToLogin" >로그인</span>
-      <button class="signup-btn">회원가입</button>
+      <template v-if="!userStore.userId">
+        <span class="right-link" @click="goToLogin">로그인</span>
+        <button class="signup-btn" @click="goToRegister">회원가입</button>
+      </template>
+      <template v-else>
+        <span class="right-link">{{ userStore.userId }}님</span>
+        <button class="signup-btn" @click="handleLogout">로그아웃</button>
+      </template>
     </div>
   </header>
   <div class="border-line"></div>
@@ -41,13 +45,21 @@ const userId = store.userId;
 const goToLogin = ()=>{
   router.push('/welcome/login')
 
+const goToRegister = () => {
+  router.push('/welcome/regist')
 }
 
-const goToHome = ()=>{
+const goToHome = () => {
   router.push("/");
 }
 
-
+const handleLogout = () => {
+  console.log('Logout clicked');
+  console.log('Before clearUser - userId:', userStore.userId);
+  userStore.clearUser();  // 세션버리기
+  console.log('After clearUser - userId:', userStore.userId);
+  router.push('/');
+}
 </script>
 
 <style scoped>

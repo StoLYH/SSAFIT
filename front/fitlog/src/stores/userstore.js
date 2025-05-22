@@ -41,6 +41,7 @@ export const useUserStore = defineStore('user', {
       this.userId = null
       this.token = null
       sessionStorage.removeItem('token')
+      sessionStorage.removeItem('userId')
     }
   }
-})
+},)
