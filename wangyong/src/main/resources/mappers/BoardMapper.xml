@@ -7,7 +7,8 @@
 
 	<select id="getCategory" parameterType="int" resultType="ColBoard">
 		select * from col_board
-		where category=#{categoryNum};
+		where category=#{categoryNum}
+		order by created_at desc
 	</select>
 
 	
@@ -25,7 +26,7 @@
 
 	<update id="update" parameterType="ColBoard">
 		update col_board
-		set title=#{title}, content=#{content}
+		set title=#{title}, content=#{content}, category=#{category}
 		where colboard_id=#{colboardId}
 	</update>
 
@@ -75,6 +76,15 @@
 		LIMIT 3;
 	</select>
 
+	
+	
+	
+	
+	<select id="confirmClick" parameterType="BoardLike">
+		select count(*) from board_like
+		where user_id=#{userId} and colboard_id=#{colboardId}
+	</select>
+
 
 
 	<select id="getUserPopularBoardList" parameterType="String" resultType="ColBoard">
@@ -82,6 +92,27 @@
 		where user_id=#{userId}
 		ORDER BY view_cnt DESC
 		LIMIT 3;
+
 	</select>
 
+	<delete id="deleteClick" parameterType="BoardLike">
+		delete from board_like
+		where user_id=#{userId} and colboard_id=#{colboardId}
+	</delete>
+
+	<insert id="insertClick" parameterType="BoardLike">
+		insert into board_like (user_id, colboard_id)
+		values (#{userId}, #{colboardId})
+	</insert>
+	
+	 <select id="getLike" parameterType="int" resultType="int">
+	 	select count(*) from board_like
+	 	where colboard_id=#{colboardId}
+	 </select>
+	 
+	 
+	 
+	 
+
+	
 </mapper>

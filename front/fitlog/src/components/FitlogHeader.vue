@@ -21,7 +21,7 @@
       </span>
       <span class="right-link">광고 상품</span>
       <RouterLink class="right-link" to="/mypage">마이페이지</RouterLink>
-      <template v-if="!store.userId">
+      <template v-if="!userStore.userId">
         <span class="right-link" @click="goToLogin">로그인</span>
         <button class="signup-btn" @click="goToRegister">회원가입</button>
       </template>
@@ -39,8 +39,8 @@
 import router from '@/router';
 import { useUserStore } from '@/stores/userstore';
 
-const store = useUserStore();
-const userId = store.userId;
+const userStore = useUserStore();
+const userId = userStore.userId;
 
 const goToLogin = ()=>{
   router.push('/welcome/login')}
@@ -55,9 +55,9 @@ const goToHome = () => {
 
 const handleLogout = () => {
   console.log('Logout clicked');
-  console.log('Before clearUser - userId:', store.userId);
-  store.clearUser();  // 세션버리기
-  console.log('After clearUser - userId:', store.userId);
+  console.log('Before clearUser - userId:', userStore.userId);
+  userStore.clearUser();
+  console.log('After clearUser - userId:', userStore.userId);
   router.push('/');
 }
 </script>

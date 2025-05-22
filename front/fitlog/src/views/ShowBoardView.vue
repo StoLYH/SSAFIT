@@ -1,16 +1,14 @@
 <template>
   <div class="show-board-container" v-if="board">
     <div class="show-board-header-flex">
-      <div class="side-area left"><ShowBoardProfile /></div>                          <!-- 왼쪽 프로필-->
+      <div class="side-area left"><ShowBoardProfile :board="board" /></div>                          <!-- 왼쪽 프로필-->
       <div class="center-area"><ShowBoardTitle :board="board" /></div>                <!-- 게시글 제목-->  
       <div class="side-area right"><ShowBoardAuthorRecommend /></div>                 <!-- 오른쪽 추천 작가-->  
     </div>
 
 
     <!-- 게시글 본문 등 추가 영역은 여기에 -->
-    <div class="board-content">
-      <div class="board-content" v-html="board.content"></div>
-    </div>
+    <div class="board-content" v-html="board.content"></div>
 
 
     <!-- 버튼-->
@@ -20,9 +18,26 @@
         <button class="delete-btn" @click="deletefunction">삭제하기</button>
       </template>    
     </div>
-    <ShowBoardComment />
+    
+
+    <!-- 첨부파일 다운로드 리스트 (댓글 위에 위치) -->
+    <div v-if="fileList.length > 1" class="file-download-list">
+      <h4>첨부 파일</h4>
+      <ul>
+        <li v-for="file in fileList.slice(1)" :key="file.uploadName">
+          <a
+            :href="`${BASE_URL}/upload/sendImg/${file.uploadName}`"
+            :download="file.originalName"
+          >
+            {{ file.originalName }}
+          </a>
+        </li>
+      </ul>
+    </div>
   </div>
   <div v-else class="loading">로딩 중...</div>
+
+  <ShowBoardComment />
 </template>
 
 <script setup>
@@ -31,10 +46,10 @@ import ShowBoardTitle from '../components/showBoardDir/ShowBoardTitle.vue'
 import ShowBoardAuthorRecommend from '../components/showBoardDir/ShowBoardAuthorRecommend.vue'
 import ShowBoardComment from '../components/showBoardDir/ShowBoardComment.vue'
 import { useRoute } from 'vue-router'
-import {ref, watch} from 'vue'
+import {ref, watch, onMounted} from 'vue'
 import {getoneBoard} from '@/api/board'
 import { useUserStore } from '@/stores/userstore'
-import { deleteBoard } from '@/api/board'
+import { deleteBoard, getfileInformaton } from '@/api/board'
 import { useRouter } from 'vue-router'
 
 
@@ -43,12 +58,16 @@ const route = useRoute();
 const router = useRouter();
 const colboardId = ref(route.params.colboardId);  // ref로 변경
 const board = ref(null); // 게시물 정보
+const fileList = ref([])
+const BASE_URL = import.meta.env.VITE_FITLOG_API_URL
 
 // 게시물 데이터 로드 함수
 const loadBoard = async () => {
   try {
     const response = await getoneBoard(colboardId.value);
     board.value = response;
+    const res = await getfileInformaton(route.params.colboardId)
+    fileList.value = res
   } catch (error) {
     console.error('게시물 로드 실패:', error);
     alert('게시물을 불러오는데 실패했습니다.');
@@ -84,6 +103,17 @@ const deletefunction = async () => {
 const editfunction = () => {
   router.push("/edit/" + colboardId.value);
 }
+
+onMounted(async () => {
+  // ...기존 게시글 정보 로드...
+  try {
+    // ...기존 게시글 로드 코드...
+    const res = await getfileInformaton(route.params.colboardId)
+    fileList.value = res
+  } catch (e) {
+    // ...에러 처리...
+  }
+})
 
 </script>
 
@@ -166,5 +196,26 @@ const editfunction = () => {
   padding: 2rem;
   font-size: 1.2rem;
   color: #666;
+}
+.file-download-list {
+  margin: 2rem 0 1rem 0;
+}
+.file-download-list ul {
+  padding-left: 0;
+  list-style: none;
+}
+.file-download-list li {
+  margin-bottom: 0.5rem;
+}
+.file-download-list a {
+  color: #1976d2;
+  text-decoration: underline;
+  font-weight: 500;
+}
+.board-content {
+  margin-top: -170px;         /* 기존에 margin-top이 있다면 0으로 */
+  padding-top: 0;        /* 기존에 padding-top이 있다면 0으로 */
+  /* 필요하다면 아래도 추가 */
+  margin-bottom: 24px;   /* 아래쪽 여백만 살짝 */
 }
 </style>
