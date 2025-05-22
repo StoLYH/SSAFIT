@@ -8,11 +8,11 @@
       <div class="title">{{ post.title }}</div>
       <div class="summary">{{ removehtml }} </div>
       <div class="meta-row">
-        <span class="category">{{ post.category }}</span>
+        <span class="category">{{ getCategoryName(post.category) }}</span>
         <span class="author">{{ post.author }}</span>
         <span class="date">{{ post.date }}</span>
-        <span class="views">👁 1,308</span>
-        <span class="likes">👍 11</span>
+        <span class="views">👁 {{ post.viewCnt }}</span>
+        <span class="likes">👍 {{ likeCount }}</span>
         <span class="comments">💬 2</span>
       </div>
     </div>
@@ -21,7 +21,7 @@
 
 <script setup>
 import {watch, ref} from 'vue';
-import {getfileInformaton} from '@/api/board';
+import {getfileInformaton, getLike} from '@/api/board';
 import { useRouter } from 'vue-router';
 
 const props =defineProps({ post: Object })    // 각 게시판의 dto가 넘어온다
@@ -29,9 +29,21 @@ const props =defineProps({ post: Object })    // 각 게시판의 dto가 넘어�
 const fileinfo = ref(null);
 const removehtml = ref("");
 const router = useRouter();
+const likeCount = ref(0);
 
 function goToShow() {
   router.push('/show/' + props.post.colboardId);
+}
+
+function getCategoryName(num) {
+  switch (Number(num)) {
+    case 1: return "운동/트레이닝";
+    case 2: return "재활/통증";
+    case 3: return "영양/식단";
+    case 4: return "정신 건강/라이프스타일";
+    case 5: return "의학/질환";
+    default: return "카테고리 없음";
+  }
 }
 
 watch(
@@ -39,6 +51,7 @@ watch(
   async (newId) => {
     fileinfo.value = await getfileInformaton(newId);  // 게시판 id를 이용해서 해당 게시판의 파일정보 가져온다
     removehtml.value = props.post.content.replace(/<[^>]*>?/g, '').slice(0, 100);
+    likeCount.value = await getLike(newId);
   },
   { immediate: true } // 처음 렌더링 될 때도 실행
 )

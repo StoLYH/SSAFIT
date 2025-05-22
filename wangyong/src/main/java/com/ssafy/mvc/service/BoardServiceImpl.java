@@ -14,9 +14,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.ssafy.mvc.exception.BoardException;
 import com.ssafy.mvc.model.dao.BoardDao;
 import com.ssafy.mvc.model.dao.FileDao;
 import com.ssafy.mvc.model.dto.BoardFile;
+import com.ssafy.mvc.model.dto.BoardLike;
 import com.ssafy.mvc.model.dto.ColBoard;
 import com.ssafy.mvc.model.dto.SearchCondition;
 
@@ -292,6 +294,35 @@ public class BoardServiceImpl implements BoardService{
 	@Override
 	public List<ColBoard> getPopularBoard() {
 		return boardDao.getPopularBoardList();
+	}
+
+
+	@Override
+	public int clickBoardLike(BoardLike boardLike) {
+		
+		// 사용자 + 게시판 id 존재하는지 확인
+		int result = boardDao.confirmClick(boardLike);
+		
+		if (result == 1) {
+			// 존재하면 -> 기존 것 삭제
+			return boardDao.deleteClick(boardLike);
+		} else if (result == 0) {
+			// 존재안하면 -> 기존것 추가 
+			return boardDao.insertClick(boardLike);
+		} 
+		
+		// 오류
+		return -1;
+	}
+
+
+	@Override
+	public int getLikeCount(int colboardId) {
+		try {
+			return boardDao.getLike(colboardId);
+		} catch(Exception e) {
+			throw new BoardException("좋아요 조회 시 에러");
+		}
 	}
 
 

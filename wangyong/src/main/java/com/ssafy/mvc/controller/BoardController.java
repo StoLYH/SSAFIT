@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafy.mvc.exception.BoardException;
+import com.ssafy.mvc.model.dto.BoardLike;
 import com.ssafy.mvc.model.dto.ColBoard;
 import com.ssafy.mvc.model.dto.SearchCondition;
 import com.ssafy.mvc.service.BoardService;
@@ -118,7 +119,6 @@ public class BoardController {
 	public ResponseEntity<?> getMethod3(@PathVariable("colboardId") int colboardId) {
 		try {
 			ColBoard colBoard = boardService.getOneBoard(colboardId);
-			System.out.println("조회된 게시글: " + colBoard);
 			if (colBoard != null) {	
 				return ResponseEntity.status(HttpStatus.OK).body(colBoard);
 			} else {	
@@ -191,6 +191,7 @@ public class BoardController {
 	 */
 	@PutMapping("{colboardId}")
 	public ResponseEntity<String> postMethodName(@PathVariable("colboardId") int colboardId, @ModelAttribute ColBoard colBoard) {
+		System.out.println("확인좀 " + colBoard);
 		
 		try {
 			colBoard.setColboardId(colboardId);
@@ -213,7 +214,7 @@ public class BoardController {
 	@DeleteMapping("{colboardId}")
 	public ResponseEntity<String> deleteMethod(@PathVariable("colboardId") int colboardId) {
 		
-		System.out.println("삭제함???");
+
 		
 		try {
 			int result = boardService.deleteBoard(colboardId);
@@ -251,7 +252,30 @@ public class BoardController {
 
 
 
+	/**
+	 * Post 요청 
+	 * (사용자 id, colBoardId) 
+	 */
+	@PostMapping("/like")
+	public ResponseEntity<String> clickLike(@RequestBody BoardLike boardLike) {
+		System.out.println(boardLike + "좀 나와라!!!!!!");
+		
+		// boardService
+		int result = boardService.clickBoardLike(boardLike);
+		if (result == 1) {
+			return ResponseEntity.status(HttpStatus.OK).body("좋아요 요청 성공");
+		} else {
+			throw new BoardException("좋아요 요청 시 에러");
+		}
+	}
 
+	// 좋아요 조회하기
+	@GetMapping("/like/{colboardId}")
+	public ResponseEntity<Integer> getMethodName(@PathVariable("colboardId") int colboardId) {
+		int result = boardService.getLikeCount(colboardId);
+		return ResponseEntity.status(HttpStatus.OK).body(result);
+	}
+	
 
 
 

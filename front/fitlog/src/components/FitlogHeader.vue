@@ -56,7 +56,7 @@ const goToHome = () => {
 const handleLogout = () => {
   console.log('Logout clicked');
   console.log('Before clearUser - userId:', userStore.userId);
-  userStore.clearUser();  // 세션버리기
+  userStore.clearUser();
   console.log('After clearUser - userId:', userStore.userId);
   router.push('/');
 }

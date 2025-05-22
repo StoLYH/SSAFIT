@@ -18,6 +18,7 @@ export const useUserStore = defineStore('user', {
 
         // 토큰 세션스토리지에도 저장
         sessionStorage.setItem('token', data.token)
+        sessionStorage.setItem('userId', data.userId)
         return true
       } catch (error) {
         console.error('로그인 실패:', error)

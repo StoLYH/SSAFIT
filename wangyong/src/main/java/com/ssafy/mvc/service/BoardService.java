@@ -2,6 +2,7 @@ package com.ssafy.mvc.service;
 
 import java.util.List;
 
+import com.ssafy.mvc.model.dto.BoardLike;
 import com.ssafy.mvc.model.dto.ColBoard;
 import com.ssafy.mvc.model.dto.SearchCondition;
 
@@ -26,6 +27,12 @@ public interface BoardService {
 	
 	// 업로드 가장 최근 3개 가져오기
 	List<ColBoard> getRecentBoard();
-
     List<ColBoard> getPopularBoard();
+    int clickBoardLike(BoardLike boardLike);
+    
+    int getLikeCount (int colboardId);
+    
+    
+    
+    
 }
