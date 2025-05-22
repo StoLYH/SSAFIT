@@ -1,6 +1,8 @@
 package com.ssafy.mvc.controller;
 
+import com.ssafy.mvc.exception.BoardException;
 import com.ssafy.mvc.model.dto.User;
+import com.ssafy.mvc.model.dto.UserDetail;
 import com.ssafy.mvc.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,7 +29,7 @@ public class UserController {
     public ResponseEntity<String> registUser(
         @RequestParam("userId") String userId,
         @RequestParam("userName") String userName,
-        @RequestParam("userRole") String userRole,
+        @RequestParam("userRole") int userRole,
         @RequestParam("password") String password,
         @RequestParam(value = "attach", required = false) MultipartFile attach
     ) throws IOException {
@@ -44,7 +46,13 @@ public class UserController {
         return new ResponseEntity<>("fail", HttpStatus.NO_CONTENT);
     }
 
-    //Put방식으로 유저 정보 수정
+
+    //유저정보가져오기
+    @GetMapping("{userId}")
+    public ResponseEntity<User> getUserInfo(@PathVariable String userId) {
+            return ResponseEntity.status(HttpStatus.OK).body(userService.getUserInfo(userId));
+
+    }
 
 
     @PutMapping("{userId}") // ✅ 경로 변수는 반드시 {} 안에 써야 한다!
@@ -55,6 +63,15 @@ public class UserController {
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("user not found or update failed");
     }
+
+
+    //디테일 정보등록
+     @PutMapping("detail")
+  public ResponseEntity<?> updateUserDetail(@RequestBody UserDetail userDetail) {
+         System.out.println("userDetail: " + userDetail);
+      userService.updateUserDetail(userDetail);
+      return ResponseEntity.ok().build();
+  }
     
 
     /**

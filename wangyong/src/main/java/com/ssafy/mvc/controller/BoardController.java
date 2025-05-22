@@ -119,14 +119,14 @@ public class BoardController {
 		try {
 			ColBoard colBoard = boardService.getOneBoard(colboardId);
 			System.out.println("조회된 게시글: " + colBoard);
-			if (colBoard != null) {	
+			if (colBoard != null) {
 				return ResponseEntity.status(HttpStatus.OK).body(colBoard);
-			} else {	
+			} else {
 				return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 			}
 		} catch (Exception e) {	
 			e.printStackTrace();
-			throw new BoardException("개별 게시물 조회시 에러 발생: " + e.getMessage());	
+			throw new BoardException("개별 게시물 조회시 에러 발생: " + e.getMessage());
 		}
 	}
 	
@@ -137,6 +137,8 @@ public class BoardController {
 	 * 데이터가 없는 겨우 : 404
 	 * 서버 오류 : 500
 	 */
+
+	//마이페이지 전체칼럼
 	@GetMapping("user/{userId}")
 	public ResponseEntity<?> getMethod4(@PathVariable("userId") String userId) {
 		
@@ -154,7 +156,17 @@ public class BoardController {
 			throw new BoardException("사용자 게시물 조회시 에러 발생");		
 		}
 	}
-	
+
+	//마이페이지 인기칼럼
+	@GetMapping("user/popular{userId}")
+	public ResponseEntity<List<ColBoard>> getUserPopularColumns(@PathVariable String userId) {
+		try {
+			return ResponseEntity.status(HttpStatus.OK).body(boardService.getUserPopularBoard(userId));
+		} catch(Exception e) {
+			throw new BoardException("인기칼럼 조회시 에러");
+		}
+	}
+
 	
 	
 	/**
@@ -164,6 +176,15 @@ public class BoardController {
 	 *  정상 실행 : 201
 	 *  서버 오류 : 500
 	 */
+
+	//
+
+
+
+
+
+
+
 	@PostMapping
 	public ResponseEntity<String> postMethodName(@ModelAttribute ColBoard colBoard) {
 		
@@ -212,9 +233,9 @@ public class BoardController {
 	 */
 	@DeleteMapping("{colboardId}")
 	public ResponseEntity<String> deleteMethod(@PathVariable("colboardId") int colboardId) {
-		
+
 		System.out.println("삭제함???");
-		
+
 		try {
 			int result = boardService.deleteBoard(colboardId);
 			if (result == 1) {
@@ -231,7 +252,7 @@ public class BoardController {
 	// 최근에 올라온 칼럼 3개만 가져오도록 Limit 걸어두었다.
 	@GetMapping("recent")
 	public ResponseEntity<List<ColBoard>> getRecentColumns() {
-		
+
 		try {
 			return ResponseEntity.status(HttpStatus.OK).body(boardService.getRecentBoard());
 		} catch(Exception e) {
@@ -241,7 +262,7 @@ public class BoardController {
 
 	@GetMapping("popular")
 	public ResponseEntity<List<ColBoard>> getPopularColumns() {
-		
+
 		try {
 			return ResponseEntity.status(HttpStatus.OK).body(boardService.getPopularBoard());
 		} catch(Exception e) {

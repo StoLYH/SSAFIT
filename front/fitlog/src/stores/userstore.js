@@ -2,10 +2,11 @@
 import { defineStore } from 'pinia'
 import { PostLogin } from '@/api/auth'
 
+
 export const useUserStore = defineStore('user', {
   state: () => ({
-    userId: null,
-    token: null
+    userId: sessionStorage.getItem('userId') || null,
+    token: sessionStorage.getItem('token') || null
   }),
   actions: {
     async login(loginForm) {
@@ -17,13 +18,21 @@ export const useUserStore = defineStore('user', {
         this.token = data.token
 
         // 토큰 세션스토리지에도 저장
+        
         sessionStorage.setItem('token', data.token)
+        sessionStorage.setItem('userId', data.userId)
+
+        
         return true
       } catch (error) {
         console.error('로그인 실패:', error)
         return false
       }
-    },
+    }
+
+
+
+    ,
     setUser(userId, token) {
       this.userId = userId
       this.token = token
