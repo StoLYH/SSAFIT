@@ -84,8 +84,7 @@ export {
     getsearch,
     deleteBoard,
     updateBoard,
-    serveFile
-    getsearch,
+    serveFile,
     getUserColumns,
     getUserPopularColumns
 };

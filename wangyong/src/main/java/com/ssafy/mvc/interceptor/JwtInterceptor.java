@@ -1,4 +1,4 @@
-package com.ssafy.mvc.Interceptor;
+package com.ssafy.mvc.interceptor;
 
 
 import com.ssafy.mvc.jwt.JwtUtil;
@@ -44,3 +44,5 @@ public class JwtInterceptor implements HandlerInterceptor {
         return false;
     }
 }
+
+

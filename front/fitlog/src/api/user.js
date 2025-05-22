@@ -33,7 +33,7 @@ const confirmName = async (userName) => {
 export{
     PostRegist,
     confirmId,
-    confirmName
+    confirmName,
     GetInfo,
     updateUserDetail
 }
