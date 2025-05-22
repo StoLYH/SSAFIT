@@ -1,20 +1,63 @@
 <template>
   <div class="board-header-container">
-    <div class="board-category">{{ props.board.category }}</div>
+    <div class="board-category">{{ getCategoryName(props.board.category) }}</div>
     <div class="board-title">{{ props.board.title }}</div>
     <div class="board-meta-row">
       <img class="profile-img" src="https://randomuser.me/api/portraits/men/32.jpg" alt="프로필" />
-      <span class="profile-name">영양학자 김사원</span>
-      <span class="board-date">2023.03.21</span>
-      <span class="board-views">👁 1,308</span>
-      <span class="board-likes">👍 11</span>
+      <span class="profile-name">{{ props.board.userId }}</span>
+      <span class="board-date">{{ props.board.createdAt }}</span>
+      <span class="board-views">👁 {{ props.board.viewCnt }}</span>
+      <span class="board-likes" @click="updateLike"> 👍 {{ likeCount }} </span>
+      
     </div>
   </div>
 </template>
 
 <script setup>
+import { clickLike, getLike } from '@/api/board';  
+import { useUserStore } from '@/stores/userstore';
+import { onMounted, ref } from 'vue';
 const props = defineProps({ board: Object });
-console.log(props.board);
+const userStore = useUserStore();
+
+const likeCount = ref(0);
+
+onMounted(async () => {
+  likeCount.value = await getLike(props.board.colboardId);
+})
+
+function getCategoryName(num) {
+  switch (Number(num)) {
+    case 1: return "운동/트레이닝";
+    case 2: return "재활/통증";
+    case 3: return "영양/식단";
+    case 4: return "정신 건강/라이프스타일";
+    case 5: return "의학/질환";
+    default: return "카테고리 없음";
+  }
+}
+
+const updateLike = async () => {
+  if (!userStore.userId) {
+    return;
+  }
+  
+  try {
+    const res = await clickLike({
+      userId: userStore.userId,
+      colboardId: props.board.colboardId
+    })
+
+    likeCount.value = await getLike(props.board.colboardId);
+
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+
+
+
 
 </script>
 

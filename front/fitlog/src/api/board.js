@@ -72,7 +72,15 @@ const serveFile = async (uploadName) => {
     return data;
 }
 
+const clickLike = async (boardLike) => {
+    const response = await api.post("board/like", boardLike);
+    return response;
+}
 
+const getLike = async (colboardId) => {
+    const {data} = await api.get("board/like/" + colboardId);
+    return data;
+}
 
 export {
     getRecentColumns,
@@ -85,6 +93,8 @@ export {
     deleteBoard,
     updateBoard,
     serveFile,
+    clickLike,
+    getLike,
     getUserColumns,
     getUserPopularColumns
 };

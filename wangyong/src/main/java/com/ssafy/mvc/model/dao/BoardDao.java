@@ -3,6 +3,7 @@ package com.ssafy.mvc.model.dao;
 import java.util.List;
 
 import com.ssafy.mvc.model.dto.BoardFile;
+import com.ssafy.mvc.model.dto.BoardLike;
 import com.ssafy.mvc.model.dto.ColBoard;
 import com.ssafy.mvc.model.dto.SearchCondition;
 
@@ -34,5 +35,13 @@ public interface BoardDao {
 
     List<ColBoard> getPopularBoardList();
 
+
+    int confirmClick(BoardLike boardLike);
+    int deleteClick(BoardLike boardLike);
+    int insertClick(BoardLike boardLike);
+    
+    int getLike(int colboardId);
+
 	List<ColBoard> getUserPopularBoardList(String userId);
+
 }
