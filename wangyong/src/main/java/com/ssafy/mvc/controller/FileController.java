@@ -42,7 +42,8 @@ public class FileController {
 	// 서버에 저장된 파일을 준다.		
 	@GetMapping("/sendImg/{fileName}")
     public ResponseEntity<Resource> serveFile(@PathVariable String fileName) {
-        
+		System.out.println(fileName);
+
 		
 		try {
             // 경로를 지정하고 리소스 객체로 변환
@@ -74,7 +75,7 @@ public class FileController {
 	 */
 	 @GetMapping("{colboardId}")
 	public ResponseEntity<List<BoardFile>> getMethod4(@PathVariable("colboardId") int colboardId) {
-		 
+
 		 List<BoardFile> list = fileService.getBoardFiles(colboardId);
 		 if (list != null) {
 			 return ResponseEntity.status(HttpStatus.OK).body(list);
@@ -82,6 +83,19 @@ public class FileController {
 			 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		 }
 	 }
+
+	@GetMapping("user/{userId}")
+	public ResponseEntity<UserFile> getMethod5(@PathVariable("userId") String userId) {
+
+		UserFile userFile = fileService.getUserFiles(userId);
+
+
+		if (userFile == null) {
+			return ResponseEntity.status(HttpStatus.OK).body(userFile);
+		} else {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+		}
+	}
 
 	
 	

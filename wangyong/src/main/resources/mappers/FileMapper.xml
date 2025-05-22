@@ -16,7 +16,7 @@
 	</delete>
 
 	<!-- 프로필 이미지 관련 SQL -->
-	<select id="getProfileImage" parameterType="string" resultType="UserFile">
+	<select id="getUserFile" parameterType="string" resultType="UserFile">
 		select * from user_file
 		where user_id=#{userId}
 	</select>
