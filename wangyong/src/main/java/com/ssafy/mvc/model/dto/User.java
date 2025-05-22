@@ -10,10 +10,22 @@ public class User {
     private int userRole;
     private String password;
     private MultipartFile attach;
-    private UserFile userFile;	// 각 파일에 대한 정보
+    private UserFile userFile;
+    private UserRole userRoleName;
+    // 각 파일에 대한 정보
 
     //생성자
 
+
+
+
+    public UserRole getUserRoleName() {
+        return userRoleName;
+    }
+
+    public void setUserRoleName(UserRole userRoleName) {
+        this.userRoleName = userRoleName;
+    }
 
     public MultipartFile getAttach() {
         return attach;

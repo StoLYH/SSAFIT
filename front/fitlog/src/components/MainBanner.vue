@@ -13,7 +13,6 @@ import CategoryBar from './CategoryBar.vue'
 .main-banner {
   position: relative;
   width: 100%;
-  height: 320px;
   overflow: hidden;
   margin-bottom: 32px;
 }

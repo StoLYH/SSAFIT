@@ -17,13 +17,19 @@
       <!-- 인기 칼럼 -->
       <section>
         <h2>{{ userInfo.nickname }}의 인기 칼럼</h2>
-        <ColumnList :items="popularColumns" />
+        <div v-if="popularColumns.length === 0" class="no-data">
+          아직 등록된 게시물이 없습니다.
+        </div>
+        <ColumnList v-else :items="popularColumns" />
       </section>
   
       <!-- 전체 칼럼 -->
       <section>
         <h2>{{ userInfo.nickname }}의 전체 칼럼</h2>
-        <PostList :posts="posts" />
+        <div v-if="posts.length === 0" class="no-data">
+          아직 등록된 게시물이 없습니다.
+        </div>
+        <PostList v-else :posts="posts" />
       </section>
     </div>
   </template>
@@ -41,10 +47,10 @@ import { GetInfo } from '@/api/user'
   const posts = ref([]);
   const store = useUserStore();
   
-  const profileImg = ref('/profile_default.png') // 기본 프로필 이미지
+  const profileImg = ref('/landingpage2.png') // 기본 프로필 이미지
   const userInfo = ref({
-    nickname: store.userId,
-    role: data.userRole,
+    nickname: '당신은 누구십니까',
+    role: '당신의 직업은?',
     desc: 'working out is essential to me',
     extra: [
       'winning bodybuilding contest',
@@ -57,19 +63,25 @@ import { GetInfo } from '@/api/user'
   const popularColumns = ref([])
   
   onMounted(async () => {
-  if (store.userId) {
-    posts.value = await getUserColumns(store.userId)
-    popularColumns.value = await getUserPopularColumns(store.userId)
-  }
-  data.value = await GetInfo(store.userId);
-  userInfo.value = {
-      nickname: data.value.userName,
-      role: data.value.userRolerole,
+    if (store.userId) {
+      try {
+        data.value = await GetInfo(store.userId);
+        userInfo.value = {
+          nickname: data.value.userName,
+          role: data.value.userRoleName.userRoleName 
+        }
+      } catch (error) {
+        console.error('Error fetching user info:', error);
+      }
+
+      // 게시물 데이터 가져오기
+      const columns = await getUserColumns(store.userId);
+      posts.value = columns || []; // null이나 undefined면 빈 배열로
+
+      const popular = await getUserPopularColumns(store.userId);
+      popularColumns.value = popular || []; // null이나 undefined면 빈 배열로
     }
-  
-
-
-})  
+  })  
 
 
 
@@ -138,5 +150,11 @@ import { GetInfo } from '@/api/user'
     font-size: 1.3rem;
     font-weight: bold;
     margin-bottom: 18px;
+  }
+  .no-data {
+    text-align: center;
+    padding: 2rem;
+    color: #666;
+    font-size: 1.1rem;
   }
   </style>
