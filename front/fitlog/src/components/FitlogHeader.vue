@@ -20,13 +20,13 @@
         </svg>
       </span>
       <span class="right-link">광고 상품</span>
-      <span class="right-link">작가 지원</span>
+      <RouterLink class="right-link" to="/mypage">마이페이지</RouterLink>
       <template v-if="!userStore.userId">
         <span class="right-link" @click="goToLogin">로그인</span>
         <button class="signup-btn" @click="goToRegister">회원가입</button>
       </template>
       <template v-else>
-        <span class="right-link">{{ userStore.userId }}님</span>
+        <span class="right-link">{{ userId }}님</span>
         <button class="signup-btn" @click="handleLogout">로그아웃</button>
       </template>
     </div>
@@ -37,13 +37,13 @@
 
 <script setup>
 import router from '@/router';
-import { useUserStore } from '@/stores/userstore'
+import { useUserStore } from '@/stores/userstore';
 
 const userStore = useUserStore();
+const userId = userStore.userId;
 
-const goToLogin = () => {
-  router.push('/welcome/login')
-}
+const goToLogin = ()=>{
+  router.push('/welcome/login')}
 
 const goToRegister = () => {
   router.push('/welcome/regist')

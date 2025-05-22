@@ -28,11 +28,13 @@ public interface BoardService {
 	// 업로드 가장 최근 3개 가져오기
 	List<ColBoard> getRecentBoard();
     List<ColBoard> getPopularBoard();
+
     int clickBoardLike(BoardLike boardLike);
     
     int getLikeCount (int colboardId);
     
     
-    
-    
+
+
+	List<ColBoard> getUserPopularBoard(String userId);
 }

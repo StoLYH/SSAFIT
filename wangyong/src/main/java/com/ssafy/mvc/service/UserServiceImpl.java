@@ -3,6 +3,7 @@ package com.ssafy.mvc.service;
 import com.ssafy.mvc.model.dao.UserDao;
 import com.ssafy.mvc.model.dto.LoginRequest;
 import com.ssafy.mvc.model.dto.User;
+import com.ssafy.mvc.model.dto.UserDetail;
 import com.ssafy.mvc.model.dto.UserFile;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -77,13 +78,23 @@ public class UserServiceImpl implements UserService {
 			return user;
 		}
 	}
-	
-	
+
+	@Override
+	public User getUserInfo(String userId) {
+		return userDao.findUserByIdUser(userId);
+	}
+
+	@Override
+	public int updateUserDetail(UserDetail userDetail) {
+		return userDao.updateUserDetail(userDetail);
+	}
+
+
 	@Override
 	public boolean confirmId(String id) {
 		// 1. id 중복성 검사
 		int result = userDao.confirmId(id);
-		
+
 		if (result == 1) {	// 중복
 			return false;
 		}
@@ -92,13 +103,12 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public boolean confirmName(String name) {
-		// Name중복성 검사 
+		// Name중복성 검사
 		int result = userDao.confirmName(name);
 		if (result == 1) {	// 중복
 			return false;
 		}
 		return true;		// 비중복
 	}
-	
-}
 
+}

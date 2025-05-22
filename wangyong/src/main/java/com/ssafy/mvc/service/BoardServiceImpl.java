@@ -296,6 +296,11 @@ public class BoardServiceImpl implements BoardService{
 		return boardDao.getPopularBoardList();
 	}
 
+	@Override
+	public List<ColBoard> getUserPopularBoard(String userId) {
+		return boardDao.getUserPopularBoardList(userId);
+	}
+
 
 	@Override
 	public int clickBoardLike(BoardLike boardLike) {

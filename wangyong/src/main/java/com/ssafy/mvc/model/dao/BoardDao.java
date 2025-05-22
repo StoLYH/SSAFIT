@@ -22,7 +22,7 @@ public interface BoardDao {
 	
 	int delete(int colboardId);
 	
-	List<ColBoard> getBoardByUser(String user_id);
+	List<ColBoard> getBoardByUser(String userId);
 	
 	// 조회수 증가하기
 	int upBoardCnt(int colboardId);
@@ -35,10 +35,13 @@ public interface BoardDao {
 
     List<ColBoard> getPopularBoardList();
 
+
     int confirmClick(BoardLike boardLike);
     int deleteClick(BoardLike boardLike);
     int insertClick(BoardLike boardLike);
     
     int getLike(int colboardId);
+
+	List<ColBoard> getUserPopularBoardList(String userId);
 
 }

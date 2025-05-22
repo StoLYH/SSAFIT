@@ -37,7 +37,7 @@
 	
 	<select id="getBoardByUser" parameterType="String" resultType="ColBoard">
 		select * from col_board
-		where user_id=#{user_id}
+		where user_id=#{userId}
 	</select>
 	
 	<update id="upBoardCnt" parameterType="int">
@@ -75,6 +75,7 @@
 		ORDER BY view_cnt DESC
 		LIMIT 3;
 	</select>
+
 	
 	
 	
@@ -82,6 +83,16 @@
 	<select id="confirmClick" parameterType="BoardLike">
 		select count(*) from board_like
 		where user_id=#{userId} and colboard_id=#{colboardId}
+	</select>
+
+
+
+	<select id="getUserPopularBoardList" parameterType="String" resultType="ColBoard">
+		SELECT * FROM col_board
+		where user_id=#{userId}
+		ORDER BY view_cnt DESC
+		LIMIT 3;
+
 	</select>
 
 	<delete id="deleteClick" parameterType="BoardLike">
