@@ -37,11 +37,11 @@ public class FileController {
 	public FileController(FileService fileService) {
 		this.fileService = fileService;
 	}
-	
+
 	// 서버에 저장된 파일을 준다.		
 	@GetMapping("/sendImg/{fileName}")
     public ResponseEntity<Resource> serveFile(@PathVariable String fileName) {
-        
+
 		try {
             // 경로를 지정하고 리소스 객체로 변환
             Path filePath = Paths.get(uploadDir).resolve(fileName).normalize();
@@ -81,6 +81,18 @@ public class FileController {
 		 }
 	 }
 
+	@GetMapping("user/{userId}")
+	public ResponseEntity<UserFile> getMethod5(@PathVariable("userId") String userId) {
+		UserFile userFile = fileService.getUserFiles(userId);
+		if (userFile != null) {
+			return ResponseEntity.status(HttpStatus.OK).body(userFile);
+		} else {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+		}
+	}
+
+
+	
 	 /**
 	  * 파일 다운로드
 	  * 이해 x => 가져다 쓴다.

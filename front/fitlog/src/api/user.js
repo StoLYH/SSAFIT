@@ -1,4 +1,8 @@
 import {api, api_file} from "./index";
+
+
+
+
 // import axios를 할필요없음 
 // user 관련된 기능들만 모음 
 const USER_API_BASE ="/api/user";
@@ -11,6 +15,11 @@ const PostRegist = async (registForm)=>{
 
 const GetInfo = async (userId)=>{
     const{data}= await api.get(`${USER_API_BASE}/${userId}`)
+    return data;
+}
+
+const GetImg = async (userId)=>{
+    const{data}= await api.get(`/upload/user/${userId}`)
     return data;
 }
 
@@ -35,5 +44,6 @@ export{
     confirmId,
     confirmName,
     GetInfo,
-    updateUserDetail
+    updateUserDetail,
+    GetImg
 }

@@ -16,4 +16,5 @@ public interface FileDao {
 	UserFile getProfileImage(String userId);
 	int insertProfileImage(UserFile userFile);
 	int deleteProfileImage(String userId);
+	UserFile getUserFile(String userId);
 }

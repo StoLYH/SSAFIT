@@ -13,7 +13,7 @@ import com.ssafy.mvc.model.dto.Review;
 import com.ssafy.mvc.service.ReviewService;
 @CrossOrigin(origins = "http://localhost:5173")
 @RestController
-@RequestMapping("/review")
+@RequestMapping("/api/review")
 public class ReviewController {
 	
 	private final ReviewService reviewService;
@@ -32,6 +32,7 @@ public class ReviewController {
 	//colboardId 받아서 해당 리뷰 보여줌 
 	@GetMapping("{colboardId}")
 	public ResponseEntity<List<Review>>getAllReviews(@PathVariable int colboardId){
+		System.out.println(colboardId);
 		List<Review>list = reviewService.selectAllReviews(colboardId);
 		if(!list.isEmpty()) {
 			return ResponseEntity.ok(list);	
