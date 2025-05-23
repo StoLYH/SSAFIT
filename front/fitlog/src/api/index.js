@@ -33,8 +33,13 @@ api_file.interceptors.request.use((config)=>{
     return config;
 })
 
+const api_download = axios.create({
+    baseURL: import.meta.env.VITE_FITLOG_API_URL,
+    responseType: 'blob' // 중요: binary 파일 받을 준비
+});
 
 
 
-export { api, api_file };
+
+export { api, api_file, api_download };
 
