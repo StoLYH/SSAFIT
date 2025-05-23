@@ -37,7 +37,7 @@
   </div>
   <div v-else class="loading">로딩 중...</div>
 
-  <ShowBoardComment />
+  <ShowBoardComment :board="board" />
 </template>
 
 <script setup>

@@ -25,7 +25,6 @@ import { GetImg } from '@/api/user.js'
 
 const props = defineProps({ board: Object });
 const userStore = useUserStore();
-const data = ref({})
 const profileData = ref({});
 const profileImg = ref('/landingpage2.png') //
 
