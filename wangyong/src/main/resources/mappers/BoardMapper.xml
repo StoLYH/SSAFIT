@@ -76,7 +76,13 @@
 		LIMIT 3;
 	</select>
 
-	
+	<select id="getUserPopularBoardList" parameterType="String" resultType="ColBoard">
+		SELECT * FROM col_board
+		where user_id=#{userId}
+		ORDER BY view_cnt DESC
+		LIMIT 3;
+
+	</select>
 	
 	
 	
@@ -85,15 +91,6 @@
 		where user_id=#{userId} and colboard_id=#{colboardId}
 	</select>
 
-
-
-	<select id="getUserPopularBoardList" parameterType="String" resultType="ColBoard">
-		SELECT * FROM col_board
-		where user_id=#{userId}
-		ORDER BY view_cnt DESC
-		LIMIT 3;
-
-	</select>
 
 	<delete id="deleteClick" parameterType="BoardLike">
 		delete from board_like
@@ -110,8 +107,26 @@
 	 	where colboard_id=#{colboardId}
 	 </select>
 	 
+
+	 <select id="getMonthBestWriter" resultType="String">
+	 	select cb.user_id
+		from board_like bl
+		join col_board cb on bl.colboard_id = cb.colboard_id
+		group by cb.user_id
+		order by count(*) desc
+		limit 3;
+	 </select>
 	 
-	 
+	 <select id="getBestBoard" parameterType="String" resultType="int">
+	 	select 
+ 	    cb.colboard_id
+		from col_board cb
+		left join board_like bl on cb.colboard_id = bl.colboard_id
+		where cb.user_id = #{writer}
+		group by cb.colboard_id
+		order by count(bl.like_id) desc
+		limit 3;
+	 </select>
 	 
 
 	

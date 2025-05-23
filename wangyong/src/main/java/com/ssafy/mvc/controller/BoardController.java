@@ -14,6 +14,7 @@ import com.ssafy.mvc.exception.BoardException;
 import com.ssafy.mvc.model.dto.BoardLike;
 import com.ssafy.mvc.model.dto.ColBoard;
 import com.ssafy.mvc.model.dto.SearchCondition;
+import com.ssafy.mvc.model.dto.User;
 import com.ssafy.mvc.service.BoardService;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -132,6 +133,29 @@ public class BoardController {
 	}
 	
 	
+	
+	/**
+	 *  메인페이지 게시물에 해당하는 위와 동일(조회수 증가만 막는다)
+	 */
+	@GetMapping("withoutCnt/{colboardId}")
+	public ResponseEntity<?> getMethod4(@PathVariable("colboardId") int colboardId) {
+		try {
+			ColBoard colBoard = boardService.getOneBoardWithoutCnt(colboardId);
+
+			if (colBoard != null) {
+				return ResponseEntity.status(HttpStatus.OK).body(colBoard);
+			} else {
+				return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+			}
+		} catch (Exception e) {	
+			e.printStackTrace();
+			throw new BoardException("개별 게시물 조회시 에러 발생: " + e.getMessage());
+		}
+	}
+	
+	
+	
+	
 	/**
 	 * user_id(기본키)를 이용하여 마이페이지에서 사용자가 등록한 게시물 조회
 	 * 정상 실행 : 200
@@ -177,15 +201,6 @@ public class BoardController {
 	 *  정상 실행 : 201
 	 *  서버 오류 : 500
 	 */
-
-	//
-
-
-
-
-
-
-
 	@PostMapping
 	public ResponseEntity<String> postMethodName(@ModelAttribute ColBoard colBoard) {
 		
@@ -277,7 +292,6 @@ public class BoardController {
 	 */
 	@PostMapping("/like")
 	public ResponseEntity<String> clickLike(@RequestBody BoardLike boardLike) {
-		System.out.println(boardLike + "좀 나와라!!!!!!");
 		
 		// boardService
 		int result = boardService.clickBoardLike(boardLike);
@@ -295,7 +309,13 @@ public class BoardController {
 		return ResponseEntity.status(HttpStatus.OK).body(result);
 	}
 	
-
+	// 이달의 작가 (1달간 추천 수 1위)
+	@GetMapping("/MonthWriterBoards")
+	public ResponseEntity<List<List<Integer>>> getWriter() {
+		List<List<Integer>> bestBoards = boardService.getBestWriterBoards();
+		 
+		return ResponseEntity.status(HttpStatus.OK).body(bestBoards);
+	}
 
 
 

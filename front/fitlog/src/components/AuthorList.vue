@@ -1,14 +1,15 @@
 <template>
+ 
   <section class="section">
-    <h2>{{ title }}</h2>
-    <div class="author-list">
-      <div class="author-card" v-for="(author, idx) in authors" :key="idx">
-        <div class="author-name">{{ author.name }}</div>
-        <div class="author-subtitle">“{{ author.subtitle }}”</div>
+  <h2>이달의 작가 </h2>
+   <div class="author-list">
+      <div class="author-card" v-for="(writer, idx) in writers" :key="idx">
+        <div class="author-name">{{ writer }}</div>
+        <div class="author-subtitle">"작가의 인사말"</div>
         <ul class="column-list">
-          <li v-for="(col, i) in author.columns" :key="i">
-            <img src="/un.png" alt="썸네일" class="square-img" />
-            <span class="col-title">{{ col }}</span>
+          <li v-for="(board) in getAuthorBoards(idx)" :key="board.colboardId" @click="goToBoard(board.colboardId)" class="clickable">
+            <img :src="imageUrls[board.colboardId] || '/un.png'" alt="썸네일" class="square-img" />
+            <span class="col-title">{{ board.title }}</span>
           </li>
         </ul>
         <div class="more-link">해당 작가의 글 더보기 &gt;</div>
@@ -18,17 +19,73 @@
 </template>
 
 <script setup>
+import { ref, onMounted, watch, computed } from 'vue'
+import { useRouter } from 'vue-router'
+import { getfileInformaton } from '@/api/board'
+
+const router = useRouter()
+
 const props = defineProps({
-  title: String,
-  authors: {
-    type: Array,
-    default: () => []
-  }
+  writer: Array,
+  AuthorsBoard1: Array,
+  AuthorsBoard2: Array,
+  AuthorsBoard3: Array,
 })
 
+const writers = computed(() => props.writer)
 
+const imageUrls = ref({}) // { [colboardId]: url }
 
+const getAuthorBoards = (authorIndex) => {
+  switch(authorIndex) {
+    case 0:
+      return props.AuthorsBoard1
+    case 1:
+      return props.AuthorsBoard2
+    case 2:
+      return props.AuthorsBoard3
+    default:
+      return []
+  }
+}
 
+const goToBoard = (colboardId) => {
+  router.push(`/show/${colboardId}`)
+}
+
+onMounted(() => {
+  [props.AuthorsBoard1, props.AuthorsBoard2, props.AuthorsBoard3].forEach(async (boards) => {
+    if (boards) {
+      for (const board of boards) {
+        const fileList = await getfileInformaton(board.colboardId)
+        if (fileList && fileList[0] && fileList[0].uploadName) {
+          imageUrls.value[board.colboardId] = `http://localhost:8080/upload/sendImg/${fileList[0].uploadName}`
+        } else {
+          imageUrls.value[board.colboardId] = '/un.png'
+        }
+      }
+    }
+  })
+})
+
+watch(
+  () => [props.AuthorsBoard1, props.AuthorsBoard2, props.AuthorsBoard3],
+  (newBoards) => {
+    newBoards.forEach(async (boards) => {
+      if (boards) {
+        for (const board of boards) {
+          const fileList = await getfileInformaton(board.colboardId)
+          if (fileList && fileList[0] && fileList[0].uploadName) {
+            imageUrls.value[board.colboardId] = `http://localhost:8080/upload/sendImg/${fileList[0].uploadName}`
+          } else {
+            imageUrls.value[board.colboardId] = '/un.png'
+          }
+        }
+      }
+    })
+  },
+  { deep: true }
+)
 
 </script>
 
@@ -98,6 +155,14 @@ const props = defineProps({
 }
 .more-link:hover {
   color: #f9c846;
+}
+.clickable {
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+.clickable:hover {
+  background-color: #f5f5f5;
+  border-radius: 8px;
 }
 @media (max-width: 900px) {
   .author-list {
