@@ -1,4 +1,4 @@
-import { api_file,  api } from './index'
+import { api_file,  api, api_download } from './index'
 
 // 메인페이지 인기 게시물 가져오기
 
@@ -50,9 +50,15 @@ const getfileInformaton = async (colboardId) => {
     return data;
 }
 
-// 게시물 1개 가져오기
+// 게시물 1개 가져오기 + 조회수 증가
 const  getoneBoard = async (colboardId) => {
     const {data} = await api.get("board/" + colboardId);
+    return data;
+}
+
+// 게시물 1개 가져오기 + 조회수 증가x
+const  getoneBoardWithoutCnt = async (colboardId) => {
+    const {data} = await api.get("board/withoutCnt/" + colboardId);
     return data;
 }
 
@@ -82,6 +88,45 @@ const getLike = async (colboardId) => {
     return data;
 }
 
+const fileDownload = async (uploadName) => {
+    try {
+        const response = await api_download.get("upload/download/" + uploadName);
+        
+        // Content-Disposition 헤더에서 파일명 추출
+        const contentDisposition = response.headers['content-disposition'];
+        let fileName = uploadName;
+        if (contentDisposition) {
+            const fileNameMatch = contentDisposition.match(/filename="(.+)"/);
+            if (fileNameMatch) {
+                fileName = decodeURIComponent(fileNameMatch[1]);
+            }
+        }
+
+        // Blob 객체 생성 및 다운로드
+        const blob = new Blob([response.data]);
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = fileName;
+        document.body.appendChild(link);
+        link.click();
+        
+        // Cleanup
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(link);
+        
+        return true;
+    } catch (error) {
+        console.error('File download failed:', error);
+        throw error;
+    }
+}
+
+const getBestBoards = async () => {
+    const {data} = await api.get("board/MonthWriterBoards");
+    return data
+}
+
 export {
     getRecentColumns,
     getPopularColumns,
@@ -96,5 +141,8 @@ export {
     clickLike,
     getLike,
     getUserColumns,
-    getUserPopularColumns
+    getUserPopularColumns,
+    fileDownload,
+    getBestBoards,
+    getoneBoardWithoutCnt
 };

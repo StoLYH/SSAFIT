@@ -38,12 +38,10 @@ public class FileController {
 		this.fileService = fileService;
 	}
 	
-	
 	// 서버에 저장된 파일을 준다.		
 	@GetMapping("/sendImg/{fileName}")
     public ResponseEntity<Resource> serveFile(@PathVariable String fileName) {
         
-		
 		try {
             // 경로를 지정하고 리소스 객체로 변환
             Path filePath = Paths.get(uploadDir).resolve(fileName).normalize();
@@ -83,6 +81,32 @@ public class FileController {
 		 }
 	 }
 
-	
-	
+	 /**
+	  * 파일 다운로드
+	  * 이해 x => 가져다 쓴다.
+	  */
+	 @GetMapping("/download/{fileName}")
+	 public ResponseEntity<Resource> downloadFile(@PathVariable String fileName) {
+
+	     try {
+	         // 실제 파일 경로 생성
+	         Path filePath = Paths.get(uploadDir).resolve(fileName).normalize();
+	         Resource resource = new UrlResource(filePath.toUri());
+
+	         if (!resource.exists()) {
+	             return ResponseEntity.notFound().build();
+	         }
+
+	         // 파일 확장자와 상관없이 다운로드 처리하도록 설정
+	         String encodedFileName = java.net.URLEncoder.encode(fileName, "UTF-8").replaceAll("\\+", "%20");
+
+	         return ResponseEntity.ok()
+	                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + encodedFileName + "\"")
+	                 .header(HttpHeaders.CONTENT_TYPE, "application/octet-stream") // 모든 바이너리 파일 지원
+	                 .body(resource);
+
+	     } catch (IOException e) {
+	         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+	     }
+	 }
 }

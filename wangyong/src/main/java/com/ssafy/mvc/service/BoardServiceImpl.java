@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -21,6 +22,7 @@ import com.ssafy.mvc.model.dto.BoardFile;
 import com.ssafy.mvc.model.dto.BoardLike;
 import com.ssafy.mvc.model.dto.ColBoard;
 import com.ssafy.mvc.model.dto.SearchCondition;
+import com.ssafy.mvc.model.dto.User;
 
 @Service
 public class BoardServiceImpl implements BoardService{
@@ -130,6 +132,18 @@ public class BoardServiceImpl implements BoardService{
 		
 		return board;
 	}
+	
+	@Override
+	public ColBoard getOneBoardWithoutCnt(int colboardId) {
+		
+		List<BoardFile> File = fileDao.getFiles(colboardId);  // 해당하는 게시판이 가지고 있는 파일정보
+		
+		ColBoard board = boardDao.getBoard(colboardId);				
+		board.setBoardFiles(File);
+		
+		return board;
+	}
+	
 
 
 	@Override
@@ -315,7 +329,8 @@ public class BoardServiceImpl implements BoardService{
 			// 존재안하면 -> 기존것 추가 
 			return boardDao.insertClick(boardLike);
 		} 
-		
+	
+		System.out.println("뇽안");
 		// 오류
 		return -1;
 	}
@@ -328,6 +343,22 @@ public class BoardServiceImpl implements BoardService{
 		} catch(Exception e) {
 			throw new BoardException("좋아요 조회 시 에러");
 		}
+	}
+
+
+	@Override
+	public List<List<Integer>> getBestWriterBoards() {
+		// 인기 작가 3명 가져와 (추천수 한달간 종합 랭킹 3위까지)
+		List<String> BestWriter = boardDao.getMonthBestWriter();
+		
+		List<List<Integer>> bestList = new ArrayList<>();
+		// 인기 작가마다 추천 가장 많이 많은 게시물 3개 가져와
+		for (int i = 0; i < 3; i++) {
+			List<Integer> list = boardDao.getBestBoard(BestWriter.get(i));
+			bestList.add(list);
+		}
+		
+		return bestList;
 	}
 
 

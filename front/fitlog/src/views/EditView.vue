@@ -63,7 +63,7 @@ import Editor from '@toast-ui/editor'
 import '@toast-ui/editor/dist/toastui-editor.css'
 import colorSyntax from '@toast-ui/editor-plugin-color-syntax'
 import '@toast-ui/editor-plugin-color-syntax/dist/toastui-editor-plugin-color-syntax.css'
-import { getoneBoard, updateBoard, getfileInformaton, serveFile } from '@/api/board'
+import { getoneBoardWithoutCnt, updateBoard, getfileInformaton, serveFile } from '@/api/board'
 import { useRoute, useRouter } from 'vue-router'
 
 const route = useRoute()
@@ -93,7 +93,7 @@ const categories = [
 // 게시글 데이터 로드 함수
 const loadBoard = async () => {
   try {
-    const data = await getoneBoard(route.params.colboardId)
+    const data = await getoneBoardWithoutCnt(route.params.colboardId)
     board.value = data                        // 게시글 객체
     title.value = board.value.title           // 게시글 제목
     selectedCategory.value = board.value.category  // 게시글 카테고리
