@@ -2,9 +2,11 @@ package com.ssafy.mvc.service;
 
 import java.util.List;
 
+import com.ssafy.mvc.model.dto.BoardFile;
 import com.ssafy.mvc.model.dto.BoardLike;
 import com.ssafy.mvc.model.dto.ColBoard;
 import com.ssafy.mvc.model.dto.SearchCondition;
+import com.ssafy.mvc.model.dto.User;
 
 public interface BoardService {
 	//
@@ -15,6 +17,7 @@ public interface BoardService {
 	int intsertCategoryBoard(ColBoard colBoard);	// flag = 0 (일반등록)  1(업데이트)
 
 	ColBoard getOneBoard(int colboardId);
+	ColBoard getOneBoardWithoutCnt(int colboardId);
 	
 	int updateBoard(ColBoard colBoard);
 	
@@ -33,8 +36,11 @@ public interface BoardService {
     
     int getLikeCount (int colboardId);
     
-    
-
-
 	List<ColBoard> getUserPopularBoard(String userId);
-}
+	
+	List<List<Integer>> getBestWriterBoards();
+	
+	
+	
+	
+	}

@@ -57,8 +57,9 @@ import colorSyntax from '@toast-ui/editor-plugin-color-syntax'
 import '@toast-ui/editor-plugin-color-syntax/dist/toastui-editor-plugin-color-syntax.css'
 import { registForm } from '@/api/board'
 import {useRouter} from 'vue-router';
+import { useUserStore } from '@/stores/userstore';
 
-
+const userStore = useUserStore();
 const router = useRouter();
 
 // toast ui editor 설정
@@ -173,7 +174,7 @@ async function registerPost() {
   }
 
   const formData = new FormData();
-  formData.append('userId', 'user001'); // 하드코딩
+  formData.append('userId', userStore.userId); // 하드코딩
   formData.append('category', selectedCategory.value);
   const title = document.querySelector('.title-input').value;
   const content = editorInstance.value.getHTML();

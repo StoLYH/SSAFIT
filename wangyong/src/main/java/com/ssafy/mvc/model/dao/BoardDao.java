@@ -6,6 +6,7 @@ import com.ssafy.mvc.model.dto.BoardFile;
 import com.ssafy.mvc.model.dto.BoardLike;
 import com.ssafy.mvc.model.dto.ColBoard;
 import com.ssafy.mvc.model.dto.SearchCondition;
+import com.ssafy.mvc.model.dto.User;
 
 
 public interface BoardDao {
@@ -43,5 +44,9 @@ public interface BoardDao {
     int getLike(int colboardId);
 
 	List<ColBoard> getUserPopularBoardList(String userId);
+	
+	List<String> getMonthBestWriter();
+	List<Integer> getBestBoard(String writer);
+	
 
 }

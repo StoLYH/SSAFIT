@@ -23,10 +23,7 @@ const router = useRouter();
 
 const props = defineProps({
   title: String,
-  items: {
-    type: Array,
-    default: () => []       // 부모가 전달한 데이터가 없으면 빈 배열 전달
-  }
+  items: Array
 })
 
 
