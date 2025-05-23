@@ -13,4 +13,5 @@ public interface FileService {
 	UserFile getProfileImage(String userId);
 	int uploadProfileImage(UserFile userFile);
 	int deleteProfileImage(String userId);
+    UserFile getUserFiles(String userId);
 }

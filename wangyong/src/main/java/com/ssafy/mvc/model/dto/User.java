@@ -13,6 +13,7 @@ public class User {
     private UserFile userFile;
     private UserRole userRoleName;
     private UserDetail userDetail;
+    private boolean editable;
     // 각 파일에 대한 정보
 
     //생성자
@@ -88,7 +89,16 @@ public class User {
         this.password = password;
     }
 
-	@Override
+    public boolean getEditable() {
+        return editable;
+    }
+
+    public void setEditable(boolean editable) {
+        this.editable = editable;
+    }
+
+
+    @Override
 	public String toString() {
 		return "User [userId=" + userId + ", userName=" + userName + ", userRole=" + userRole + ", password=" + password
 				+ "]";

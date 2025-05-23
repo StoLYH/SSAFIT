@@ -48,15 +48,17 @@ import PostList from '@/components/PostList.vue';
 import { useUserStore } from '@/stores/userstore';
 import { getUserColumns } from '@/api/board.js'
 import { getUserPopularColumns } from '@/api/board.js'
-import { GetInfo } from '@/api/user'
+import { GetInfo } from '@/api/user.js'
 import UserDetailEditModal from '@/components/UserDetailEditModal.vue'
 import { updateUserDetail } from '@/api/user.js'
+import { GetImg } from '@/api/user.js'
+
 
 
   const data = ref({});
   const posts = ref([]);
   const store = useUserStore();
-  
+  const profileData = ref({});
   const profileImg = ref('/landingpage2.png') // 기본 프로필 이미지
   const userInfo = ref({
     nickname: '당신은 누구십니까',
@@ -64,6 +66,7 @@ import { updateUserDetail } from '@/api/user.js'
     onelineInfo: 'working out is essential to me',
     exper: 'winning bodybuilding contest, working in H1 Fitness, healthman youtube channel'
   })
+
   
   // 예시 데이터, 실제로는 API에서 받아와야 함
   const popularColumns = ref([])
@@ -78,16 +81,24 @@ import { updateUserDetail } from '@/api/user.js'
           onelineInfo: data.value.userDetail?.onelineInfo || '아직 한 줄 소개가 없습니다.',
           exper: data.value.userDetail?.exper || '아직 경력 정보가 없습니다.'
         }
+
+        profileData.value = await GetImg(store.userId);
+        
+        if (profileData.value && profileData.value.uploadName) {
+            profileImg.value = `http://localhost:8080/upload/sendImg/${profileData.value.uploadName}`;
+          } else {
+            console.log('프로필 이미지가 없습니다.');
+            profileImg.value = '/landingpage2.png';
+          }
+
+
       } catch (error) {
-        console.error('Error fetching user info:', error);
+        console.error('사용자 정보 로딩 실패:', error);
       }
 
-      // 게시물 데이터 가져오기
-      const columns = await getUserColumns(store.userId);
-      posts.value = columns || []; // null이나 undefined면 빈 배열로
-
-      const popular = await getUserPopularColumns(store.userId);
-      popularColumns.value = popular || []; // null이나 undefined면 빈 배열로
+        // 칼럼 리스트 - 실패해도 에러 아님 (빈 배열은 정상)
+    posts.value = (await getUserColumns(store.userId).catch(() => [])) ?? []
+    popularColumns.value = (await getUserPopularColumns(store.userId).catch(() => [])) ?? []
     }
   })  
   const showModal = ref(false)
