@@ -81,20 +81,15 @@ import { GetImg } from '@/api/user.js'
           exper: data.value.userDetail?.exper || '아직 경력 정보가 없습니다.'
         }
 
-        // 프로필 이미지 가져오기
-        try {
-          profileData.value = await GetImg(store.userId);
-
-          if (profileData.value && profileData.value.uploadName) {
+        profileData.value = await GetImg(store.userId);
+        
+        if (profileData.value && profileData.value.uploadName) {
             profileImg.value = `http://localhost:8080/upload/sendImg/${profileData.value.uploadName}`;
           } else {
             console.log('프로필 이미지가 없습니다.');
             profileImg.value = '/landingpage2.png';
           }
-        } catch (imgError) {
-          console.error('프로필 이미지 로딩 실패:', imgError);
-          profileImg.value = '/landingpage2.png';
-        }
+
 
       } catch (error) {
         console.error('사용자 정보 로딩 실패:', error);
