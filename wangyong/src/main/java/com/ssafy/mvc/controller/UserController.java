@@ -1,6 +1,7 @@
 package com.ssafy.mvc.controller;
 
 import com.ssafy.mvc.exception.BoardException;
+import com.ssafy.mvc.jwt.JwtUtil;
 import com.ssafy.mvc.model.dto.User;
 import com.ssafy.mvc.model.dto.UserDetail;
 import com.ssafy.mvc.service.UserService;
@@ -18,8 +19,11 @@ public class UserController {
 
     //싱글톤 의존성 주입
     private final UserService userService;
-    public UserController(UserService userService) {
+    private final JwtUtil jwtUtil;
+
+    public UserController(UserService userService, JwtUtil jwtUtil) {
         this.userService = userService;
+        this.jwtUtil = jwtUtil;
     }
 
 
@@ -49,8 +53,14 @@ public class UserController {
 
     //유저정보가져오기
     @GetMapping("{userId}")
-    public ResponseEntity<User> getUserInfo(@PathVariable String userId) {
-            return ResponseEntity.status(HttpStatus.OK).body(userService.getUserInfo(userId));
+    public ResponseEntity<User> getUserInfo(@PathVariable String userId ,@RequestHeader("Authorization") String token) {
+
+        //토큰 받아서 토큰뿌셔서 userId꺼내고 url에 딸려온 userId랑 비교해서
+        String tokenUserId = jwtUtil.getUserIdFromToken(token);
+        boolean isOwner = tokenUserId.equals(userId);
+        User user = userService.getUserInfo(userId);
+        user.setEditable(isOwner);
+        return ResponseEntity.status(HttpStatus.OK).body(user);
 
     }
 

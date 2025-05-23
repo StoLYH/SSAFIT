@@ -66,6 +66,7 @@ import { GetImg } from '@/api/user.js'
     onelineInfo: 'working out is essential to me',
     exper: 'winning bodybuilding contest, working in H1 Fitness, healthman youtube channel'
   })
+
   
   // 예시 데이터, 실제로는 API에서 받아와야 함
   const popularColumns = ref([])

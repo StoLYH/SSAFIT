@@ -1,7 +1,7 @@
 <template>
   <div class="show-board-container" v-if="board">
     <div class="show-board-header-flex">
-      <div class="side-area left"><ShowBoardProfile :board="board" /></div>                          <!-- 왼쪽 프로필-->
+      <div class="side-area left"><ShowBoardProfile :boardUserId="boardUserId" /></div>                          <!-- 왼쪽 프로필-->
       <div class="center-area"><ShowBoardTitle :board="board" /></div>                <!-- 게시글 제목-->  
       <div class="side-area right"><ShowBoardAuthorRecommend /></div>                 <!-- 오른쪽 추천 작가-->  
     </div>
@@ -60,12 +60,15 @@ const colboardId = ref(route.params.colboardId);  // ref로 변경
 const board = ref(null); // 게시물 정보
 const fileList = ref([])
 const BASE_URL = import.meta.env.VITE_FITLOG_API_URL
+const boardUserId = ref('');
 
 // 게시물 데이터 로드 함수
 const loadBoard = async () => {
   try {
     const response = await getoneBoard(colboardId.value);
     board.value = response;
+    
+    boardUserId.value = response.userId
     const res = await getfileInformaton(route.params.colboardId)
     fileList.value = res
   } catch (error) {

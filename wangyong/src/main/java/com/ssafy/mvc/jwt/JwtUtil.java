@@ -28,6 +28,18 @@ public class JwtUtil {
     }
 
 
+    public String getUserIdFromToken(String token) {
+        if (token.startsWith("Bearer ")) {
+            token = token.substring(7);
+        }
 
+        Claims claims = Jwts.parser()
+                .verifyWith(secretKey)
+                .build()
+                .parseSignedClaims(token)
+                .getPayload();
+
+        return claims.getSubject(); // sub에 userId를 저장했으므로 이렇게 꺼냄
+    }
 
 }
