@@ -6,8 +6,8 @@
         <div class="profile-info">
           <h1>{{ userInfo.nickname }}</h1>
           <div class="profile-role">{{ userInfo.role }}</div>
-          <div class="profile-onelineInfo" @click="openEdit('onelineInfo')">{{ userInfo.onelineInfo }}</div>
-          <div class="profile-exper" @click="openEdit('exper')">{{ userInfo.exper }}</div>
+          <div class="profile-onelineInfo" @click="profileStore.user.editable && openEdit('onelineInfo')">{{ userInfo.onelineInfo }}</div>
+          <div class="profile-exper" @click="profileStore.user.editable && openEdit('exper')">{{ userInfo.exper }}</div>
           <UserDetailEditModal
     v-if="showModal"
     :modelValue="editValue"
@@ -45,19 +45,16 @@
   import { ref, onMounted } from 'vue'
   import ColumnList from '@/components/ColumnList.vue'
 import PostList from '@/components/PostList.vue';
-import { useUserStore } from '@/stores/userstore';
 import { getUserColumns } from '@/api/board.js'
 import { getUserPopularColumns } from '@/api/board.js'
-import { GetInfo } from '@/api/user.js'
 import UserDetailEditModal from '@/components/UserDetailEditModal.vue'
 import { updateUserDetail } from '@/api/user.js'
 import { GetImg } from '@/api/user.js'
+import { useRoute } from 'vue-router';
+import { useProfileStore } from '@/stores/profilestore.js';
 
-
-
-  const data = ref({});
+  const route = useRoute()
   const posts = ref([]);
-  const store = useUserStore();
   const profileData = ref({});
   const profileImg = ref('/landingpage2.png') // 기본 프로필 이미지
   const userInfo = ref({
@@ -66,40 +63,43 @@ import { GetImg } from '@/api/user.js'
     onelineInfo: 'working out is essential to me',
     exper: 'winning bodybuilding contest, working in H1 Fitness, healthman youtube channel'
   })
-
+  const profileStore = useProfileStore();
   
   // 예시 데이터, 실제로는 API에서 받아와야 함
   const popularColumns = ref([])
   
   onMounted(async () => {
-    if (store.userId) {
-      try {
-        data.value = await GetInfo(store.userId);
+    const userId = route.params.userId
+    console.log('Loading user info for ID:', userId)
+    try {
+      const success = await profileStore.GetProfileInfo(userId)
+      if (success) {
+        const userData = profileStore.user
         userInfo.value = {
-          nickname: data.value.userName,
-          role: data.value.userRoleName.userRoleName,
-          onelineInfo: data.value.userDetail?.onelineInfo || '아직 한 줄 소개가 없습니다.',
-          exper: data.value.userDetail?.exper || '아직 경력 정보가 없습니다.'
+          nickname: userData.userName,
+          role: userData.userRoleName?.userRoleName,
+          onelineInfo: userData.userDetail?.onelineInfo || '아직 한 줄 소개가 없습니다.',
+          exper: userData.userDetail?.exper || '아직 경력 정보가 없습니다.'
         }
 
-        profileData.value = await GetImg(store.userId);
+        profileData.value = await GetImg(userId);
         
         if (profileData.value && profileData.value.uploadName) {
-            profileImg.value = `http://localhost:8080/upload/sendImg/${profileData.value.uploadName}`;
-          } else {
-            console.log('프로필 이미지가 없습니다.');
-            profileImg.value = '/landingpage2.png';
-          }
-
-
-      } catch (error) {
-        console.error('사용자 정보 로딩 실패:', error);
+          profileImg.value = `http://localhost:8080/upload/sendImg/${profileData.value.uploadName}`;
+        } else {
+          console.log('프로필 이미지가 없습니다.');
+          profileImg.value = '/landingpage2.png';
+        }
+      } else {
+        console.error('프로필 정보를 불러오는데 실패했습니다.')
       }
-
-        // 칼럼 리스트 - 실패해도 에러 아님 (빈 배열은 정상)
-    posts.value = (await getUserColumns(store.userId).catch(() => [])) ?? []
-    popularColumns.value = (await getUserPopularColumns(store.userId).catch(() => [])) ?? []
+    } catch (error) {
+      console.error('사용자 정보 로딩 실패:', error);
     }
+
+    // 칼럼 리스트 - 실패해도 에러 아님 (빈 배열은 정상)
+    posts.value = (await getUserColumns(userId).catch(() => [])) ?? []
+    popularColumns.value = (await getUserPopularColumns(userId).catch(() => [])) ?? []
   })  
   const showModal = ref(false)
 const editField = ref('')
@@ -112,7 +112,7 @@ function openEdit(field) {
 }
 async function handleSave({ field, value }) {
   const newUserDetail = {
-    userId: store.userId,
+    userId: profileStore.userId,
     onelineInfo: field === 'onelineInfo' ? value : userInfo.value.onelineInfo,
       exper: field === 'exper' ? value : userInfo.value.exper
   } 
