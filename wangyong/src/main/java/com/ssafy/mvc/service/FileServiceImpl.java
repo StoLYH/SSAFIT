@@ -38,4 +38,9 @@ public class FileServiceImpl implements FileService{
 	public int deleteProfileImage(String userId) {
 		return fileDao.deleteProfileImage(userId);
 	}
+
+	@Override
+	public UserFile getUserFiles(String userId) {
+		return fileDao.getUserFile(userId);
+	}
 }

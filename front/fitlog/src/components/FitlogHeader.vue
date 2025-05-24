@@ -20,7 +20,7 @@
         </svg>
       </span>
       <span class="right-link">광고 상품</span>
-      <RouterLink class="right-link" to="/mypage">마이페이지</RouterLink>
+      <RouterLink class="right-link" :to="`/mypage/${userId}`">마이페이지</RouterLink>
       <template v-if="!userStore.userId">
         <span class="right-link" @click="goToLogin">로그인</span>
         <button class="signup-btn" @click="goToRegister">회원가입</button>

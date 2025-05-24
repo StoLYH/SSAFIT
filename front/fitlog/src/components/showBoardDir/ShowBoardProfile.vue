@@ -3,13 +3,82 @@
     class="profile-card draggable"
     draggable="true"
     style="position:sticky; top:32px; z-index:2;"
+    @click="goToMyPage"
   >
-    <img class="profile-img" src="https://randomuser.me/api/portraits/women/44.jpg" alt="프로필" />
-    <div class="profile-name">Lisa</div>
-    <div class="profile-job">전문가/작가</div>
-    <div class="profile-desc">안녕하세요 김작가입니다.<br>영양과 운동에 진심인 칼럼니스트입니다.<br>사내 영양관리와 운동지도를 맡아오며<br>여러분과 이야기를 이어가고자 해요!</div>
+    <img class="profile-img" :src="profileImg"  alt="프로필" />
+    <div class="profile-name">{{userInfo.nickname}}</div>
+    <div class="profile-job">{{userInfo.role}}</div>
+    <div class="profile-desc">{{userInfo.onelineInfo}}</div>
   </div>
 </template>
+
+
+<script setup>
+import { defineProps } from 'vue'
+import { GetImg } from '@/api/user.js'
+import { GetInfo } from '@/api/user.js'
+import { useRouter } from 'vue-router'
+import { ref, onMounted } from 'vue'
+
+const router = useRouter()
+const props = defineProps({
+  boardUserId: String
+})
+const data = ref({})
+const profileData = ref({});
+const profileImg = ref('/landingpage2.png') //
+
+const userInfo = ref({
+    nickname: '당신은 누구십니까',
+    role: '당신의 직업은?',
+    onelineInfo: 'working out is essential to me',
+  })
+
+const goToMyPage = () => {
+  router.push(`/mypage/${props.boardUserId}`)
+}
+
+onMounted(async () => {
+  try {
+    const data = await GetInfo(props.boardUserId);
+    userInfo.value = {
+      nickname: data.userName,
+      role: data.userRoleName?.userRoleName || '직업 정보 없음',
+      onelineInfo: data.userDetail?.onelineInfo || '아직 한 줄 소개가 없습니다.',
+    };
+
+    profileData.value = await GetImg(props.boardUserId);
+        
+        if (profileData.value && profileData.value.uploadName) {
+            profileImg.value = `http://localhost:8080/upload/sendImg/${profileData.value.uploadName}`;
+          } else {
+            console.log('프로필 이미지가 없습니다.');
+            profileImg.value = '/landingpage2.png';
+          }
+
+
+
+
+
+  } catch (e) {
+    console.error("유저 정보 불러오기 실패:", e);
+  }
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+</script>
+
 
 <style scoped>
 .profile-card {

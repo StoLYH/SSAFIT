@@ -1,4 +1,4 @@
-import { api_file,  api, api_download, api_token } from './index'
+import { api_file,  api, api_download} from './index'
 
 // 메인페이지 인기 게시물 가져오기
 
@@ -71,7 +71,7 @@ const getsearch = async (query) => {
 
 // 토큰추가
 const deleteBoard = async (colboardId) => {
-    const response = await api_token.delete("board/" + colboardId);
+    const response = await api.delete("board/" + colboardId);
     return response;
 }
 

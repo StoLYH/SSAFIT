@@ -53,7 +53,7 @@ const router = createRouter({
           component: DebatePageView,
         },
         {
-          path: 'mypage',   //   부모경로 + category
+          path: 'mypage/:userId',   //   부모경로 + category
           name: 'mypage',
           component: MyPageView,
         },

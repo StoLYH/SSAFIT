@@ -42,7 +42,14 @@
     <br><br>
     <h2 >추천하는 칼럼</h2>
     <br>
-    <PostList :posts="posts" />                 
+
+
+    
+    <PostList :posts="posts" />     
+    
+    
+
+
     <div v-if="isLoading" class="loading-overlay">
       <div class="spinner"></div>
       <div class="loading-text">답변을 생성중입니다...</div>

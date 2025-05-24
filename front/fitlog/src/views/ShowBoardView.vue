@@ -1,14 +1,16 @@
 <template>
   <div class="show-board-container" v-if="board">
     <div class="show-board-header-flex">
-      <div class="side-area left"><ShowBoardProfile :board="board" /></div>                                       <!-- 왼쪽 프로필-->
-      <div class="center-area"><ShowBoardTitle :board="board" /></div>                                            <!-- 게시글 제목-->  
+
+      <div class="side-area left"><ShowBoardProfile :boardUserId="boardUserId" /></div>                          <!-- 왼쪽 프로필-->
+      <div class="center-area"><ShowBoardTitle :board="board" /></div>                <!-- 게시글 제목-->  
       <div class="side-area right"><ShowBoardAuthorRecommend :boardId="board.colboardId" /></div>                 <!-- 오른쪽 추천 작가-->  
+
     </div>
 
     <!-- 게시글 본문 등 추가 영역은 여기에 -->
     <div class="board-content" v-html="board.content"></div>
-
+    
 
     <!-- 버튼-->
     <div class="board-action-btns">
@@ -17,14 +19,14 @@
         <button class="delete-btn" @click="deletefunction">삭제하기</button>
       </template>    
     </div>
-    
+
     <div v-if="fileList.length > 1" class="file-download-list">
       <h4>첨부 파일</h4>
       <ul>
         <li v-for="file in fileList.slice(1)" :key="file.uploadName">   <!-- 0번은 섬네일 이미지라서 제외 -->
           <a
             href="#"
-            @click.prevent="handleFileDownload(file)"                  
+            @click.prevent="handleFileDownload(file)"
             class="file-download-link">
             {{ file.originalName }}
           </a>
@@ -33,8 +35,9 @@
     </div>
   </div>
   <div v-else class="loading">로딩 중...</div>
+  
 
-  <ShowBoardComment />
+  <ShowBoardComment :board="board" />
 </template>
 
 <script setup>
@@ -55,13 +58,19 @@ const router = useRouter();
 const colboardId = ref(route.params.colboardId);  // ref로 변경
 const board = ref(null); // 게시물 정보
 const fileList = ref([])
+const BASE_URL = import.meta.env.VITE_FITLOG_API_URL
+const boardUserId = ref('');
 
 // 게시물 데이터 로드 함수
 const loadBoard = async () => {
   try {
     const response = await getoneBoard(colboardId.value);
     board.value = response;
-    
+
+    boardUserId.value = response.userId
+    const res = await getfileInformaton(route.params.colboardId)
+    fileList.value = res
+
     try {
       const res = await getfileInformaton(route.params.colboardId);
       fileList.value = res || [];
@@ -76,8 +85,8 @@ const loadBoard = async () => {
         alert('존재하지 않는 게시물입니다.');
       } else if (error.response.status === 500) {
         alert('서버 오류가 발생했습니다.');
-      } 
-    } 
+      }
+    }
     router.push('/');
   }
 };

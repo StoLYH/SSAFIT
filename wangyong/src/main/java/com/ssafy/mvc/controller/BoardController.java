@@ -169,13 +169,9 @@ public class BoardController {
 		
 		try {
 			List<ColBoard> list = boardService.getBoardlistByUser(userId);	
-			if (!list.isEmpty()) {
 				// 정상동작:200
 				return ResponseEntity.status(HttpStatus.OK).body(list);
-			} else {
-				// 데이터가 없는경우 404 [오류x]
-				return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-			}
+
 		} catch (Exception e) {
 			// 서버오류 500
 			throw new BoardException("사용자 게시물 조회시 에러 발생");		

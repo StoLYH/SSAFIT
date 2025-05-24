@@ -3,8 +3,8 @@
     <div class="board-category">{{ getCategoryName(props.board.category) }}</div>
     <div class="board-title">{{ props.board.title }}</div>
     <div class="board-meta-row">
-      <img class="profile-img" src="https://randomuser.me/api/portraits/men/32.jpg" alt="프로필" />
-      <span class="profile-name">{{ props.board.userId }}</span>
+      <img class="profile-img" :src= "profileImg" alt="프로필" />
+      <span class="profile-name">{{ userInfo.nickName }}</span>
       <span class="board-date">{{ props.board.createdAt }}</span>
       <span class="board-views">👁 {{ props.board.viewCnt }}</span>
       <span class="board-likes" @click="updateLike"> 👍 {{ likeCount }} </span>
@@ -16,13 +16,53 @@
 import { clickLike, getLike } from '@/api/board';  
 import { useUserStore } from '@/stores/userstore';
 import { onMounted, ref } from 'vue';
+import { GetInfo } from '@/api/user.js'
+import { GetImg } from '@/api/user.js'
+
+
+
+
 const props = defineProps({ board: Object });
 const userStore = useUserStore();
+const profileData = ref({});
+const profileImg = ref('/landingpage2.png') //
+
+const userInfo = ref({
+    nickname: '당신은 누구십니까',
+    role: '당신의 직업은?',
+    onelineInfo: 'working out is essential to me',
+  })
+
+
 
 const likeCount = ref(0);
 
 onMounted(async () => {
   likeCount.value = await getLike(props.board.colboardId);
+  
+  //유저정보가져오기
+  const data = await GetInfo(props.board.userId);
+    userInfo.value = {
+      nickname: data.userName,
+      role: data.userRoleName?.userRoleName || '직업 정보 없음',
+      onelineInfo: data.userDetail?.onelineInfo || '아직 한 줄 소개가 없습니다.',
+    };
+
+    profileData.value = await GetImg(props.board.userId);
+        
+        if (profileData.value && profileData.value.uploadName) {
+            profileImg.value = `http://localhost:8080/upload/sendImg/${profileData.value.uploadName}`;
+          } else {
+            console.log('프로필 이미지가 없습니다.');
+            profileImg.value = '/landingpage2.png';
+          }
+
+
+
+
+
+
+
 })
 
 function getCategoryName(num) {

@@ -38,10 +38,10 @@ public class Review {
 	public void setColboardId(int colboardId) {
 		this.colboardId = colboardId;
 	}
-	public String getuserId() {
+	public String getUserId() {
 		return userId;
 	}
-	public void setuserId(String userId) {
+	public void setUserId(String userId) {
 		this.userId = userId;
 	}
 	public String getContent() {
