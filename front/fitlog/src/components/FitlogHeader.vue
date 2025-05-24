@@ -8,7 +8,7 @@
         <ul>
           <li class="main-menu-item"><span>핏로그 칼럼</span></li>
           <li class="main-menu-item"><span>핏로그 디베이트</span></li>
-          <li class="main-menu-item"><span>핏로그 QnA</span></li>
+          <li class="main-menu-item"><span @click="goToQuestion">핏로그 QnA</span></li>
         </ul>
       </nav>
     </div>
@@ -51,6 +51,11 @@ const goToRegister = () => {
 
 const goToHome = () => {
   router.push("/");
+}
+
+
+const goToQuestion = () => {
+  router.push('/question');
 }
 
 const handleLogout = () => {

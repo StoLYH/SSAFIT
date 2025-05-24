@@ -2,16 +2,47 @@
   <div
     class="author-recommend-card draggable"
     draggable="true"
-    style="position:sticky; top:32px; z-index:2;"
-  >
+    style="position:sticky; top:32px; z-index:2;">
     <div class="recommend-title">작가의 다른 콘텐츠</div>
     <ul class="recommend-list">
-      <li>영양/운동법<br><span class="recommend-link">운동과 영양관리</span></li>
-      <li>영양/칼럼<br><span class="recommend-link">영양의 중요성</span></li>
-      <li>영양/칼럼<br><span class="recommend-link">추천식단asdfasdfasdfasdf</span></li>
+      <li v-for="(board) in top3Boards" :key="board.colboardId">
+        {{ categoryMap[board.category] }}<br>
+        <span class="recommend-link" @click="goToBoard(board.colboardId)">{{ board.title }}</span>
+      </li>
     </ul>
   </div>
+
 </template>
+
+<script setup>
+import { getTop3Boards } from '@/api/board';
+import { ref, onMounted } from 'vue';
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
+const categoryMap = {
+  1: '운동/트레이닝',
+  2: '재활/통증 관리',
+  3: '영양/식단',
+  4: '정신 건강/라이프스타일',
+  5: '의학/질환 정보'
+};
+
+const props = defineProps({
+  boardId: Number
+})
+
+const top3Boards = ref([]);
+
+onMounted(async () => {
+  top3Boards.value = await getTop3Boards(props.boardId);
+})
+
+const goToBoard = (colboardId) => {
+  router.push("/show/" + colboardId);
+};
+
+</script>
 
 <style scoped>
 .author-recommend-card {

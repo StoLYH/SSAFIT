@@ -9,6 +9,8 @@ import UserRegister from '@/components/UserRegister.vue'
 import UserLogin from '@/components/UserLogin.vue'
 import MyPageView from '@/views/MyPageView.vue'
 import EditView from '@/views/EditView.vue'
+import QuestionView from '@/views/QuestionView.vue'
+import AnsView from '@/views/AnsView.vue'
 
 import { createRouter, createWebHistory } from 'vue-router'
 
@@ -54,6 +56,16 @@ const router = createRouter({
           path: 'mypage',   //   부모경로 + category
           name: 'mypage',
           component: MyPageView,
+        },
+        {
+          path: 'question',   
+          name: 'question',
+          component: QuestionView,
+        },
+        {
+          path: 'ans',   
+          name: 'ans',
+          component: AnsView,
         }
       ]
     },

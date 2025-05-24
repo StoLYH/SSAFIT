@@ -44,12 +44,12 @@ public class BoardServiceImpl implements BoardService{
 	@Override
 	public List<ColBoard> getCategoryBoard(int categoryNum) {
 		List<ColBoard> list = boardDao.getCategory(categoryNum);
+		
 		for (ColBoard c: list) {
 			int id = c.getColboardId();	// 게시판 기본키
 			List<BoardFile> fileList = fileDao.getFiles(id);		// 게시판 기본키 이용해 해당 파일을 모두 가져온다.
 			c.setBoardFiles(fileList);	
 		}
-		
 		return list;
 	}
 
@@ -58,8 +58,6 @@ public class BoardServiceImpl implements BoardService{
 	public int intsertCategoryBoard(ColBoard colBoard) {
 
 		int result = boardDao.insertBoard(colBoard);	// 게시물 등록			=> 예외처리
-		
-		
 		int primarykey = colBoard.getColboardId();		// 기본키				=> 기본키 리턴
 		
 		// 첨부파일이 없는경우.
@@ -350,16 +348,28 @@ public class BoardServiceImpl implements BoardService{
 	public List<List<Integer>> getBestWriterBoards() {
 		// 인기 작가 3명 가져와 (추천수 한달간 종합 랭킹 3위까지)
 		List<String> BestWriter = boardDao.getMonthBestWriter();
-		
-		List<List<Integer>> bestList = new ArrayList<>();
-		// 인기 작가마다 추천 가장 많이 많은 게시물 3개 가져와
-		for (int i = 0; i < 3; i++) {
-			List<Integer> list = boardDao.getBestBoard(BestWriter.get(i));
-			bestList.add(list);
+		if (BestWriter == null) {
+			throw new BoardException("인기 작가 조회시 에러");
+		} else {
+			List<List<Integer>> bestList = new ArrayList<>();
+			// 인기 작가마다 추천 가장 많이 많은 게시물 3개 가져와
+			for (int i = 0; i < 3; i++) {
+				List<Integer> list = boardDao.getBestBoard(BestWriter.get(i));
+				bestList.add(list);
+			}
+			return bestList;
 		}
-		
-		return bestList;
 	}
 
 
+	@Override
+	public List<ColBoard> getTop3(int colboardId) {
+		
+		// 1. 작가를 찾자
+		ColBoard board = boardDao.getBoard(colboardId);
+		String writer = board.getUserId();
+		
+		// 2. 해당 작가의 조회수 top3를 게시판 정보를 List로 가져오자		
+		return boardDao.getWriterTop3(writer);
+	}
 }

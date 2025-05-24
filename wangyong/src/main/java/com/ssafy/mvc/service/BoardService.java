@@ -40,6 +40,7 @@ public interface BoardService {
 	
 	List<List<Integer>> getBestWriterBoards();
 	
+	List<ColBoard> getTop3(int colboardId);
 	
 	
 	

@@ -53,27 +53,11 @@ const goToBoard = (colboardId) => {
   router.push(`/show/${colboardId}`)
 }
 
-onMounted(() => {
-  [props.AuthorsBoard1, props.AuthorsBoard2, props.AuthorsBoard3].forEach(async (boards) => {
-    if (boards) {
-      for (const board of boards) {
-        const fileList = await getfileInformaton(board.colboardId)
-        if (fileList && fileList[0] && fileList[0].uploadName) {
-          imageUrls.value[board.colboardId] = `http://localhost:8080/upload/sendImg/${fileList[0].uploadName}`
-        } else {
-          imageUrls.value[board.colboardId] = '/un.png'
-        }
-      }
-    }
-  })
-})
-
 watch(
   () => [props.AuthorsBoard1, props.AuthorsBoard2, props.AuthorsBoard3],
-  (newBoards) => {
+  (newBoards) => {  
     newBoards.forEach(async (boards) => {
-      if (boards) {
-        for (const board of boards) {
+      for (const board of boards) {
           const fileList = await getfileInformaton(board.colboardId)
           if (fileList && fileList[0] && fileList[0].uploadName) {
             imageUrls.value[board.colboardId] = `http://localhost:8080/upload/sendImg/${fileList[0].uploadName}`
@@ -81,10 +65,10 @@ watch(
             imageUrls.value[board.colboardId] = '/un.png'
           }
         }
-      }
     })
   },
-  { deep: true }
+  { deep: true ,    // props.AuthorsBoard(1,2,3) 감시하는 배열의 내부 객체까지 변화를 감지한다 (for문)
+  immediate: true}  // onMouted시에도 감시
 )
 
 </script>

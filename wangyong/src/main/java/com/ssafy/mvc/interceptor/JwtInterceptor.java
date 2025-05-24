@@ -19,6 +19,8 @@ public class JwtInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+    	System.out.println("오긴옴?");
+    	
         //토큰이 저장된 Authorizaiton를 헤더에서 뽑아서 authHeader에 넣기
         String authHeader = request.getHeader("Authorization");
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
@@ -33,13 +35,13 @@ public class JwtInterceptor implements HandlerInterceptor {
                 return true;
             } catch (JwtException e) {
                 // 유효하지 않은 토큰
-                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);	// 401
                 response.getWriter().write("Invalid or expired token");
                 return false;
             }
         }
         // 토큰 없거나 잘못된 형식
-        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);			// 401
         response.getWriter().write("Authorization header missing or malformed");
         return false;
     }

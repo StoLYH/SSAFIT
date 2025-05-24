@@ -309,14 +309,32 @@ public class BoardController {
 		return ResponseEntity.status(HttpStatus.OK).body(result);
 	}
 	
+	
 	// 이달의 작가 (1달간 추천 수 1위)
 	@GetMapping("/MonthWriterBoards")
 	public ResponseEntity<List<List<Integer>>> getWriter() {
 		List<List<Integer>> bestBoards = boardService.getBestWriterBoards();
-		 
 		return ResponseEntity.status(HttpStatus.OK).body(bestBoards);
 	}
 
+	
+	/**
+	 *  게시판 번호 -> 작가 찾기 -> 해당 작가의 조회수 top3 Board 반환
+	 */
+	@GetMapping("/findTop3/{colboardId}")
+	public ResponseEntity<List<ColBoard>> getTop3(@PathVariable("colboardId") int colboardId) {
+		
+		List<ColBoard> list = boardService.getTop3(colboardId);
+		
+		return ResponseEntity.status(HttpStatus.OK).body(list);
+	}
+	
+	
+	
+	
+	
+	
+	
 
 
 }

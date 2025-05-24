@@ -1,4 +1,4 @@
-import { api_file,  api, api_download } from './index'
+import { api_file,  api, api_download, api_token } from './index'
 
 // 메인페이지 인기 게시물 가져오기
 
@@ -33,12 +33,13 @@ const getCategoryColumns = async (categoryNumber) => {
     return data
 }
 
-
+// 토큰 추가
 const registForm = async (formData) => {
     const {data} = await api_file.post("board", formData);
     return data;
 }
 
+// 토큰 추가
 const updateBoard = async (colboardId, formData) => {
     const response = await api_file.put(`board/${colboardId}`, formData)
     return response;
@@ -68,8 +69,9 @@ const getsearch = async (query) => {
     return data;
 }
 
+// 토큰추가
 const deleteBoard = async (colboardId) => {
-    const response = await api.delete("board/" + colboardId);
+    const response = await api_token.delete("board/" + colboardId);
     return response;
 }
 
@@ -127,6 +129,16 @@ const getBestBoards = async () => {
     return data
 }
 
+const getTop3Boards = async (boardId) => {
+    const {data} = await api.get("board/findTop3/" + boardId);
+    return data
+}
+
+const gptCall = async (message) => {
+    const {data} = await api.post("chatGPT", message);
+    return data;
+}
+
 export {
     getRecentColumns,
     getPopularColumns,
@@ -144,5 +156,7 @@ export {
     getUserPopularColumns,
     fileDownload,
     getBestBoards,
-    getoneBoardWithoutCnt
+    getoneBoardWithoutCnt,
+    getTop3Boards,
+    gptCall
 };

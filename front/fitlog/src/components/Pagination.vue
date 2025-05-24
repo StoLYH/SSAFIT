@@ -1,12 +1,15 @@
 <template>
   <div class="pagination">
     <button :disabled="currentPage === 1" @click="changePage(currentPage - 1)">&lt;</button>
+    
+    
     <button
       v-for="page in totalPages"
       :key="page"
       :class="{ active: page === currentPage }"
-      @click="changePage(page)"
-    >{{ page }}</button>
+      @click="changePage(page)">{{ page }}</button>
+
+
     <button :disabled="currentPage === totalPages" @click="changePage(currentPage + 1)">&gt;</button>
   </div>
 </template>
@@ -17,6 +20,7 @@ const props = defineProps({
   totalPages: Number
 })
 const emit = defineEmits(['pageChange'])
+
 function changePage(page) {
   if (page >= 1 && page <= props.totalPages) emit('pageChange', page)
 }

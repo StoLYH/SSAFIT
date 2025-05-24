@@ -8,7 +8,6 @@
       <span class="board-date">{{ props.board.createdAt }}</span>
       <span class="board-views">👁 {{ props.board.viewCnt }}</span>
       <span class="board-likes" @click="updateLike"> 👍 {{ likeCount }} </span>
-      
     </div>
   </div>
 </template>

@@ -127,6 +127,14 @@
 		order by count(bl.like_id) desc
 		limit 3;
 	 </select>
+	 	
+	 	
+	 <select id="getWriterTop3" parameterType="String" resultType="ColBoard">
+	 	select * from col_board
+	 	where user_id=#{writer}
+	 	order by view_cnt desc
+	 	limit 3
+	 </select>
 	 
 
 	

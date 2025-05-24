@@ -22,13 +22,19 @@ import { useRoute } from 'vue-router'
 
 const route = useRoute();
 const posts = ref([]);
+const totalPosts = ref([]);
 const currentPage = ref(1);
-const totalPages = ref(5);
+const totalPages = ref(99);
 
 watch(
   () => route.params.categoryNumber,    // 함수로 사용해야 변화되는 값을 추적
   async (newId) => {
-    posts.value = await getCategoryColumns(newId)
+    totalPosts.value = await getCategoryColumns(newId)
+    console.log(totalPosts.value.length);
+    
+    posts.value = totalPosts.value.slice(0, 10); 
+    totalPages.value = Math.floor(posts.value.length / 10) + 1;
+    
   },
   { immediate: true }                   // 최초 진입 시에도 한 번 실행
 )
@@ -37,10 +43,10 @@ const handleSearchEmit = (res) => {
   posts.value = res;
 }
 
-const handlePageChange = (page) => {
+const handlePageChange = async (page) => {
   currentPage.value = page;
-  // TODO: 페이지 변경 시 데이터 다시 불러오기
-  // 예: posts.value = await getCategoryColumns(route.params.categoryNumber, page);
+  
+  posts.value = totalPosts.value.slice((page - 1) * 10, page * 10);
 }
 
 </script>

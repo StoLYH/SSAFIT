@@ -1,12 +1,14 @@
 // src/stores/userStore.js
 import { defineStore } from 'pinia'
 import { PostLogin } from '@/api/auth'
+import { gptCall } from '@/api/board'
 
 
 export const useUserStore = defineStore('user', {
   state: () => ({
     userId: sessionStorage.getItem('userId') || null,
-    token: sessionStorage.getItem('token') || null
+    token: sessionStorage.getItem('token') || null,
+    answer: null
   }),
   actions: {
     async login(loginForm) {
@@ -28,11 +30,13 @@ export const useUserStore = defineStore('user', {
         console.error('로그인 실패:', error)
         return false
       }
-    }
+    },
+    async gptCall(message) {
+      const data = await gptCall(message)
+      this.answer = data 
+    },
 
 
-
-    ,
     setUser(userId, token) {
       this.userId = userId
       this.token = token

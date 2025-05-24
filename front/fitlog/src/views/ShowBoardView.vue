@@ -1,11 +1,10 @@
 <template>
   <div class="show-board-container" v-if="board">
     <div class="show-board-header-flex">
-      <div class="side-area left"><ShowBoardProfile :board="board" /></div>           <!-- 왼쪽 프로필-->
-      <div class="center-area"><ShowBoardTitle :board="board" /></div>                <!-- 게시글 제목-->  
-      <div class="side-area right"><ShowBoardAuthorRecommend /></div>                 <!-- 오른쪽 추천 작가-->  
+      <div class="side-area left"><ShowBoardProfile :board="board" /></div>                                       <!-- 왼쪽 프로필-->
+      <div class="center-area"><ShowBoardTitle :board="board" /></div>                                            <!-- 게시글 제목-->  
+      <div class="side-area right"><ShowBoardAuthorRecommend :boardId="board.colboardId" /></div>                 <!-- 오른쪽 추천 작가-->  
     </div>
-
 
     <!-- 게시글 본문 등 추가 영역은 여기에 -->
     <div class="board-content" v-html="board.content"></div>
@@ -45,9 +44,8 @@ import ShowBoardAuthorRecommend from '../components/showBoardDir/ShowBoardAuthor
 import ShowBoardComment from '../components/showBoardDir/ShowBoardComment.vue'
 import { useRoute } from 'vue-router'
 import {ref, watch, onMounted} from 'vue'
-import {getoneBoard} from '@/api/board'
 import { useUserStore } from '@/stores/userstore'
-import { deleteBoard, getfileInformaton, fileDownload } from '@/api/board'
+import { deleteBoard, getfileInformaton, fileDownload, getoneBoard } from '@/api/board'
 import { useRouter } from 'vue-router'
 
 
@@ -98,7 +96,10 @@ const deletefunction = async () => {
     if (response.status == 200) {
       alert('삭제가 완료되었습니다.');
       router.push('/category/1');
-    } 
+    } else if(response.status == 401) {
+      alert('삭제 권한이 없습니다.');
+      router.push('/welcome/login');
+    }
 }
 
 const editfunction = () => {

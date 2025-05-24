@@ -32,7 +32,7 @@ public interface BoardDao {
 	int insertBoardFile(BoardFile boardFile);
 	
 	List<ColBoard> getRecentBoardList();
-
+	
 
     List<ColBoard> getPopularBoardList();
 
@@ -47,6 +47,6 @@ public interface BoardDao {
 	
 	List<String> getMonthBestWriter();
 	List<Integer> getBestBoard(String writer);
-	
+	List<ColBoard> getWriterTop3(String writer);
 
 }

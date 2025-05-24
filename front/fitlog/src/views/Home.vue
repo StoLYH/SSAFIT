@@ -10,8 +10,6 @@
 import FitlogHeader from '../components/FitlogHeader.vue'
 import FitlogFooter from '../components/FitlogFooter.vue'
 
-
-
 // 헤더와 푸터는 재사용한다.
 </script>
 
