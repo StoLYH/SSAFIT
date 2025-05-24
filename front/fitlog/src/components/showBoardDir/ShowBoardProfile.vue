@@ -3,6 +3,7 @@
     class="profile-card draggable"
     draggable="true"
     style="position:sticky; top:32px; z-index:2;"
+    @click="goToMyPage"
   >
     <img class="profile-img" :src="profileImg"  alt="프로필" />
     <div class="profile-name">{{userInfo.nickname}}</div>
@@ -16,8 +17,10 @@
 import { defineProps } from 'vue'
 import { GetImg } from '@/api/user.js'
 import { GetInfo } from '@/api/user.js'
-
+import { useRouter } from 'vue-router'
 import { ref, onMounted } from 'vue'
+
+const router = useRouter()
 const props = defineProps({
   boardUserId: String
 })
@@ -31,8 +34,11 @@ const userInfo = ref({
     onelineInfo: 'working out is essential to me',
   })
 
+const goToMyPage = () => {
+  router.push(`/mypage/${props.boardUserId}`)
+}
 
-  onMounted(async () => {
+onMounted(async () => {
   try {
     const data = await GetInfo(props.boardUserId);
     userInfo.value = {
