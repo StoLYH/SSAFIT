@@ -38,6 +38,7 @@
 	<select id="getBoardByUser" parameterType="String" resultType="ColBoard">
 		select * from col_board
 		where user_id=#{userId}
+		order by view_cnt desc
 	</select>
 	
 	<update id="upBoardCnt" parameterType="int">
@@ -81,7 +82,6 @@
 		where user_id=#{userId}
 		ORDER BY view_cnt DESC
 		LIMIT 3;
-
 	</select>
 	
 	

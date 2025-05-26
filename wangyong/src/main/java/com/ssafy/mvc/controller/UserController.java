@@ -53,15 +53,21 @@ public class UserController {
 
     //유저정보가져오기
     @GetMapping("{userId}")
-    public ResponseEntity<User> getUserInfo(@PathVariable String userId ,@RequestHeader("Authorization") String token) {
+    public ResponseEntity<User> getUserInfo(@PathVariable String userId , @RequestHeader(value = "Authorization", required = false) String token) {
 
-        //토큰 받아서 토큰뿌셔서 userId꺼내고 url에 딸려온 userId랑 비교해서
-        String tokenUserId = jwtUtil.getUserIdFromToken(token);
-        boolean isOwner = tokenUserId.equals(userId);
-        User user = userService.getUserInfo(userId);
-        user.setEditable(isOwner);
-        return ResponseEntity.status(HttpStatus.OK).body(user);
-
+    	 if (token != null && token.startsWith("Bearer ")) {
+    		 String tokenUserId = jwtUtil.getUserIdFromToken(token);
+    		 boolean isOwner = tokenUserId.equals(userId);
+             User user = userService.getUserInfo(userId);
+             user.setEditable(isOwner);
+             return ResponseEntity.status(HttpStatus.OK).body(user);
+    	 } else {
+    		 User user = userService.getUserInfo(userId);
+             user.setEditable(false);
+             return ResponseEntity.status(HttpStatus.OK).body(user);
+    	 }
+    	
+    	
     }
 
 
