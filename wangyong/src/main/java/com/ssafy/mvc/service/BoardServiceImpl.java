@@ -10,6 +10,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
+import com.ssafy.mvc.model.dto.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -18,11 +19,6 @@ import org.springframework.web.multipart.MultipartFile;
 import com.ssafy.mvc.exception.BoardException;
 import com.ssafy.mvc.model.dao.BoardDao;
 import com.ssafy.mvc.model.dao.FileDao;
-import com.ssafy.mvc.model.dto.BoardFile;
-import com.ssafy.mvc.model.dto.BoardLike;
-import com.ssafy.mvc.model.dto.ColBoard;
-import com.ssafy.mvc.model.dto.SearchCondition;
-import com.ssafy.mvc.model.dto.User;
 
 @Service
 public class BoardServiceImpl implements BoardService{
@@ -32,6 +28,9 @@ public class BoardServiceImpl implements BoardService{
 	
 	BoardDao boardDao;
 	FileDao fileDao;
+
+	@Autowired
+	private EmbeddingService embeddingService;
 	
 	
 	@Autowired
@@ -56,9 +55,8 @@ public class BoardServiceImpl implements BoardService{
 
 	@Override
 	public int intsertCategoryBoard(ColBoard colBoard) {
-
-		int result = boardDao.insertBoard(colBoard);	// 게시물 등록			=> 예외처리
-		int primarykey = colBoard.getColboardId();		// 기본키				=> 기본키 리턴
+		int result = boardDao.insertBoard(colBoard);
+		int primarykey = colBoard.getColboardId();
 		
 		// 첨부파일이 없는경우.
 		List<MultipartFile> attachList = colBoard.getAttach();
@@ -103,7 +101,12 @@ public class BoardServiceImpl implements BoardService{
 			}
 		}
 		
-		return 1;	// 실행완료.
+		// === Embedding 저장 ===
+		String text = colBoard.getTitle() + " " + colBoard.getContent();
+		List<Float> embedding = embeddingService.getEmbedding(text);
+		byte[] embeddingBytes = floatListToByteArray(embedding);
+		boardDao.insertOrUpdateEmbedding(primarykey, embeddingBytes);
+		return 1;
 	}
 	
 	private String generateUniqueName(String originalName) {
@@ -115,6 +118,18 @@ public class BoardServiceImpl implements BoardService{
 			extName = originalName.substring(index);
 		}
 		return timeStr + "_" + uniqueStr + extName;
+	}
+	
+	private byte[] floatListToByteArray(List<Float> floatList) {
+		byte[] bytes = new byte[floatList.size() * 4];
+		for (int i = 0; i < floatList.size(); i++) {
+			int intBits = Float.floatToIntBits(floatList.get(i));
+			bytes[i * 4] = (byte) (intBits >> 24);
+			bytes[i * 4 + 1] = (byte) (intBits >> 16);
+			bytes[i * 4 + 2] = (byte) (intBits >> 8);
+			bytes[i * 4 + 3] = (byte) (intBits);
+		}
+		return bytes;
 	}
 	
 
@@ -162,7 +177,14 @@ public class BoardServiceImpl implements BoardService{
 		forupdate(colBoard);
 		
 		// db처리
-		return boardDao.update(colBoard);
+		int updateResult = boardDao.update(colBoard);
+		
+		// === Embedding 저장 ===
+		String text = colBoard.getTitle() + " " + colBoard.getContent();
+		List<Float> embedding = embeddingService.getEmbedding(text);
+		byte[] embeddingBytes = floatListToByteArray(embedding);
+		boardDao.insertOrUpdateEmbedding(colBoard.getColboardId(), embeddingBytes);
+		return updateResult;
 	}
 	
 	@Override
@@ -372,4 +394,25 @@ public class BoardServiceImpl implements BoardService{
 		// 2. 해당 작가의 조회수 top3를 게시판 정보를 List로 가져오자		
 		return boardDao.getWriterTop3(writer);
 	}
+
+
+
+public List<ColBoard> recommendByEmbedding(String question, int topN) {
+    List<Float> qVec = embeddingService.getEmbedding(question);
+    List<Embedding> all = boardDao.getAllEmbeddings();
+    List<ColBoard> allBoards = new ArrayList<>();
+    List<Double> sims = new ArrayList<>();
+    for (Embedding e : all) {
+        double sim = embeddingService.cosineSimilarity(qVec, e.getEmbedding());
+        sims.add(sim);
+        allBoards.add(boardDao.getBoard(e.getColboardId()));
+    }
+    // 유사도 기준 내림차순 정렬 후 상위 N개 반환
+    return allBoards.stream()
+        .sorted((a, b) -> Double.compare(
+            sims.get(allBoards.indexOf(b)), sims.get(allBoards.indexOf(a))
+        ))
+        .limit(topN)
+        .toList();
+}
 }

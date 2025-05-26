@@ -32,7 +32,7 @@
            r.user_role_name,
            d.oneline_info, d.exper
     FROM user u
-    LEFT JOIN user_role r ON u.user_role = r.user_role
+    LEFT JOIN role r ON u.user_role = r.user_role
     LEFT JOIN user_detail d ON u.user_id = d.user_id
     WHERE u.user_id = #{userId}
 </select>
