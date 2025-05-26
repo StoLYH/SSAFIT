@@ -9,6 +9,7 @@
     </div>
 
     <!-- 게시글 본문 등 추가 영역은 여기에 -->
+    <br><br><br><br>
     <div class="board-content" v-html="board.content"></div>
     
 

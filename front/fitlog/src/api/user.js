@@ -1,7 +1,4 @@
-import {api, api_file} from "./index";
-
-
-
+import {api, api_file, api_token} from "./index";
 
 // import axios를 할필요없음 
 // user 관련된 기능들만 모음 
@@ -12,9 +9,9 @@ const PostRegist = async (registForm)=>{
     return data;
 }
 
-
+// 수정(05/26)
 const GetInfo = async (userId)=>{
-    const{data}= await api.get(`${USER_API_BASE}/${userId}`)
+    const{data}= await api_token.get(`${USER_API_BASE}/${userId}`)
     return data;
 }
 
