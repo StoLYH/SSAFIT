@@ -137,20 +137,26 @@ const showEditModal = ref(false)
 const userEditInfo = ref({})
 
 function openProfileEdit() {
+  if(profileStore.user.editable){
   userEditInfo.value = {
     userName: userInfo.value.nickname,
     userRole: profileStore.user.userRole,
     exper: userInfo.value.exper,
     onelineInfo: userInfo.value.onelineInfo,
-    profileImg: profileImg.value
+    attach : profileImg.value
   }
   showEditModal.value = true
+}
 }
 
 async function handleProfileSave(updatedInfo) {
   const formData = new FormData()
-  for (const key in updatedInfo) {
-    formData.append(key, updatedInfo[key])
+  formData.append('userName', updatedInfo.userName)
+  formData.append('userRole', updatedInfo.userRole)
+  formData.append('exper', updatedInfo.exper)
+  formData.append('onelineInfo', updatedInfo.onelineInfo)
+  if (updatedInfo.attach) {
+    formData.append('attach', updatedInfo.attach)
   }
   await updateUser(formData, profileStore.userId)
   // 저장 후 최신 정보 다시 불러오기
@@ -167,7 +173,8 @@ async function handleProfileSave(updatedInfo) {
     profileImg.value = `http://localhost:8080/upload/sendImg/${profileData.value.uploadName}`
   }
   showEditModal.value = false
-  router.push(`/mypage/${profileStore.userId}`)
+  location.reload()
+
 
 }
 

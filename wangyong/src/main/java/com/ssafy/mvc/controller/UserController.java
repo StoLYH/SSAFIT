@@ -75,21 +75,21 @@ public class UserController {
     public ResponseEntity<String> updateUser(
             @RequestParam("userName") String userName,
             @RequestParam("userRole") int userRole,
-            @RequestParam("onelineInfo") String onelineInfo,  // userDetail 필드
-            @RequestParam("exper") String exper,              // userDetail 필드
+            @RequestParam("onelineInfo") String onelineInfo,
+            @RequestParam("exper") String exper,
             @RequestParam(value = "attach", required = false) MultipartFile attach,
             @PathVariable("userId") String userId
     ) throws IOException {
         User user = new User();
         user.setUserName(userName);
         user.setUserRole(userRole);
+        user.setUserId(userId);
 
         UserDetail userDetail = new UserDetail();
         userDetail.setOnelineInfo(onelineInfo);
         userDetail.setExper(exper);
         user.setUserDetail(userDetail);
         user.setAttach(attach);
-
 
         if(userService.updateUser(user, userId) == 1) {
             return ResponseEntity.ok("success");

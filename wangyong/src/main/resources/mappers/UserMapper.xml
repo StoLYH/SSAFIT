@@ -46,14 +46,13 @@
         where user_id = #{userId}
     </update>
 
-    <update id="updateUserDetail" parameterType="UserDetail">
-        update user_detail
-        <set>
-            <if test="onelineInfo != null">oneline_info = #{onelineInfo},</if>
-            <if test="exper != null">exper = #{exper},</if>
-        </set>
-        where user_id = #{userId}
-    </update>
+    <insert id="updateUserDetail" parameterType="UserDetail">
+        insert into user_detail (user_id, oneline_info, exper)
+        values (#{userId}, #{onelineInfo}, #{exper})
+        on duplicate key update
+        <if test="onelineInfo != null">oneline_info = #{onelineInfo},</if>
+        <if test="exper != null">exper = #{exper}</if>
+    </insert>
 
     <select id="findUserByIdLogin" parameterType="String"
         resultType="LoginRequest">
