@@ -13,7 +13,7 @@
         <span class="date">{{ post.date }}</span>
         <span class="views">👁 {{ post.viewCnt }}</span>
         <span class="likes">👍 {{ likeCount }}</span>
-        <span class="comments">💬 2</span>
+        <span class="comments">💬 {{reviewCount.length}}</span>
       </div>
     </div>
   </div>
@@ -23,6 +23,8 @@
 import {watch, ref} from 'vue';
 import {getfileInformaton, getLike} from '@/api/board';
 import { useRouter } from 'vue-router';
+import {getReview} from '@/api/review';
+
 
 const props =defineProps({ post: Object })    // 각 게시판의 dto가 넘어온다
 
@@ -30,6 +32,7 @@ const fileinfo = ref(null);
 const removehtml = ref("");
 const router = useRouter();
 const likeCount = ref(0);
+const reviewCount = ref(0);
 
 function goToShow() {
   router.push('/show/' + props.post.colboardId);
@@ -52,6 +55,8 @@ watch(
     fileinfo.value = await getfileInformaton(newId);  // 게시판 id를 이용해서 해당 게시판의 파일정보 가져온다
     removehtml.value = props.post.content.replace(/<[^>]*>?/g, '').slice(0, 100);
     likeCount.value = await getLike(newId);
+    reviewCount.value = await getReview(newId);
+
   },
   { immediate: true } // 처음 렌더링 될 때도 실행
 )

@@ -14,6 +14,10 @@ public class User {
     private UserRole userRoleName;
     private UserDetail userDetail;
     private boolean editable;
+
+    public User() {
+
+    }
     // 각 파일에 대한 정보
 
     //생성자

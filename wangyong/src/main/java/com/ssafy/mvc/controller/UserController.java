@@ -71,11 +71,28 @@ public class UserController {
     }
 
 
-    @PutMapping("{userId}") // ✅ 경로 변수는 반드시 {} 안에 써야 한다!
-    public ResponseEntity<String> updateUser(@RequestBody User user, @PathVariable("userId") String userId) {
-        if(userService.updateUser(user,userId)==1) {
-            return ResponseEntity.ok("success");
+    @PutMapping("{userId}")
+    public ResponseEntity<String> updateUser(
+            @RequestParam("userName") String userName,
+            @RequestParam("userRole") int userRole,
+            @RequestParam("onelineInfo") String onelineInfo,  // userDetail 필드
+            @RequestParam("exper") String exper,              // userDetail 필드
+            @RequestParam(value = "attach", required = false) MultipartFile attach,
+            @PathVariable("userId") String userId
+    ) throws IOException {
+        User user = new User();
+        user.setUserName(userName);
+        user.setUserRole(userRole);
 
+        UserDetail userDetail = new UserDetail();
+        userDetail.setOnelineInfo(onelineInfo);
+        userDetail.setExper(exper);
+        user.setUserDetail(userDetail);
+        user.setAttach(attach);
+
+
+        if(userService.updateUser(user, userId) == 1) {
+            return ResponseEntity.ok("success");
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("user not found or update failed");
     }
