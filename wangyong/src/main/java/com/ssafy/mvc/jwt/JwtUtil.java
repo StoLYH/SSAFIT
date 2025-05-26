@@ -13,6 +13,7 @@ public class JwtUtil {
     private String key = "wangyong-super-secret-hello-ssafy-this-key-is-long-enough";
     private SecretKey secretKey = Keys.hmacShaKeyFor(key.getBytes(StandardCharsets.UTF_8));
     private final long expiration = 1000 * 60 * 60; // 1시간
+    //private final long expiration = 1000 * 20; // 20초 (test용)
 
     //토큰생성
     public String generateToken(String userId) {

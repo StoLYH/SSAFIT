@@ -1,4 +1,4 @@
-import { api_file,  api, api_download} from './index'
+import { api_file,  api, api_download, api_file_token, api_token} from './index'
 
 // 메인페이지 인기 게시물 가져오기
 
@@ -9,12 +9,13 @@ const getRecentColumns = async () => {
     return data;
 }
 
+// 메인페이지
 const getPopularColumns = async () => {
     const {data} = await api.get("board/popular");
     return data;
 }
 
-
+// 마이페이지
 const getUserPopularColumns = async (userId) => {
     const {data} = await api.get("board/user/popular" + userId);
     return data;
@@ -35,13 +36,13 @@ const getCategoryColumns = async (categoryNumber) => {
 
 // 토큰 추가
 const registForm = async (formData) => {
-    const {data} = await api_file.post("board", formData);
+    const {data} = await api_file_token.post("board", formData);
     return data;
 }
 
-// 토큰 추가
+// 토큰 추가 (수정)
 const updateBoard = async (colboardId, formData) => {
-    const response = await api_file.put(`board/${colboardId}`, formData)
+    const response = await api_file_token.put(`board/${colboardId}`, formData)
     return response;
 }
 
@@ -69,9 +70,9 @@ const getsearch = async (query) => {
     return data;
 }
 
-// 토큰추가
+// 토큰추가(삭제)
 const deleteBoard = async (colboardId) => {
-    const response = await api.delete("board/" + colboardId);
+    const response = await api_token.delete("board/" + colboardId);
     return response;
 }
 

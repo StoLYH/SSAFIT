@@ -40,14 +40,12 @@ public class BoardController {
 	/**
 	 * GET http://localhost:8080/board?key=user_id&word=003&orderBy=view_cnt&orderByDir=desc
 	 * 전체 게시글 조회 (메인페이지) + 검색기능
-	 * 
 	 * user_id(작가), category, content 기준으로 필터링
 	 * 조회수, 시간 기준으로 정렬
 	 * 	key: user_id(작가), title, content
 	 *  word: 검색어
 	 *  orderBy: view_cnt(조회수), created_at(시간)
 	 *  orderByDir: ASC,DESC
-	 *  
 	 * 정상 실행 : 200
 	 * 데이터가 없는 경우 : 404
 	 * 서버오류 : 500
@@ -61,9 +59,7 @@ public class BoardController {
 			@RequestParam(value = "orderBy", required = false) String orderBy,
 			@RequestParam(value = "orderByDir", required = false) String orderByDir) {
 		
-		
-		System.out.println("안녕");
-
+	
 		SearchCondition condition = new SearchCondition(key, word, orderBy, orderByDir);
 		
 		
@@ -74,11 +70,10 @@ public class BoardController {
 				return ResponseEntity.status(HttpStatus.OK).body(list);
 			} else {
 				// 데이터가 없는 경우: 404
-				return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+				return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 			}
 		} catch (Exception e) {
-			throw new BoardException("검색시 에러 발생 ");
-			// GET http://localhost:8080/board?key=usd&word=user001&orderBy=view_cnt&orderByDir=desc
+			throw new BoardException("검색시 에러 발생");
 		}
 	}
 	
@@ -128,14 +123,14 @@ public class BoardController {
 			}
 		} catch (Exception e) {	
 			e.printStackTrace();
-			throw new BoardException("개별 게시물 조회시 에러 발생: " + e.getMessage());
+			throw new BoardException("개별 게시물 조회시 에러 발생");
 		}
 	}
 	
 	
 	
 	/**
-	 *  메인페이지 게시물에 해당하는 위와 동일(조회수 증가만 막는다)
+	 *  위와 동일(조회수 증가만 막는다)
 	 */
 	@GetMapping("withoutCnt/{colboardId}")
 	public ResponseEntity<?> getMethod4(@PathVariable("colboardId") int colboardId) {
@@ -149,40 +144,52 @@ public class BoardController {
 			}
 		} catch (Exception e) {	
 			e.printStackTrace();
-			throw new BoardException("개별 게시물 조회시 에러 발생: " + e.getMessage());
+			throw new BoardException("개별 게시물 조회시 에러 발생");
 		}
 	}
 	
 	
-	
-	
 	/**
-	 * user_id(기본키)를 이용하여 마이페이지에서 사용자가 등록한 게시물 조회
+	 * [마이페이지]
+	 * user_id(기본키)를 이용하여 마이페이지에서 사용자가 등록한 게시물 전체 조회 (최신순)
 	 * 정상 실행 : 200
 	 * 데이터가 없는 겨우 : 404
 	 * 서버 오류 : 500
 	 */
-
-	//마이페이지 전체칼럼
 	@GetMapping("user/{userId}")
 	public ResponseEntity<?> getMethod4(@PathVariable("userId") String userId) {
-		
 		try {
 			List<ColBoard> list = boardService.getBoardlistByUser(userId);	
+			if (list != null) {
 				// 정상동작:200
 				return ResponseEntity.status(HttpStatus.OK).body(list);
-
+			} else {
+				return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+			}
+				
 		} catch (Exception e) {
 			// 서버오류 500
-			throw new BoardException("사용자 게시물 조회시 에러 발생");		
+			throw new BoardException("사용자 전체 게시물 조회시 에러 발생");		
 		}
 	}
 
-	//마이페이지 인기칼럼
-	@GetMapping("user/popular{userId}")
-	public ResponseEntity<List<ColBoard>> getUserPopularColumns(@PathVariable String userId) {
+	/**
+	 * [마이페이지]
+	 * 마이페이지 조회수 기반 인기게시물 3개 조회시 사용
+	 * 정상 실행 : 200
+	 * 데이터가 없는 겨우 : 404
+	 * 서버 오류 : 500
+	 */
+	@GetMapping("user/popular/{userId}")
+	public ResponseEntity<?> getUserPopularColumns(@PathVariable String userId) {
 		try {
-			return ResponseEntity.status(HttpStatus.OK).body(boardService.getUserPopularBoard(userId));
+			List<ColBoard> list = boardService.getUserPopularBoard(userId);
+			if (list != null) {
+				return ResponseEntity.status(HttpStatus.OK).body(list); 
+			} else {
+				return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+			}
+			
 		} catch(Exception e) {
 			throw new BoardException("인기칼럼 조회시 에러");
 		}
@@ -224,7 +231,6 @@ public class BoardController {
 	 */
 	@PutMapping("{colboardId}")
 	public ResponseEntity<String> postMethodName(@PathVariable("colboardId") int colboardId, @ModelAttribute ColBoard colBoard) {
-		System.out.println("확인좀 " + colBoard);
 		
 		try {
 			colBoard.setColboardId(colboardId);
@@ -251,40 +257,68 @@ public class BoardController {
 			if (result == 1) {
 				return ResponseEntity.status(HttpStatus.OK).body("성공적으로 삭제 되었습니다");
 			} else {
-				return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("에러 발생: 게시물 삭제시 예외 발생");
+				throw new BoardException("게시물 삭제시 에러 발생");
 			}
 		} catch (Exception e) {
 			throw new BoardException("게시물 삭제시 에러 발생");	
 		}
 	}
 	
-	
-	// 최근에 올라온 칼럼 3개만 가져오도록 Limit 걸어두었다.
+	/**
+	 * [메인페이지]
+	 * 최근 올라온 칼럼 3개 조회
+	 * 정상 실행 : 200
+	 * 데이터가 없는 겨우 : 404
+	 * 서버 오류 : 500
+	 */
 	@GetMapping("recent")
-	public ResponseEntity<List<ColBoard>> getRecentColumns() {
+	public ResponseEntity<?> getRecentColumns() {
 
 		try {
-			return ResponseEntity.status(HttpStatus.OK).body(boardService.getRecentBoard());
+			List<ColBoard> list = boardService.getRecentBoard();
+			if(list != null) {
+				return ResponseEntity.status(HttpStatus.OK).body(list);
+			} else {
+				return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+			}
+			
 		} catch(Exception e) {
 			throw new BoardException("최근에 올라온 칼럼 조회시 에러");
 		}
 	}
 
+	
+	/**
+	 * [메인페이지]
+	 *  전체 게시물 중 조회수 3개
+	 * 정상 실행 : 200
+	 * 데이터가 없는 겨우 : 404
+	 * 서버 오류 : 500
+	 */
 	@GetMapping("popular")
-	public ResponseEntity<List<ColBoard>> getPopularColumns() {
+	public ResponseEntity<?> getPopularColumns() {
 
 		try {
-			return ResponseEntity.status(HttpStatus.OK).body(boardService.getPopularBoard());
+			List<ColBoard> list = boardService.getPopularBoard();
+			if (list != null) {
+				return ResponseEntity.status(HttpStatus.OK).body(list);
+			} else {
+				return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+			}
 		} catch(Exception e) {
-			throw new BoardException("인기칼럼 조회시 에러");
+			throw new BoardException("인기(조회수기반)칼럼 조회시 에러");
 		}
 	}
 
 
 
 	/**
-	 * Post 요청 
+	 * 좋아요 등록
+	 * 해당 게시물에 사용자 존재 o -> 좋아요 삭제
+	 * 해당 게시물에 사용자 존재 x -> 좋아요 생성
 	 * (사용자 id, colBoardId) 
+	 * 정상 실행 : 200
+	 * 서버 오류 : 500
 	 */
 	@PostMapping("/like")
 	public ResponseEntity<String> clickLike(@RequestBody BoardLike boardLike) {
@@ -298,39 +332,58 @@ public class BoardController {
 		}
 	}
 
-	// 좋아요 조회하기
+	/**
+	 * 게시판별 좋아요 조회
+	 * 정상 실행 : 200
+	 * 서버 오류 : 500 
+	 */
 	@GetMapping("/like/{colboardId}")
 	public ResponseEntity<Integer> getMethodName(@PathVariable("colboardId") int colboardId) {
 		int result = boardService.getLikeCount(colboardId);
 		return ResponseEntity.status(HttpStatus.OK).body(result);
 	}
 	
-	
-	// 이달의 작가 (1달간 추천 수 1위)
+	/**
+	 * [메인페이지]
+	 * 1달간 조회수 top3 작가 추출 -> 각 작가의 좋아요 top3 게시물 조회
+	 * 정상 실행 : 200
+	 * 서버 오류 : 500 
+	 */
 	@GetMapping("/MonthWriterBoards")
 	public ResponseEntity<List<List<Integer>>> getWriter() {
-		List<List<Integer>> bestBoards = boardService.getBestWriterBoards();
-		return ResponseEntity.status(HttpStatus.OK).body(bestBoards);
+		try {
+			List<List<Integer>> bestBoards = boardService.getBestWriterBoards();
+			if (bestBoards != null) {
+				return ResponseEntity.status(HttpStatus.OK).body(bestBoards);
+			} else {
+				throw new BoardException("월간 작가들의 게시물 조회시 에러 발생");
+			}
+		} catch (Exception e) {
+			throw new BoardException("월간 작가들의 게시물 조회시 에러 발생");
+		}
+		
 	}
 
 	
 	/**
+	 * [개별 게시물]
 	 *  게시판 번호 -> 작가 찾기 -> 해당 작가의 조회수 top3 Board 반환
+	 * 정상 실행 : 200
+	 * 데이터가 없는 겨우 : 404
+	 * 서버 오류 : 500 
 	 */
 	@GetMapping("/findTop3/{colboardId}")
-	public ResponseEntity<List<ColBoard>> getTop3(@PathVariable("colboardId") int colboardId) {
+	public ResponseEntity<?> getTop3(@PathVariable("colboardId") int colboardId) {
 		
-		List<ColBoard> list = boardService.getTop3(colboardId);
-		
-		return ResponseEntity.status(HttpStatus.OK).body(list);
+		try {
+			List<ColBoard> list = boardService.getTop3(colboardId);
+			if (list != null) {
+				return ResponseEntity.status(HttpStatus.OK).body(list);
+			} else {
+				return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+			}
+		} catch (Exception e) {
+			throw new BoardException("작가의 Top3 게시물 조회시 에러");
+		}
 	}
-	
-	
-	
-	
-	
-	
-	
-
-
 }

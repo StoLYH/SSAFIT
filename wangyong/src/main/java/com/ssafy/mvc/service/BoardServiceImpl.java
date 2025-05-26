@@ -96,7 +96,6 @@ public class BoardServiceImpl implements BoardService{
 				
 				
 				int fileInsertResult = boardDao.insertBoardFile(boardFile);
-				System.out.println(fileInsertResult + " fileInsertResult");
 				if (fileInsertResult != 1) {
 					return -1;	// 파일 처리 실패시 예외처리
 				}
@@ -206,7 +205,6 @@ public class BoardServiceImpl implements BoardService{
 				
 				
 				int fileInsertResult = boardDao.insertBoardFile(boardFile);
-				System.out.println(fileInsertResult + " fileInsertResult");
 				if (fileInsertResult != 1) {
 					return false;	// 파일 처리 실패시 예외처리
 				}
@@ -277,7 +275,6 @@ public class BoardServiceImpl implements BoardService{
 			int id = c.getColboardId();	// 게시판 기본키
 			List<BoardFile> fileList = fileDao.getFiles(id);		// 게시판 기본키 이용해 해당 파일을 모두 가져온다.
 			c.setBoardFiles(fileList);	
-			System.out.println(c);
 		}
 		
 		return list;
@@ -328,7 +325,7 @@ public class BoardServiceImpl implements BoardService{
 			return boardDao.insertClick(boardLike);
 		} 
 	
-		System.out.println("뇽안");
+		
 		// 오류
 		return -1;
 	}
