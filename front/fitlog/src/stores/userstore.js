@@ -8,7 +8,8 @@ export const useUserStore = defineStore('user', {
   state: () => ({
     userId: sessionStorage.getItem('userId') || null,
     token: sessionStorage.getItem('token') || null,
-    answer: null
+    answer: null,
+    recommendedBoards: null
   }),
   actions: {
     async login(loginForm) {
@@ -31,11 +32,11 @@ export const useUserStore = defineStore('user', {
         return false
       }
     },
-    async gptCall(message) {
-      const data = await gptCall(message)
-      this.answer = data 
+    async gptCall(question) {
+      const data = await gptCall(question);
+      this.answer = data.answer;
+      this.recommendedBoards = data.recommendedBoards;
     },
-
 
     setUser(userId, token) {
       this.userId = userId

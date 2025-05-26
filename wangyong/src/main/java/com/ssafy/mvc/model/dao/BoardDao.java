@@ -7,6 +7,8 @@ import com.ssafy.mvc.model.dto.BoardLike;
 import com.ssafy.mvc.model.dto.ColBoard;
 import com.ssafy.mvc.model.dto.SearchCondition;
 import com.ssafy.mvc.model.dto.User;
+import com.ssafy.mvc.model.dto.Embedding;
+import org.apache.ibatis.annotations.Param;
 
 
 public interface BoardDao {
@@ -48,5 +50,9 @@ public interface BoardDao {
 	List<String> getMonthBestWriter();
 	List<Integer> getBestBoard(String writer);
 	List<ColBoard> getWriterTop3(String writer);
+
+	// Embedding 관련 메서드 추가
+	List<Embedding> getAllEmbeddings();
+	void insertOrUpdateEmbedding(@Param("colboardId") int colboardId, @Param("embedding") byte[] embedding);
 
 }

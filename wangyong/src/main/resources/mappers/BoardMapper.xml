@@ -135,6 +135,19 @@
 	 	order by view_cnt desc
 	 	limit 3
 	 </select>
+
+
+	 <!-- Embedding 전체 조회 -->
+<select id="getAllEmbeddings" resultType="com.ssafy.mvc.model.dto.Embedding">
+    SELECT colboard_id AS colboardId, embedding FROM col_board_embedding
+</select>
+
+<!-- Embedding 저장/업데이트 -->
+<insert id="insertOrUpdateEmbedding" parameterType="map">
+    INSERT INTO col_board_embedding (colboard_id, embedding)
+    VALUES (#{colboardId}, #{embedding})
+    ON DUPLICATE KEY UPDATE embedding = #{embedding}
+</insert>
 	 
 
 	
