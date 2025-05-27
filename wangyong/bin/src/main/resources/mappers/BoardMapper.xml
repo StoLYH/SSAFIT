@@ -7,13 +7,14 @@
 
 	<select id="getCategory" parameterType="int" resultType="ColBoard">
 		select * from col_board
-		where category=#{categoryNum};
+		where category=#{categoryNum}
+		order by created_at desc
 	</select>
 
 	
-	<insert id="insertBoard" parameterType="ColBoard">
+	<insert id="insertBoard" parameterType="ColBoard" useGeneratedKeys="true" keyProperty="colboardId">
    		insert into col_board (user_id, category, title, content)
-   		values (#{userId}, #{category}, #{title}, #{content})
+   		values (#{userId}, #{category}, #{title}, #{content, jdbcType=LONGVARCHAR})
 	</insert>
 	
 
@@ -25,7 +26,7 @@
 
 	<update id="update" parameterType="ColBoard">
 		update col_board
-		set title=#{title}, content=#{content}
+		set title=#{title}, content=#{content}, category=#{category}
 		where colboard_id=#{colboardId}
 	</update>
 
@@ -33,5 +34,127 @@
 		delete from col_board
 		where colboard_id=#{colboardId}
 	</delete>
+	
+	<select id="getBoardByUser" parameterType="String" resultType="ColBoard">
+		select * from col_board
+		where user_id=#{userId}
+		order by view_cnt desc
+	</select>
+	
+	<update id="upBoardCnt" parameterType="int">
+		update col_board
+		set view_cnt=view_cnt+1
+		where colboard_id=#{colboard_id}
+	</update>
+	
 
+	<select id="search" parameterType="SearchCondition" resultType="ColBoard">
+		select * from col_board
+		<if test="key != null">
+		WHERE ${key} LIKE concat('%',#{word},'%')
+		</if>	
+		<!-- 정렬 조건 -->
+		<if test="orderBy != null">
+			ORDER BY ${orderBy} ${orderByDir}
+		</if>	
+	</select>
+	
+	<insert id="insertBoardFile" parameterType="BoardFile">
+		insert into file(colboard_id,original_name,upload_name,file_size)
+		values(#{colboardId},#{originalName},#{uploadName},#{fileSize});
+	</insert>
+	
+	<select id="getRecentBoardList" resultType="ColBoard">
+		SELECT * FROM col_board
+		ORDER BY created_at DESC
+		LIMIT 3;
+	</select>
+
+
+	<select id="getPopularBoardList" resultType="ColBoard">
+		SELECT * FROM col_board
+		ORDER BY view_cnt DESC
+		LIMIT 3;
+	</select>
+
+	<select id="getUserPopularBoardList" parameterType="String" resultType="ColBoard">
+		SELECT * FROM col_board
+		where user_id=#{userId}
+		ORDER BY view_cnt DESC
+		LIMIT 3;
+	</select>
+	
+	
+	
+	<select id="confirmClick" parameterType="BoardLike">
+		select count(*) from board_like
+		where user_id=#{userId} and colboard_id=#{colboardId}
+	</select>
+
+
+	<delete id="deleteClick" parameterType="BoardLike">
+		delete from board_like
+		where user_id=#{userId} and colboard_id=#{colboardId}
+	</delete>
+
+	<insert id="insertClick" parameterType="BoardLike">
+		insert into board_like (user_id, colboard_id)
+		values (#{userId}, #{colboardId})
+	</insert>
+	
+	 <select id="getLike" parameterType="int" resultType="int">
+	 	select count(*) from board_like
+	 	where colboard_id=#{colboardId}
+	 </select>
+	 
+
+	 <select id="getMonthBestWriter" resultType="String">
+	 	select cb.user_id
+		from board_like bl
+		join col_board cb on bl.colboard_id = cb.colboard_id
+		group by cb.user_id
+		order by count(*) desc
+		limit 3;
+	 </select>
+	 
+	 <select id="getBestBoard" parameterType="String" resultType="int">
+	 	select 
+ 	    cb.colboard_id
+		from col_board cb
+		left join board_like bl on cb.colboard_id = bl.colboard_id
+		where cb.user_id = #{writer}
+		group by cb.colboard_id
+		order by count(bl.like_id) desc
+		limit 3;
+	 </select>
+	 	
+	 	
+	 <select id="getWriterTop3" parameterType="String" resultType="ColBoard">
+	 	select * from col_board
+	 	where user_id=#{writer}
+	 	order by view_cnt desc
+	 	limit 3
+	 </select>
+
+
+	 <!-- Embedding 전체 조회 -->
+	<select id="getAllEmbeddings" resultType="Embedding">
+    	SELECT colboard_id, embedding FROM col_board_embedding
+	</select>
+
+	<!-- Embedding 저장/업데이트 -->
+	<insert id="insertOrUpdateEmbedding" parameterType="map">
+   		INSERT INTO col_board_embedding (colboard_id, embedding)
+    	VALUES (#{colboardId}, #{embedding})
+    	ON DUPLICATE KEY UPDATE embedding = #{embedding}
+	</insert>
+	
+	
+	 <!-- Embedding 삭제 -->
+	 <delete id="deleteEmbedding" parameterType="int">
+	 	delete from col_board_embedding
+	 	where colboard_id=#{colboardId}
+	 </delete>
+
+	
 </mapper>
