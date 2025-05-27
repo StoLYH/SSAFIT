@@ -5,14 +5,24 @@ import { api_file,  api, api_download, api_file_token, api_token} from './index'
 
 // 가장 최근에 올라온 칼럼 3개
 const getRecentColumns = async () => {
-    const {data} = await api.get("board/recent");
-    return data;
+    try {
+        const {data} = await api.get("board/recent");
+        return Array.isArray(data) ? data : [];
+    } catch (error) {
+        console.error('Error fetching recent columns:', error);
+        return [];
+    }
 }
 
 // 메인페이지
 const getPopularColumns = async () => {
-    const {data} = await api.get("board/popular");
-    return data;
+    try {
+        const {data} = await api.get("board/popular");
+        return Array.isArray(data) ? data : [];
+    } catch (error) {
+        console.error('Error fetching popular columns:', error);
+        return [];
+    }
 }
 
 // 마이페이지

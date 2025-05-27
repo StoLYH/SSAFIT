@@ -4,8 +4,8 @@
   <h2>이달의 작가 </h2>
    <div class="author-list">
     <div class="author-card" v-for="(userId, idx) in writers" :key="userId">
-  <div class="author-name">{{ writerInfoList[idx]?.userName || '작가 이름' }}</div>
-  <div class="author-subtitle">{{ writerInfoList[idx]?.userDetail?.onelineInfo || '"작가의 인사말"' }}</div>
+  <div class="author-name">{{ writers[idx] }}</div>
+  <div class="author-subtitle">{{ userComment[idx] }}</div>
 
         <ul class="column-list">
           <li v-for="(board) in getAuthorBoards(idx)" :key="board.colboardId" @click="goToBoard(board.colboardId)" class="clickable">
@@ -13,7 +13,7 @@
             <span class="col-title">{{ board.title }}</span>
           </li>
         </ul>
-        <div class="more-link" @click = "goToAuthorPage(writerInfoList[idx]?.userId)">해당 작가의 글 더보기 &gt;</div>
+        <div class="more-link" @click = "goToAuthorPage(stUserId[idx])">해당 작가의 글 더보기 &gt;</div>
       </div>
     </div>
   </section>
@@ -28,7 +28,9 @@ import { GetInfo } from '@/api/user'
 
 const router = useRouter()
 const props = defineProps({
+  stUserId : Array,
   writer: Array,
+  userComment: Array,
   AuthorsBoard1: Array,
   AuthorsBoard2: Array,
   AuthorsBoard3: Array,
@@ -53,8 +55,8 @@ const getAuthorBoards = (authorIndex) => {
 
 
 const goToAuthorPage = (userId) => {
-  if (!userId) return
-  router.push(`/mypage/${userId}`)  // 너가 만든 작가 상세 페이지로 연결
+  if (userId) {
+  router.push(`/mypage/${userId}`)}  // 너가 만든 작가 상세 페이지로 연결
 }
 
 const goToBoard = (colboardId) => {
