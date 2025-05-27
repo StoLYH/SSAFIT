@@ -54,5 +54,6 @@ public interface BoardDao {
 	// Embedding 관련 메서드 추가
 	List<Embedding> getAllEmbeddings();
 	void insertOrUpdateEmbedding(@Param("colboardId") int colboardId, @Param("embedding") byte[] embedding);
+	int deleteEmbedding(int colboardId); 
 
 }

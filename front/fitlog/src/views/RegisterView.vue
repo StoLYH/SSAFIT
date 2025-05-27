@@ -174,7 +174,7 @@ async function registerPost() {
   }
 
   const formData = new FormData();
-  formData.append('userId', userStore.userId); // 하드코딩
+  formData.append('userId', userStore.userId); 
   formData.append('category', selectedCategory.value);
   const title = document.querySelector('.title-input').value;
   const content = editorInstance.value.getHTML();

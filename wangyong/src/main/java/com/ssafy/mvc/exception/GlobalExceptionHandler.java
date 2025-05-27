@@ -12,6 +12,16 @@ public class GlobalExceptionHandler {
 	public ResponseEntity<String> handleEmployeeException(BoardException e) {
 		return ResponseEntity.internalServerError().body("에러 발생 : " + e.getMessage());
 	}
+	
+	
+	@ExceptionHandler(FileException.class)	// 해당 예외 발생 시 여기로 온다
+	public ResponseEntity<String> handleEmployeeException(FileException e) {
+		return ResponseEntity.internalServerError().body("에러 발생 : " + e.getMessage());
+	}
+	
+	
+	
+	
 }
 
 

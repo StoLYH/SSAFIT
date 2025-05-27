@@ -37,10 +37,7 @@ public class UserController {
         @RequestParam("password") String password,
         @RequestParam(value = "attach", required = false) MultipartFile attach
     ) throws IOException {
-        System.out.println("userId: " + userId);
-        System.out.println("userName: " + userName);
-        System.out.println("userRole: " + userRole);
-        System.out.println("password: " + password);
+
 
         User user = new User(userId, userName, userRole, password);
         user.setAttach(attach);
@@ -84,7 +81,6 @@ public class UserController {
     //디테일 정보등록
      @PutMapping("detail")
   public ResponseEntity<?> updateUserDetail(@RequestBody UserDetail userDetail) {
-         System.out.println("userDetail: " + userDetail);
       userService.updateUserDetail(userDetail);
       return ResponseEntity.ok().build();
   }

@@ -218,7 +218,6 @@ public class BoardController {
 			// 서버오류 500
 			throw new BoardException("게시물 등록시 에러 발생");	
 		}
-		
 	}
 	
 	
@@ -244,6 +243,7 @@ public class BoardController {
 			throw new BoardException("게시물 업데이트시 에러 발생");	
 		}
 	}
+	
 	
 	/**
 	 * colboard_id(기본키)를 이용하여 게시물 삭제
