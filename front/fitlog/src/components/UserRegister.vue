@@ -164,6 +164,8 @@
 
   .form-label {
     font-size: 1rem;
+    color: white;
+    font-weight: bold;
   }
 
   .input-wrapper {
@@ -211,6 +213,8 @@
 
   .radio-label {
     font-size: 0.97rem;
+    color: white;
+    font-weight: bold;
   }
 
   .profile-upload-box {
@@ -221,6 +225,8 @@
 
   .profile-box-text {
     font-size: 0.97rem;
+    color: white;
+    font-weight: bold;
   }
 
   .image-preview {

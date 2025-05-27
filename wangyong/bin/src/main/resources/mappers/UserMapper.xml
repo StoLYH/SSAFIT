@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ssafy.mvc.model.dao.UserDao">
+	<insert id="insertUser" parameterType="User">
+		insert into user (user_id, user_role, user_name, password)
+		values (#{userId}, #{userRole}, #{userName}, #{password})
+	</insert>
+
+	<resultMap id="UserResultMap" type="User">
+    <id property="userId" column="user_id"/>
+    <result property="userName" column="user_name"/>
+    <result property="password" column="password"/>
+    <result property="userRole" column="user_role"/>
+    
+    <association property="userRoleName" javaType="UserRole">
+        <result property="userRole" column="user_role"/>
+        <result property="userRoleName" column="user_role_name"/>
+    </association>
+    
+    <association property="userDetail" javaType="UserDetail">
+        <id property="userId" column="user_id"/>
+        <result property="onelineInfo" column="oneline_info"/>
+        <result property="exper" column="exper"/>
+    </association>
+</resultMap>
+
+<select id="findUserByIdUser" parameterType="String" resultMap="UserResultMap">
+    SELECT u.user_id, u.user_name, u.user_role, u.password,
+           r.user_role_name,
+           d.oneline_info, d.exper
+    FROM user u
+    LEFT JOIN role r ON u.user_role = r.user_role
+    LEFT JOIN user_detail d ON u.user_id = d.user_id
+    WHERE u.user_id = #{userId}
+</select>
+
+    <update id="updateUser" parameterType="User">
+        update user
+        <set>
+            <if test="userRole != null">user_role = #{userRole},</if>
+            <if test="userName != null">user_name = #{userName},</if>
+        </set>
+        where user_id = #{userId}
+    </update>
+
+    <insert id="updateUserDetail" parameterType="UserDetail">
+        insert into user_detail (user_id, oneline_info, exper)
+        values (#{userId}, #{onelineInfo}, #{exper})
+        on duplicate key update
+        <if test="onelineInfo != null">oneline_info = #{onelineInfo},</if>
+        <if test="exper != null">exper = #{exper}</if>
+    </insert>
+
+    <select id="findUserByIdLogin" parameterType="String"
+        resultType="LoginRequest">
+        select user_id,password from user where user_id =#{userId}
+    </select>
+
+    <select id="confirmId" resultType="int" parameterType="String">
+        select count(*) from user
+        where user_id=#{userId}
+    </select>
+    
+    <select id="confirmName" resultType="int" parameterType="User">
+        select count(*) from user
+        where user_name=#{userName}
+    </select>
+
+</mapper>
