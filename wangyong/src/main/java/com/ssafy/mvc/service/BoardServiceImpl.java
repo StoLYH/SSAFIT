@@ -165,12 +165,7 @@ public class BoardServiceImpl implements BoardService{
 		boolean result1 = deleteFileFromServer(fileList);				// 서버
 		int result2 = fileDao.deleteFile(colBoard.getColboardId());		// db(파일만 삭제)
 		
-		if (result1 == true) {
-			System.out.println("게시물 서버삭제완료");
-		}
-		if (result2 == 1) {
-			System.out.println("게시물 db삭제완료");
-		}
+
 		
 		// 서버단, 파일 재 업로드
 		forupdate(colBoard);
@@ -251,11 +246,9 @@ public class BoardServiceImpl implements BoardService{
 	            if (file.exists()) {
 	                boolean deleted = file.delete();
 	                if (!deleted) {
-	                    System.out.println("파일 삭제 실패: " + uploadName);
 	                    allDeleted = false;
 	                }
 	            } else {
-	                System.out.println("파일이 존재하지 않음: " + uploadName);
 	                allDeleted = false;
 	            }
 	            

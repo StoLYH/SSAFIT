@@ -74,12 +74,7 @@ public class UserServiceImpl implements UserService {
 		userDetail.setUserId(userId);  // userId 설정
 		int result2 = userDao.updateUserDetail(userDetail);
 
-		//첨부파일 넘어오는지 확인용
-		if (user.getAttach() != null) {
-			System.out.println("첨부파일 이름: " + user.getAttach().getOriginalFilename());
-		} else {
-			System.out.println("첨부파일이 없습니다.");
-		}
+
 		// file 저장 (User 정보가 저장된 후에)
 		if (result1 == 1 && result2 == 1 && user.getAttach() != null) {
 			//이미지 파일 지운 뒤에 다시 업로드
@@ -108,8 +103,7 @@ public class UserServiceImpl implements UserService {
 	public LoginRequest login(LoginRequest loginRequest) {
 		// service에서 로그인로직 처리
 		LoginRequest user = userDao.findUserByIdLogin(loginRequest.getUserId());
-		System.out.println(user.getUserId()+" "+user.getPassword());
-		System.out.println(user);
+
 		if (user == null || !user.getPassword().equals(loginRequest.getPassword())) {
 			throw new RuntimeException("아이디 또는 비밀번호가 틀렸습니다");
 		} else {

@@ -42,7 +42,6 @@ public class AuthController {
 	@PostMapping("/login")
 	public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest, HttpSession session) {
 		// 로그인 로직 처리
-		System.out.println("check");
 		LoginRequest user = userService.login(loginRequest);
 		if(user == null) {
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("로그인 실패");
