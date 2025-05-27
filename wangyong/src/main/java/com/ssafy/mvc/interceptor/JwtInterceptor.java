@@ -23,7 +23,6 @@ public class JwtInterceptor implements HandlerInterceptor {
 
         // 토큰이 있는 경우에만 검증
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
-        	System.out.println("테스트");
             try {
                 String token = authHeader.substring(7);
                 Jws<Claims> claims = jwtUtil.validateToken(token);		// 토큰 유효성 검사

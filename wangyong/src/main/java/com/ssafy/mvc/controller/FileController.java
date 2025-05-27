@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.ssafy.mvc.exception.FileException;
 import com.ssafy.mvc.model.dto.BoardFile;
 import com.ssafy.mvc.model.dto.UserFile;
 import com.ssafy.mvc.service.FileService;
@@ -62,7 +63,7 @@ public class FileController {
         } catch (MalformedURLException e) {
             return ResponseEntity.badRequest().build();
         } catch (Exception e) {
-            return ResponseEntity.internalServerError().build();
+            throw new FileException("서버에 저장된 파일 전달 시 에러");
         }
     }
 
@@ -77,20 +78,24 @@ public class FileController {
 		 if (list != null) {
 			 return ResponseEntity.status(HttpStatus.OK).body(list);
 		 } else {
-			 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+			 throw new FileException("파일 조회 시 에러");
 		 }
 	 }
+	 
 
 	@GetMapping("user/{userId}")
 	public ResponseEntity<UserFile> getMethod5(@PathVariable("userId") String userId) {
-		UserFile userFile = fileService.getUserFiles(userId);
-		if (userFile != null) {
-			return ResponseEntity.status(HttpStatus.OK).body(userFile);
-		} else {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+		try {
+			UserFile userFile = fileService.getUserFiles(userId);
+			if (userFile != null) {
+				return ResponseEntity.status(HttpStatus.OK).body(userFile);
+			} else {
+				return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+			}
+		} catch(Exception e) {
+			throw new FileException("사용자 파일 조회 시 에러");
 		}
 	}
-
 
 	
 	 /**
@@ -118,7 +123,7 @@ public class FileController {
 	                 .body(resource);
 
 	     } catch (IOException e) {
-	         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+	    	 throw new FileException("파일 다운로드 시 에러");
 	     }
 	 }
 }

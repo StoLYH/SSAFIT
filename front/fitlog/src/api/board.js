@@ -17,7 +17,7 @@ const getPopularColumns = async () => {
 
 // 마이페이지
 const getUserPopularColumns = async (userId) => {
-    const {data} = await api.get("board/user/popular" + userId);
+    const {data} = await api.get("board/user/popular/" + userId);
     return data;
 }
 

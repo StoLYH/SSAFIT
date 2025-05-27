@@ -42,8 +42,8 @@
   </template>
   
   <script setup>
-  import { ref, onMounted } from 'vue'
-  import ColumnList from '@/components/ColumnList.vue'
+import { ref, onMounted } from 'vue'
+import ColumnList from '@/components/ColumnList.vue'
 import PostList from '@/components/PostList.vue';
 import { getUserColumns } from '@/api/board.js'
 import { getUserPopularColumns } from '@/api/board.js'

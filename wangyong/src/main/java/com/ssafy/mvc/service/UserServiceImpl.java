@@ -70,8 +70,6 @@ public class UserServiceImpl implements UserService {
 	public LoginRequest login(LoginRequest loginRequest) {
 		// service에서 로그인로직 처리
 		LoginRequest user = userDao.findUserByIdLogin(loginRequest.getUserId());
-		System.out.println(user.getUserId()+" "+user.getPassword());
-		System.out.println(user);
 		if (user == null || !user.getPassword().equals(loginRequest.getPassword())) {
 			throw new RuntimeException("아이디 또는 비밀번호가 틀렸습니다");
 		} else {
