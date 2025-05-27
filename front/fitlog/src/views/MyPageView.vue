@@ -26,7 +26,7 @@
         @save="handleProfileSave"
         @close="showEditModal = false"
       />
-  
+
       <!-- 인기 칼럼 -->
       <section>
         <h2>{{ userInfo.nickname }}의 인기 칼럼</h2>
@@ -74,7 +74,7 @@ import { updateUser } from '@/api/user.js'
     exper: 'winning bodybuilding contest, working in H1 Fitness, healthman youtube channel'
   })
   const profileStore = useProfileStore();
-  
+
   const popularColumns = ref([])
   
   onMounted(async () => {

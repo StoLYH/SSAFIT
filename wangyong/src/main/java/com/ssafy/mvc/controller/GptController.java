@@ -33,6 +33,9 @@ public class GptController {
 
     @PostMapping("/chatGPT")
     public ResponseEntity<Map<String, Object>> chat(@RequestBody String message) {
+    	// System.out.println("질문확인 : " + message);
+    	
+    	
 		// System 역할과 사용자 메시지를 포함한 Prompt 생성
 		Prompt prompt = new Prompt(
 				new SystemMessage(SYSTEM_ROLE),

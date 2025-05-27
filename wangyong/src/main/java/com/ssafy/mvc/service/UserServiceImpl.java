@@ -68,7 +68,7 @@ public class UserServiceImpl implements UserService {
 
 		// user 테이블 업데이트
 		int result1 = userDao.updateUser(originUser);
-		
+
 		// user_detail 테이블 업데이트
 		UserDetail userDetail = originUser.getUserDetail();
 		userDetail.setUserId(userId);  // userId 설정

@@ -30,7 +30,6 @@ watch(
   () => route.params.categoryNumber,    // 함수로 사용해야 변화되는 값을 추적
   async (newId) => {
     totalPosts.value = await getCategoryColumns(newId)
-    console.log(totalPosts.value.length);
     
     posts.value = totalPosts.value.slice(0, 10); 
     totalPages.value = Math.floor(posts.value.length / 10) + 1;

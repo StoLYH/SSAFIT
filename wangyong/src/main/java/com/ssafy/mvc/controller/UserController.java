@@ -37,7 +37,8 @@ public class UserController {
         @RequestParam("password") String password,
         @RequestParam(value = "attach", required = false) MultipartFile attach
     ) throws IOException {
-   
+
+
 
         User user = new User(userId, userName, userRole, password);
         user.setAttach(attach);

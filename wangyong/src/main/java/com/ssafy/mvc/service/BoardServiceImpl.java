@@ -2,6 +2,7 @@ package com.ssafy.mvc.service;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.ByteBuffer;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
@@ -11,6 +12,8 @@ import java.util.List;
 import java.util.UUID;
 
 import com.ssafy.mvc.model.dto.*;
+
+import org.jsoup.Jsoup;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -101,11 +104,24 @@ public class BoardServiceImpl implements BoardService{
 		}
 		
 		// === Embedding 저장 ===
-		String text = colBoard.getTitle() + " " + colBoard.getContent();
-		List<Float> embedding = embeddingService.getEmbedding(text);
+		String rawText = colBoard.getTitle() + " " + colBoard.getContent();
+		String cleanText = Jsoup.parse(rawText).text();  			// HTML 태그 제거
+		
+		List<Float> embedding = embeddingService.getEmbedding(cleanText);
+		
+		
 		byte[] embeddingBytes = floatListToByteArray(embedding);
 		boardDao.insertOrUpdateEmbedding(primarykey, embeddingBytes);
+		
 		return 1;
+	}
+	
+	private byte[] floatListToByteArray(List<Float> floatList) {
+	    ByteBuffer buffer = ByteBuffer.allocate(floatList.size() * 4);
+	    for (Float f : floatList) {
+	        buffer.putFloat(f);
+	    }
+	    return buffer.array();
 	}
 	
 	private String generateUniqueName(String originalName) {
@@ -119,17 +135,8 @@ public class BoardServiceImpl implements BoardService{
 		return timeStr + "_" + uniqueStr + extName;
 	}
 	
-	private byte[] floatListToByteArray(List<Float> floatList) {
-		byte[] bytes = new byte[floatList.size() * 4];
-		for (int i = 0; i < floatList.size(); i++) {
-			int intBits = Float.floatToIntBits(floatList.get(i));
-			bytes[i * 4] = (byte) (intBits >> 24);
-			bytes[i * 4 + 1] = (byte) (intBits >> 16);
-			bytes[i * 4 + 2] = (byte) (intBits >> 8);
-			bytes[i * 4 + 3] = (byte) (intBits);
-		}
-		return bytes;
-	}
+
+
 	
 
 	@Override
@@ -177,6 +184,8 @@ public class BoardServiceImpl implements BoardService{
 		String text = colBoard.getTitle() + " " + colBoard.getContent();
 		List<Float> embedding = embeddingService.getEmbedding(text);
 		byte[] embeddingBytes = floatListToByteArray(embedding);
+
+		
 		boardDao.insertOrUpdateEmbedding(colBoard.getColboardId(), embeddingBytes);
 		return updateResult;
 	}
@@ -274,8 +283,13 @@ public class BoardServiceImpl implements BoardService{
 			if (result == true) {
 			}
 		}
+
 	
-		
+		int result = boardDao.deleteEmbedding(colboardId);
+		if (result != 1) {
+			throw new BoardException("Embedding 삭제시 에러");
+		}
+	
 		
 		// 게시판 삭제시 파일 연쇄 삭제
 		return boardDao.delete(colboardId);
@@ -385,24 +399,83 @@ public class BoardServiceImpl implements BoardService{
 		return boardDao.getWriterTop3(writer);
 	}
 
+	private List<Float> byteArrayToFloatList(byte[] bytes) {
+		List<Float> floatList = new ArrayList<>();
+		for (int i = 0; i < bytes.length; i += 4) {
+			int intBits = ((bytes[i] & 0xFF) << 24) |
+						 ((bytes[i + 1] & 0xFF) << 16) |
+						 ((bytes[i + 2] & 0xFF) << 8) |
+						 (bytes[i + 3] & 0xFF);
+			floatList.add(Float.intBitsToFloat(intBits));
+		}
+		return floatList;
+	}
 
+	private double cosineSimilarity(List<Float> v1, List<Float> v2) {
+		if (v1 == null || v2 == null || v1.size() != v2.size()) {
+			return 0.0;
+		}
+		
+		double dotProduct = 0.0;
+		double norm1 = 0.0;
+		double norm2 = 0.0;
+		
+		for (int i = 0; i < v1.size(); i++) {
+			dotProduct += v1.get(i) * v2.get(i);
+			norm1 += v1.get(i) * v1.get(i);
+			norm2 += v2.get(i) * v2.get(i);
+		}
+		
+		if (norm1 == 0.0 || norm2 == 0.0) {
+			return 0.0;
+		}
+		
+		return dotProduct / (Math.sqrt(norm1) * Math.sqrt(norm2));
+	}
 
-public List<ColBoard> recommendByEmbedding(String question, int topN) {
-    List<Float> qVec = embeddingService.getEmbedding(question);
-    List<Embedding> all = boardDao.getAllEmbeddings();
-    List<ColBoard> allBoards = new ArrayList<>();
-    List<Double> sims = new ArrayList<>();
-    for (Embedding e : all) {
-        double sim = embeddingService.cosineSimilarity(qVec, e.getEmbedding());
-        sims.add(sim);
-        allBoards.add(boardDao.getBoard(e.getColboardId()));
-    }
-    // 유사도 기준 내림차순 정렬 후 상위 N개 반환
-    return allBoards.stream()
-        .sorted((a, b) -> Double.compare(
-            sims.get(allBoards.indexOf(b)), sims.get(allBoards.indexOf(a))
-        ))
-        .limit(topN)
-        .toList();
-}
+	public List<ColBoard> recommendByEmbedding(String question, int topN) {
+		List<Float> qVec = embeddingService.getEmbedding(question);			// 질문 임베딩 백터화
+
+		// 백터주석
+//		System.out.println("qVec 길이: " + qVec.size());
+//		System.out.println("qVec 값 샘플: " + qVec.subList(0, Math.min(5, qVec.size())));
+		
+		List<Embedding> all = boardDao.getAllEmbeddings();					// DB에서 모든 게시글의 임베딩 정보를 불러옵니다.
+		List<ColBoard> allBoards = new ArrayList<>();
+		List<Double> similarities = new ArrayList<>();
+		
+		for (Embedding e : all) {
+			byte[] vecBytes = e.getEmbedding();
+			List<Float> vec = byteArrayToFloatList(vecBytes);  // byte[]를 List<Float>로 변환
+			
+			// 벡터 크기 검증
+			if (vec.size() != qVec.size()) {
+				System.out.println("경고: 벡터 크기가 일치하지 않습니다. ID: " + e.getColboardId() + 
+					", 예상 크기: " + qVec.size() + ", 실제 크기: " + vec.size());
+				continue;
+			}
+			
+			double similarity = cosineSimilarity(qVec, vec);
+			
+			// System.out.println("게시글 ID: " + e.getColboardId() + ", 유사도: " + similarity);
+			
+			similarities.add(similarity);
+			allBoards.add(boardDao.getBoard(e.getColboardId()));
+		}
+		
+		// 유사도 기준 내림차순 정렬 후 상위 N개 반환
+		List<Integer> indices = new ArrayList<>();
+		for (int i = 0; i < similarities.size(); i++) {
+			indices.add(i);
+		}
+		
+		indices.sort((a, b) -> Double.compare(similarities.get(b), similarities.get(a)));
+		
+		List<ColBoard> result = new ArrayList<>();
+		for (int i = 0; i < Math.min(topN, indices.size()); i++) {
+			result.add(allBoards.get(indices.get(i)));
+		}
+		
+		return result;
+	}
 }
