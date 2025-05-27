@@ -41,7 +41,10 @@ public interface BoardService {
 	List<List<Integer>> getBestWriterBoards();
 	
 	List<ColBoard> getTop3(int colboardId);
+
+	//유사게시글 추천메서드
 	List<ColBoard> recommendByEmbedding(String question, int topN);
-
-
-}
+	
+	
+	
+	}

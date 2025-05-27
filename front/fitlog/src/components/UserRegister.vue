@@ -1,22 +1,64 @@
 <template>
     <form class="register-form" @submit.prevent="onRegister">
-      <div class="input-wrapper">
-        <input class="form-input" type="text" placeholder="아이디 또는 이메일" v-model="id" required />
-        <button type="button" class="check-btn" @click="checkId">중복확인</button>
+      <div class="form-group">
+        <label class="form-label">아이디 또는 이메일</label>
+        <div class="input-wrapper">
+          <input class="form-input" type="text" v-model="id" required />
+          <button type="button" class="check-btn" @click="checkId">확인</button>
+        </div>
       </div>
-      <input class="form-input" type="password" placeholder="비밀번호" v-model="password" required />
-      <input class="form-input" type="password" placeholder="비밀번호 확인" v-model="passwordConfirm" required />
-      <input class="form-input" type="text" placeholder="직업" v-model="job" required />
-      <div class="input-wrapper">
-        <input class="form-input" type="text" placeholder="닉네임" v-model="nickname" required />
-        <button type="button" class="check-btn" @click="checkNickname">중복확인</button>
+      <div class="form-group">
+        <label class="form-label">비밀번호</label>
+        <div class="input-wrapper">
+          <input class="form-input" type="password" v-model="password" required />
+        </div>
       </div>
-      <label class="profile-upload">
-        <input type="file" accept="image/*" @change="onProfileImageChange" hidden />
-        <span class="profile-btn">프로필 이미지 등록</span>
-      </label>
-      <div v-if="previewUrl" class="image-preview">
-        <img :src="previewUrl" alt="프로필 이미지 미리보기">
+      <div class="form-group">
+        <label class="form-label">비밀번호 확인</label>
+        <div class="input-wrapper">
+          <input class="form-input" type="password" v-model="passwordConfirm" required />
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">닉네임</label>
+        <div class="input-wrapper">
+          <input class="form-input" type="text" v-model="nickname" required />
+          <button type="button" class="check-btn" @click="checkNickname">확인</button>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">직업</label>
+        <div class="job-radio-group">
+          <label class="radio-label">
+            <input type="radio" value="1" v-model="job" />
+            <span class="custom-radio"></span>
+            의사
+          </label>
+          <label class="radio-label">
+            <input type="radio" value="2" v-model="job" />
+            <span class="custom-radio"></span>
+            헬스
+          </label>
+          <label class="radio-label">
+            <input type="radio" value="3" v-model="job" />
+            <span class="custom-radio"></span>
+            의사
+          </label>
+          <label class="radio-label">
+            <input type="radio" value="4" v-model="job" />
+            <span class="custom-radio"></span>
+            의사
+          </label>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="profile-upload-box">
+          <input type="file" accept="image/*" @change="onProfileImageChange" hidden />
+          <span class="profile-box-text">프로필이미지등록</span>
+        </label>
+        <div v-if="previewUrl" class="image-preview">
+          <img :src="previewUrl" alt="프로필 이미지 미리보기">
+        </div>
       </div>
       <button type="submit" class="btn btn-register">회원가입</button>
       <button type="button" class="btn btn-login" @click="goToLogin">로그인</button>
@@ -31,7 +73,7 @@
   const router = useRouter();
 
   const goToLogin = () => {
-    router.push('/login')
+    router.push('/welcome')
   }
 
   const id = ref('')
@@ -109,82 +151,129 @@
   
   <style scoped>
   .register-form {
-    width: 350px;
-    display: flex;
-    flex-direction: column;
-    gap: 18px;
+    width: 340px;
+    padding: 28px;
+    gap: 16px;
+    border-radius: 12px;
+    font-size: 0.97rem;
   }
+
+  .form-group {
+    gap: 5px;
+  }
+
+  .form-label {
+    font-size: 1rem;
+  }
+
   .input-wrapper {
     position: relative;
     width: 100%;
-    margin-bottom: 0;
-  }
-  .input-wrapper .form-input {
-    width: 100%;
-    padding-right: 100px; /* 버튼 공간 확보 */
     box-sizing: border-box;
-  }
-  .input-wrapper .check-btn {
-    position: absolute;
-    right: 10px;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 90px;
-    height: 38px;
-    margin: 0;
-  }
-  .form-input {
-    width: 100%;
-    padding: 13px 15px;
-    border: none;
-    border-radius: 4px;
-    font-size: 1rem;
-    background: #fff;
-    margin-bottom: 0;
-  }
-  .profile-upload {
     display: flex;
     align-items: center;
-    margin-bottom: 0;
+    gap: 8px;
   }
-  .profile-btn {
-    background: #3b5998;
-    color: #fff;
-    padding: 8px 16px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 0.98rem;
-  }
-  .btn {
+
+  .input-wrapper .form-input {
+    flex: 1 1 0%;
     width: 100%;
-    padding: 12px 0;
-    border: none;
-    border-radius: 4px;
-    font-size: 1.05rem;
-    font-weight: 600;
-    cursor: pointer;
-    margin-bottom: 0;
+    min-width: 0;
+    padding: 10px 12px;
+    padding-right: 0;
+    border: 1px solid #e0e0e0;
+    border-radius: 7px;
+    font-size: 0.97rem;
+    background: #f9fafc;
+    transition: all 0.2s;
+    box-sizing: border-box;
+    display: block;
   }
-  .btn-register {
-    background: #f7f97a;
-    color: #222;
-    margin-bottom: 0;
+
+  .input-wrapper .check-btn {
+    flex-shrink: 0;
+    width: 64px;
+    padding: 6px 0;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    margin-left: 4px;
   }
-  .btn-login {
-    background: #222;
-    color: #fff;
-    margin-bottom: 0;
+
+  .job-radio-group {
+    gap: 18px;
   }
+
+  .custom-radio {
+    width: 16px;
+    height: 16px;
+    margin-right: 2px;
+  }
+
+  .radio-label {
+    font-size: 0.97rem;
+  }
+
+  .profile-upload-box {
+    width: 150px;
+    height: 70px;
+    border-radius: 8px;
+  }
+
+  .profile-box-text {
+    font-size: 0.97rem;
+  }
+
   .image-preview {
     width: 100%;
     max-width: 200px;
     margin: 0 auto;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   }
 
   .image-preview img {
     width: 100%;
-    height: auto;
-    border-radius: 4px;
-    border: 1px solid #ddd;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 12px;
+    transition: all 0.2s;
+  }
+
+  .btn {
+    width: 100%;
+    padding: 12px 0;
+    border-radius: 8px;
+    font-size: 1.05rem;
+  }
+
+  .btn-register {
+    background: #6c6c6c;
+    color: white;
+    margin-bottom: 12px;
+  }
+
+  .btn-register:hover {
+    background: #444;
+  }
+
+  .btn-login {
+    background: #f5f5f5;
+    color: #111;
+    font-weight: 700;
+  }
+
+  .btn-login:hover {
+    background: #e0e0e0;
+  }
+
+  input:focus, select:focus {
+    outline: none;
+    border-color: #56adff;
+    box-shadow: 0 0 0 2px rgba(86, 173, 255, 0.1);
+  }
+
+  input:hover, select:hover {
+    border-color: #ccc;
   }
   </style>

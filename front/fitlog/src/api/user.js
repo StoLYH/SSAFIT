@@ -26,6 +26,12 @@ const updateUserDetail = async (newUserDetail)=>{
     return data;
 }
 
+const updateUser = async (newUser, userId)=>{
+    const{data}= await api_file.put(`${USER_API_BASE}/${userId}`,newUser)
+    return data;
+}
+
+
 const confirmId = async (userId) => {
     const { data } = await api.get(`${USER_API_BASE}/confirmId/${userId}`)
     return data
@@ -42,5 +48,6 @@ export{
     confirmName,
     GetInfo,
     updateUserDetail,
-    GetImg
+    GetImg,
+    updateUser
 }
