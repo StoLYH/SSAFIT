@@ -18,9 +18,15 @@
 
           
         </div>
-        <button class="edit-btn">정보수정</button>
+        <button class="edit-btn" @click="openProfileEdit">정보수정</button>
       </div>
-  
+      <UserProfileEditModal
+        v-if="showEditModal"
+        :modelValue="userEditInfo"
+        @save="handleProfileSave"
+        @close="showEditModal = false"
+      />
+
       <!-- 인기 칼럼 -->
       <section>
         <h2>{{ userInfo.nickname }}의 인기 칼럼</h2>
@@ -42,8 +48,10 @@
   </template>
   
   <script setup>
-import { ref, onMounted } from 'vue'
-import ColumnList from '@/components/ColumnList.vue'
+  import router from '@/router';
+
+  import { ref, onMounted } from 'vue'
+  import ColumnList from '@/components/ColumnList.vue'
 import PostList from '@/components/PostList.vue';
 import { getUserColumns } from '@/api/board.js'
 import { getUserPopularColumns } from '@/api/board.js'
@@ -52,6 +60,8 @@ import { updateUserDetail } from '@/api/user.js'
 import { GetImg } from '@/api/user.js'
 import { useRoute } from 'vue-router';
 import { useProfileStore } from '@/stores/profilestore.js';
+import UserProfileEditModal from '@/components/UserProfileEditModal.vue'
+import { updateUser } from '@/api/user.js'
 
   const route = useRoute()
   const posts = ref([]);
@@ -64,13 +74,11 @@ import { useProfileStore } from '@/stores/profilestore.js';
     exper: 'winning bodybuilding contest, working in H1 Fitness, healthman youtube channel'
   })
   const profileStore = useProfileStore();
-  
-  // 예시 데이터, 실제로는 API에서 받아와야 함
+
   const popularColumns = ref([])
   
   onMounted(async () => {
     const userId = route.params.userId
-    console.log('Loading user info for ID:', userId)
     try {
       const success = await profileStore.GetProfileInfo(userId)
       if (success) {
@@ -125,7 +133,50 @@ async function handleSave({ field, value }) {
     }
 }
 
+const showEditModal = ref(false)
+const userEditInfo = ref({})
 
+function openProfileEdit() {
+  if(profileStore.user.editable){
+  userEditInfo.value = {
+    userName: userInfo.value.nickname,
+    userRole: profileStore.user.userRole,
+    exper: userInfo.value.exper,
+    onelineInfo: userInfo.value.onelineInfo,
+    attach : profileImg.value
+  }
+  showEditModal.value = true
+}
+}
+
+async function handleProfileSave(updatedInfo) {
+  const formData = new FormData()
+  formData.append('userName', updatedInfo.userName)
+  formData.append('userRole', updatedInfo.userRole)
+  formData.append('exper', updatedInfo.exper)
+  formData.append('onelineInfo', updatedInfo.onelineInfo)
+  if (updatedInfo.attach) {
+    formData.append('attach', updatedInfo.attach)
+  }
+  await updateUser(formData, profileStore.userId)
+  // 저장 후 최신 정보 다시 불러오기
+  await profileStore.GetProfileInfo(profileStore.userId)
+  const userData = profileStore.user
+  userInfo.value = {
+    nickname: userData.userName,
+    role: userData.userRole, // 숫자!
+    onelineInfo: userData.userDetail?.onelineInfo || '아직 한 줄 소개가 없습니다.',
+    exper: userData.userDetail?.exper || '아직 경력 정보가 없습니다.'
+  }
+  profileData.value = await GetImg(profileStore.userId)
+  if (profileData.value && profileData.value.uploadName) {
+    profileImg.value = `http://localhost:8080/upload/sendImg/${profileData.value.uploadName}`
+  }
+  showEditModal.value = false
+  location.reload()
+
+
+}
 
   </script>
   

@@ -38,6 +38,9 @@ onMounted(async () => {
     const board = await getoneBoardWithoutCnt(bestBoardNumStr[i][0]);
     popularAuthors.value.push(board.userId);
   }
+
+
+  
   console.log(popularAuthors.value);  // 작가이름
 
   for (let i = 0; i < 3; i++) {
