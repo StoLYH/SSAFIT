@@ -93,7 +93,7 @@ import { updateUser } from '@/api/user.js'
         profileData.value = await GetImg(userId);
         
         if (profileData.value && profileData.value.uploadName) {
-          profileImg.value = `http://localhost:8080/upload/sendImg/${profileData.value.uploadName}`;
+          profileImg.value = `https://localhost:8443/upload/sendImg/${profileData.value.uploadName}`;
         } else {
           console.log('프로필 이미지가 없습니다.');
           profileImg.value = '/landingpage2.png';
@@ -170,7 +170,7 @@ async function handleProfileSave(updatedInfo) {
   }
   profileData.value = await GetImg(profileStore.userId)
   if (profileData.value && profileData.value.uploadName) {
-    profileImg.value = `http://localhost:8080/upload/sendImg/${profileData.value.uploadName}`
+    profileImg.value = `https://localhost:8443/upload/sendImg/${profileData.value.uploadName}`
   }
   showEditModal.value = false
   location.reload()

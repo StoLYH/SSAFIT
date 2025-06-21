@@ -88,7 +88,7 @@ watch(
       for (const board of boards) {
           const fileList = await getfileInformaton(board.colboardId)
           if (fileList && fileList[0] && fileList[0].uploadName) {
-            imageUrls.value[board.colboardId] = `http://localhost:8080/upload/sendImg/${fileList[0].uploadName}`
+            imageUrls.value[board.colboardId] = `https://localhost:8443/upload/sendImg/${fileList[0].uploadName}`
           } else {
             imageUrls.value[board.colboardId] = '/un.png'
           }

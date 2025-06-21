@@ -1,7 +1,7 @@
 <template>
   <div class="post-item" @click="goToShow">
     <img
-      :src="fileinfo && fileinfo[0] ? `http://localhost:8080/upload/sendImg/${fileinfo[0].uploadName}` : '/un.png'"
+      :src="fileinfo && fileinfo[0] ? `https://localhost:8443/upload/sendImg/${fileinfo[0].uploadName}` : '/un.png'"
       alt="썸네일"/>
                                           <!-- 기본 이미지 어떻게 처리할지 고민...... -->
     <div class="post-info">

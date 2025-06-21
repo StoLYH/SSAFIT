@@ -24,7 +24,7 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.UUID;
 
-@CrossOrigin(origins = "http://localhost:5173")
+
 @RestController
 @RequestMapping("/upload")
 public class FileController {
