@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import com.ssafy.mvc.model.dto.Review;
 import com.ssafy.mvc.service.ReviewService;
-@CrossOrigin(origins = "http://localhost:5173")
+
 @RestController
 @RequestMapping("/api/review")
 public class ReviewController {

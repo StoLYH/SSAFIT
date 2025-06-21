@@ -104,7 +104,7 @@ const loadBoard = async () => {
     existingFiles.value = fileRes      // 기존 파일 목록 저장
 
     // 커버 이미지 서버에서 가져와서 표시
-    const coverImageUrl = `http://localhost:8080/upload/sendImg/${fileRes[0].uploadName}`
+    const coverImageUrl = `https://localhost:8443/upload/sendImg/${fileRes[0].uploadName}`
     coverPreview.value = coverImageUrl
     
     // 모든 기존 파일을 files 배열에 추가
@@ -123,7 +123,7 @@ const loadBoard = async () => {
 
       // 나머지 기존 파일들도 로드 (1번째부터)
       for (let i = 1; i < fileRes.length; i++) {
-        const fileUrl = `http://localhost:8080/upload/sendImg/${fileRes[i].uploadName}`
+        const fileUrl = `https://localhost:8443/upload/sendImg/${fileRes[i].uploadName}`
         try {
           const response = await fetch(fileUrl)   // 서버로부터 받은 파일
           const blob = await response.blob()     // 파일 => js 사용하도록 2진화

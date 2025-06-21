@@ -38,7 +38,7 @@ watch (
     for (const item of newItems) {
       const fileinfo = await getfileInformaton(item.colboardId);  // 게시물에 해당하는 파일가져오기
       if (fileinfo && fileinfo.length > 0 ) {
-        map[item.colboardId] = `http://localhost:8080/upload/sendImg/${fileinfo[0].uploadName}`
+        map[item.colboardId] = `https://localhost:8443/upload/sendImg/${fileinfo[0].uploadName}`
       } else {
         map[item.colboardId] = '/un.png';
       }
