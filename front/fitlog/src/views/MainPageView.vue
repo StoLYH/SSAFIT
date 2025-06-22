@@ -55,10 +55,13 @@ onMounted(async () => {
 
     for (let i = 0; i < 3; i++) {
       const board = await getoneBoardWithoutCnt(bestBoardNumStr[i][0]);
-      const userInfo = await GetInfo(board.userId);
+      const userInfo = await GetInfo(board.userId).catch(err => {
+        console.error('Failed to fetch user info:', err);
+        return { userName: 'Unknown', userDetail: { onelineInfo: '정보 없음' } };
+      });
 
       popularAuthors.value.push(userInfo.userName);
-      userComment.value.push(userInfo.userDetail.onelineInfo);
+      userComment.value.push(userInfo.userDetail?.onelineInfo || '정보 없음');
       stUserId.value.push(board.userId);
     }
 

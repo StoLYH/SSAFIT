@@ -1,6 +1,6 @@
 // src/stores/userStore.js
 import { defineStore } from 'pinia'
-import { PostLogin } from '@/api/auth'
+import { PostLogin, PostLogout } from '@/api/auth'
 import { gptCall } from '@/api/board'
 
 
@@ -32,6 +32,24 @@ export const useUserStore = defineStore('user', {
         return false
       }
     },
+    
+    async logout() {
+      try {
+        // 서버 로그아웃 API 호출
+        await PostLogout();
+        
+        // 로컬 상태 정리
+        this.clearUser();
+        
+        return true;
+      } catch (error) {
+        console.error('로그아웃 실패:', error);
+        // 에러가 발생해도 로컬 상태는 정리
+        this.clearUser();
+        return false;
+      }
+    },
+    
     async gptCall(question) {
       const data = await gptCall(question);
       this.answer = data.answer;
@@ -42,6 +60,12 @@ export const useUserStore = defineStore('user', {
       this.userId = userId
       this.token = token
     },
+    
+    updateToken(newToken) {
+      this.token = newToken
+      sessionStorage.setItem('token', newToken)
+    },
+    
     clearUser() {
       this.userId = null
       this.token = null
