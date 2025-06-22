@@ -5,9 +5,21 @@ const USER_API_BASE ="/api/auth";
 
 const PostLogin = async (loginForm)=>{
     const{data}= await api.post(`${USER_API_BASE}/login`,loginForm)
+    
+    // 로그인 성공 시 Access Token 저장
+    if (data.token) {
+        sessionStorage.setItem('token', data.token);
+        console.log('로그인 성공: Access Token이 저장되었습니다.');
+    }
+    
     return data;
 }
 
+const PostLogout = async () => {
+    await api.post(`${USER_API_BASE}/logout`);
+}
+
 export{
-    PostLogin
+    PostLogin,
+    PostLogout
 }

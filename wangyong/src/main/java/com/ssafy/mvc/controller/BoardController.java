@@ -208,7 +208,7 @@ public class BoardController {
 	public ResponseEntity<String> postMethodName(@ModelAttribute ColBoard colBoard) {
 		
 		try {
-			int result = boardService.intsertCategoryBoard(colBoard);
+			int result = boardService.insertCategoryBoard(colBoard);
 			if(result == 1) {	// 등록성공 201
 				return ResponseEntity.status(HttpStatus.CREATED).body("성공적으로 등록 되었습니다.");
 			} else {

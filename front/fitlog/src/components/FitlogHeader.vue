@@ -58,12 +58,19 @@ const goToQuestion = () => {
   router.push('/question');
 }
 
-const handleLogout = () => {
+const handleLogout = async () => {
   console.log('Logout clicked');
-  console.log('Before clearUser - userId:', userStore.userId);
-  userStore.clearUser();
-  console.log('After clearUser - userId:', userStore.userId);
-  router.push('/');
+  try {
+    // 서버 로그아웃 API 호출
+    await userStore.logout();
+    console.log('Logout successful');
+    router.push('/');
+  } catch (error) {
+    console.error('Logout failed:', error);
+    // 에러가 발생해도 로컬 상태는 정리
+    userStore.clearUser();
+    router.push('/');
+  }
 }
 </script>
 

@@ -14,7 +14,7 @@ public interface BoardService {
 	
 	List<ColBoard> getCategoryBoard(int categoryNum);
 	
-	int intsertCategoryBoard(ColBoard colBoard);	// flag = 0 (일반등록)  1(업데이트)
+	int insertCategoryBoard(ColBoard colBoard);	// flag = 0 (일반등록)  1(업데이트)
 
 	ColBoard getOneBoard(int colboardId);
 	ColBoard getOneBoardWithoutCnt(int colboardId);

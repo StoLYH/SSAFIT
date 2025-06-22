@@ -57,7 +57,7 @@ public class BoardServiceImpl implements BoardService{
 
 
 	@Override
-	public int intsertCategoryBoard(ColBoard colBoard) {
+	public int insertCategoryBoard(ColBoard colBoard) {
 		int result = boardDao.insertBoard(colBoard);
 		int primarykey = colBoard.getColboardId();
 		
