@@ -31,7 +31,7 @@
 - 아이디,비밀번호,닉네임,직업,프로필이미지를 이용하여 회원가입
 
 <br>
- ![ssafit35.png](./images/5.PNG)  
+![ssafit33.png](./images/5.PNG)  
 - 로그인 기능 : <br>
 Access Token, Refresh(HTTPONLY+SECURE) 클라이언트와 상호작용 <br>
 Access Token(5분), Refresh Token(7일), Refresh Token DB저장 <br>
@@ -51,13 +51,11 @@ Access Token(5분), Refresh Token(7일), Refresh Token DB저장 <br>
    
 <br><br>
 ### 게시판
-![ssafit2.png](./images/6.PNG)   <br>
 ![ssafit5.png](./images/7.PNG)   
 - 작가페이지로 이동, 작가 인기 게시물 확인
 - 게시물 확인, 댓글,좋아요,조회수, 파일 다운로드
 
-![ssafit6.png](./images/8.PNG)   
-Poast API 활용한 게시물 등록(제목,게시글,카테고리,파일)
+
 
 <br><br>
 ### Q&A, 검색
