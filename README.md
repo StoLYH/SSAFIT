@@ -27,11 +27,11 @@
 
 <br><br>
 ### 회원 가입 및 로그인
-![ssafit33.png](./images/4.png)  
+![ssafit33.png](./images/4.PNG)  
 - 아이디,비밀번호,닉네임,직업,프로필이미지를 이용하여 회원가입
 
----
- ![ssafit35.png](./images/5.png)  
+<br>
+ ![ssafit35.png](./images/5.PNG)  
 - 로그인 기능 : <br>
 Access Token, Refresh(HTTPONLY+SECURE) 클라이언트와 상호작용 <br>
 Access Token(5분), Refresh Token(7일), Refresh Token DB저장 <br>
@@ -39,11 +39,11 @@ Access Token(5분), Refresh Token(7일), Refresh Token DB저장 <br>
 
 <br><br>
 ### 마이페이지
-![ssafit1.png](./images/2.png)
+![ssafit1.png](./images/2.PNG)
 - 개인정보 수정, 게시글 확인
 <br><br>
 ### 메인 화면
-![ssafit1.png](./images/3.png)
+![ssafit1.png](./images/3.PNG)
 
 - 조회수 기반 게시글 
 - 최근 업로드된 게시글 
@@ -51,17 +51,17 @@ Access Token(5분), Refresh Token(7일), Refresh Token DB저장 <br>
    
 <br><br>
 ### 게시판
-![ssafit2.png](./images/6.png)   <br>
-![ssafit5.png](./images/7.png)   
+![ssafit2.png](./images/6.PNG)   <br>
+![ssafit5.png](./images/7.PNG)   
 - 작가페이지로 이동, 작가 인기 게시물 확인
 - 게시물 확인, 댓글,좋아요,조회수, 파일 다운로드
 
-![ssafit6.png](./images/8.png)   
+![ssafit6.png](./images/8.PNG)   
 Poast API 활용한 게시물 등록(제목,게시글,카테고리,파일)
 
 <br><br>
 ### Q&A, 검색
-![ssafit2.png](./images/9.png)  
+![ssafit2.png](./images/9.PNG)  
 - GPT API 활용한 Q&A
 - 백터 내적을 활용한 게시글 내용기반 검색<br>
 게시글 등록 시 문장을 벡터화(Embedding)하여 DB에 저장 <BR>
