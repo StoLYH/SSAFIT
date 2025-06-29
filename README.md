@@ -31,7 +31,8 @@
 - 아이디,비밀번호,닉네임,직업,프로필이미지를 이용하여 회원가입
 
 <br>
-![ssafit33.png](./images/5.png)  
+
+![ssafit33.png](./images/5.PNG)  
 - 로그인 기능 : <br>
 Access Token, Refresh(HTTPONLY+SECURE) 클라이언트와 상호작용 <br>
 Access Token(5분), Refresh Token(7일), Refresh Token DB저장 <br>
